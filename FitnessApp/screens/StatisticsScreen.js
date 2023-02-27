@@ -24,9 +24,6 @@ function StatisticsScreen({navigation}) {
             <View style={styles.placeholderContainer}>
                 <Placeholder customText={"The statistics page is still in development."}></Placeholder>
             </View>
-            <View style={styles.toolbarMenuContainer}>
-            <ToolbarMenu pPress={navigateProfileScreenHandler} ePress={navigateEncyclopediaScreenHandler} wPress={navigateWorkoutScreenHandler} nPress={navigateNutritionScreenHandler}></ToolbarMenu>
-            </View>
       </View>
     );
 }

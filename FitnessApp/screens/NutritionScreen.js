@@ -21,9 +21,6 @@ function NutritionScreen({navigation}) {
             <View style={styles.placeholderContainer}>
                 <Placeholder customText={"The nutrition page is still in development."}></Placeholder>
             </View>
-            <View style={styles.toolbarMenuContainer}>
-            <ToolbarMenu pPress={navigateProfileScreenHandler} ePress={navigateEncyclopediaScreenHandler} sPress={navigateStatisticsScreenHandler} wPress={navigateWorkoutScreenHandler}></ToolbarMenu>
-            </View>
       </View>
     );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, Image, StyleSheet, Text, Animated} from "react-native";
 import { Pressable } from "react-native";
 import { back } from "react-native/Libraries/Animated/Easing";
@@ -81,6 +81,28 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc,
         setExpanded(!expanded);
     }
       }
+
+      useEffect(()=> {
+        if (startWorkout) {
+            setHeight(101);
+            setImgBackGroundHeight(87);
+            setImgBackGroundWidth(87);
+            setImgBackGroundTop(0);
+            setImgBackGroundLeft(0);
+            setImgHeight(70);
+            setImgWidth(70);
+            setImgTop(7);
+            setImgLeft(7);
+            setRightListItemJustify('center');
+            setListItemContainerFlexDirection('row');
+            setTextPrimaryFontSize(22);
+            setTextSecondaryFontSize(17);
+            setTextAlignment('right');
+            setRightListItemMarginBottom(0);
+            setRightListItemMarginRight(8);
+            setRightListItemMarginLeft(0);
+        }
+      }, [startWorkout]);
 
     
 

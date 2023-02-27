@@ -6,7 +6,6 @@ import WorkoutContainerComponent from "../components/WorkourContainerComponent";
 import { useState } from "react";
 import StartButton from "../components/StartButton";
 function WorkoutScreen({navigation}) {
-    const [selected, updateSelected] = useState(1);
 
     const [workoutStarted, setWorkoutStarted] = useState(false);
     
@@ -16,20 +15,7 @@ function WorkoutScreen({navigation}) {
 
     function startWorkoutHandler() {
         setWorkoutStarted(!workoutStarted);
-    }
-
-
-    function navigateProfileScreenHandler() {
-        navigation.navigate('ProfileScreen');
-    }
-    function navigateEncyclopediaScreenHandler() {
-        navigation.navigate('EncyclopediaScreen');
-    }
-    function navigateStatisticsScreenHandler() {
-        navigation.navigate('StatisticsScreen');
-    }
-    function navigateNutritionScreenHandler() {
-        navigation.navigate('NutritionScreen');
+        navigation.navigate('ExerciseInfoScreen');
     }
 
 
@@ -58,7 +44,7 @@ function WorkoutScreen({navigation}) {
 
                 <WorkoutContainerComponent workout={ppl[dateMinusOne.getDay()]} date={dateMinusOne}/>
 
-                <WorkoutContainerComponent workout={ppl[date.getDay()]} date={date} startWorkout={workoutStarted}/>
+                <WorkoutContainerComponent workout={ppl[datePlusOne.getDay()]} date={datePlusOne} startWorkout={workoutStarted}/>
 
                 <WorkoutContainerComponent workout={ppl[datePlusOne.getDay()]} date={datePlusOne}/>
 
@@ -69,7 +55,6 @@ function WorkoutScreen({navigation}) {
 
         <StartButton showButton={currentIndex == 3} onPress={startWorkoutHandler} workoutStarted={workoutStarted}></StartButton>
 
-        <ToolbarMenu pPress={navigateProfileScreenHandler} ePress={navigateEncyclopediaScreenHandler} sPress={navigateStatisticsScreenHandler} nPress={navigateNutritionScreenHandler} selected={selected}></ToolbarMenu>
 
         </View>
 
@@ -244,6 +229,6 @@ const styles = StyleSheet.create({
 
 
 
-
+        <ToolbarMenu pPress={navigateProfileScreenHandler} ePress={navigateEncyclopediaScreenHandler} sPress={navigateStatisticsScreenHandler} nPress={navigateNutritionScreenHandler} selected={selected}></ToolbarMenu>
 
                     */

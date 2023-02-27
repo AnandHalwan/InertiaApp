@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, Image, StyleSheet, Text, Animated, TextInput} from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
@@ -9,7 +9,7 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
 
     const [weightText, setWeightText] = useState("Weight");
     const [repsText, setRepsText] = useState("Reps");
-
+    const [initialFlip, setInitialFlip] = useState(false);
     const animate = useRef(new Animated.Value(0));
 
     const [isFlipped, setIsFlipped] = useState(false);
@@ -32,6 +32,15 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
     const handleTextInputChangeReps = (text) => {
         setRepsText(text);
     }
+
+
+    function gestureHandler() {
+        if (!initialFlip) {
+            doAFlip();
+            setInitialFlip(true);
+        }
+    }
+
     const doAFlip = () => {
         Animated.timing(animate.current, {
             duration: 300,
@@ -41,6 +50,7 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
             setIsFlipped(!isFlipped);
         });
     };
+
 
     const interpolatedValueFront = animate.current.interpolate({
         inputRange: [0, 180],
@@ -69,8 +79,35 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
       };
 
 
+    const [timer, setTimer] = useState(5);
+    const [showTimer, setShowTimer] = useState(false);
 
+        useEffect(() => {
+            const intervalId = setInterval(() => {
+            if (timer <= 0) {
+                setShowTimer(false);
+                /*
+                setDefaultBack('none');
+                setEnterDisplay('flex');
+                */
+                doAFlip();
+                /*
+                setTimeout(() => {setTimerDisplay('none')
+                                    setDefaultFront('flex')}, 1000);
 
+                clearInterval(intervalId);
+                */
+            }
+            if (showTimer) {
+                setTimer(timer - 1);
+                console.log(timer);
+            }
+
+            }, 1000); // repeat every second
+        
+            // cleanup function to stop interval when component unmounts
+            return () => clearInterval(intervalId);
+        }, [timer, showTimer]); // empty array as second argument to useEffect, to only run effect once
     function enterButtonPressedHandler() {
         if (isFlipped) {
             const weightValue = parseInt(weightText, 10);
@@ -79,23 +116,40 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
             if (!isNaN(weightValue) && !isNaN(repsValue)) {
                 setWeightText("Weight");
                 setRepsText("Reps");
+                setTimer(5);
+                setShowTimer(true);
+                if (initialFlip) {
+                    setTimerDisplay('flex');
+                    setDefaultFront('none');
+                }
                 doAFlip();
+                //setDefaultBack('flex');
+                //setTimeout(() => {setDefaultBack('flex')
+                 //                   setEnterDisplay('none')}, 1000);
+                //setEnterDisplay('none');
+
+
                 handleEnterButton(weightValue, repsValue, lastSet);
+
             } else {
                 console.log("Please enter valid weight and reps values");
             }
         }
     }
 
+    const [defaultFront, setDefaultFront] = useState('flex');
+    const [timerDisplay, setTimerDisplay] = useState('none');
+    const [enterDisplay, setEnterDisplay] = useState('flex');
+    const [defaultBack, setDefaultBack] = useState('none');
     return(
         <View>
-            <GestureRecognizer onSwipeLeft={doAFlip}>
+            <GestureRecognizer onSwipeLeft={gestureHandler}>
             <Animated.View style={[styles.listItemContainer, styles.front, {height: 420, flexDirection: 'column', }, rotateFront]}> 
-                <CurrentExericseItemFront display={'flex'} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange}></CurrentExericseItemFront>
-                <ExerciseTimer display={'none'} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} setNumber={setNumber}></ExerciseTimer>
+                <CurrentExericseItemFront display={defaultFront} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange}></CurrentExericseItemFront>
+                <ExerciseTimer start={showTimer} timer={timer} display={timerDisplay} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} setNumber={setNumber}></ExerciseTimer>
             </Animated.View>
             <Animated.View style={[styles.listItemContainer, styles.back, {height: 420, flexDirection: 'column', justifyContent: 'space-between'}, rotateBack]}>
-                <View style={{display: 'flex'}}>
+                <View style={{display: enterDisplay}}>
                     <View style={{flexDirection: 'row'}}>
                         <View style={{marginTop: 13, marginLeft: 20}}>
                         <Text style={{fontSize: 47, color: 'white', fontWeight: '600'}}>Set {setNumber}</Text>
@@ -118,7 +172,7 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
                         </Pressable>
                     </View>
                 </View>
-                <CurrentExericseItemFront display={'none'} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange}></CurrentExericseItemFront>
+                <CurrentExericseItemFront display={defaultBack} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange}></CurrentExericseItemFront>
             </Animated.View>
             </GestureRecognizer>
     </View>    

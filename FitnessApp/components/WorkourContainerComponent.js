@@ -1,10 +1,28 @@
-import { useState } from "react";
-import { View, StyleSheet, Text, FlatList } from "react-native";
+import { useEffect, useState } from "react";
+import { View, StyleSheet, Text, FlatList, Animated } from "react-native";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
 function WorkoutContainerComponent({workout, date, startWorkout}) {
     const dateRel = date;
 
+    const [translateY] = useState(new Animated.Value(0));
+
+    useEffect(() => {
+        if (startWorkout) {
+
+        
+    console.log(translateY);
+      Animated.timing(translateY, {
+        toValue: -100,
+        duration: 1000,
+        useNativeDriver: true,
+      }).start();
+      console.log(translateY);
+    }
+    }, [startWorkout]);
+  
+
+  
 
     const daysOfWeek = [
         "SUNDAY",
@@ -29,6 +47,14 @@ function WorkoutContainerComponent({workout, date, startWorkout}) {
         "NOV",
         "DEC"
     ]
+
+    useEffect(() =>{
+        if (startWorkout) {
+
+        }
+    }, [startWorkout])
+
+
     const [currentExercise, setCurrentExercise] = useState(0);
     
     const [setCounter, setSetCounter] = useState(1);
@@ -38,9 +64,14 @@ function WorkoutContainerComponent({workout, date, startWorkout}) {
         console.log("Child passed to parent");
         console.log(weight, reps);
         if (lastSet) {
-            console.log("Last set!");
-            setCurrentExercise(currentExercise+1);
-            setSetCounter(1);
+                if ((currentExercise - 1) === workout.exerciseCount){
+                    startWorkout = false;
+                } else {
+                    console.log("Last set!");
+                    setCurrentExercise(currentExercise+1);
+                    setSetCounter(1);
+                }
+
         }
     }
 
@@ -57,37 +88,39 @@ function WorkoutContainerComponent({workout, date, startWorkout}) {
 
     const workoutLocal = workout;
     return(
-            <View style={styles.workoutScreenContainer}>
+            <Animated.View style={styles.workoutScreenContainer}>
                 <View style={styles.headerContainer}>
                     <View style={styles.leftHeaderContainer}>
-                        <View style={{marginBottom: -3}}>
+                        <View style={{marginBottom: -10, height: 25}}>
                             <Text style={styles.dateText}>{daysOfWeek[dateRel.getDay()]}, {months[date.getMonth()]} {date.getDate()}</Text>
                         </View>
-                        <View style={{marginBottom: -3, marginLeft: -3}}>
-                            <Text style={styles.workoutNameText}>{workoutLocal.name}</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.durationText}>{workoutLocal.durationLow}-{workoutLocal.durationHigh} min</Text>
+                        <View style={{}}>
+                            <View style={{marginBottom: -3, marginLeft: -3}}>
+                                <Text style={styles.workoutNameText}>{workoutLocal.name}</Text>
+                            </View>
+                            <View>
+                                <Text style={styles.durationText}>{workoutLocal.durationLow}-{workoutLocal.durationHigh} min</Text>
+                            </View>
                         </View>
                     </View>
 
                     <View style={styles.rightHeaderContainer}>
                         <View style={{marginBottom: 30}}>
                             <Text> </Text>
-                                </View>
-                            <View style={{marginBottom: 5}}>
-                                <Text style={styles.exerciseCountText} >{workout.exerciseCount} Exercises</Text>
-                            </View>
-                            <View>
-                                <Text style={styles.setCountText}>{workout.totalSets} Sets</Text>
-                            </View>
+                        </View>
+                        <View style={{marginBottom: 5}}>
+                            <Text style={styles.exerciseCountText} >{workout.exerciseCount} Exercises</Text>
+                        </View>
+                        <View>
+                            <Text style={styles.setCountText}>{workout.totalSets} Sets</Text>
                         </View>
                     </View>
+                </View>
                                 
                     <View style={styles.workoutContainer}>
                         <FlatList data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
                     </View>
-            </View>
+            </Animated.View>
     );
 }
 export default WorkoutContainerComponent;

@@ -21,9 +21,6 @@ function ProfileScreen({navigation}) {
             <View style={styles.placeholderContainer}>
                 <Placeholder customText={"The profile page is still in development."}></Placeholder>
             </View>
-            <View style={styles.toolbarMenuContainer}>
-            <ToolbarMenu wPress={navigateWorkoutScreenHandler} ePress={navigateEncyclopediaScreenHandler} sPress={navigateStatisticsScreenHandler} nPress={navigateNutritionScreenHandler}></ToolbarMenu>
-            </View>
       </View>
     );
 }

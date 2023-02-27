@@ -1,7 +1,19 @@
+import { useEffect, useState, useRef } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import CircularProgress from "react-native-circular-progress-indicator";
+import CircularProgress, {ProgressRef} from "react-native-circular-progress-indicator";
 
-function ExerciseTimer({display, setNumber, name, sets, lowRepRange, highRepRange}) {
+function ExerciseTimer({display, setNumber, name, sets, lowRepRange, highRepRange, timer, start}) {
+
+    const progressRef = useRef(null);
+
+    useEffect(()=> {
+        progressRef.current.pause();
+        timer = 5;
+        progressRef.current.play();
+        console.log("Restarted Timer");
+    }, [start])
+
+
     return (
         <View style={{display: display}}>
         <View style={{flexDirection: 'row'}}>
@@ -13,10 +25,11 @@ function ExerciseTimer({display, setNumber, name, sets, lowRepRange, highRepRang
         <View style={{top: 0, left: 83}}>
         <CircularProgress
             initialValue={0}
-            maxValue={180}
-            value={180}
+            value={5 - timer}
+            maxValue={5}
             radius={100}
-            duration={180000}
+            duration={1000}
+            ref={progressRef}
             progressValueColor={'white'}
             progressValueFontSize={45}
             valueSuffix={"s"}
@@ -33,15 +46,14 @@ function ExerciseTimer({display, setNumber, name, sets, lowRepRange, highRepRang
             inActiveStrokeWidth={0}
             progressFormatter={(value) => {
                 'worklet';
-                
-                return (180 - value).toFixed(0);
+                return (5-value).toFixed(0);
             }}
             />
 
 
         </View>
 
-        <View style={[{justifyContent: 'flex-end', marginBottom: 35, marginRight: 0, marginLeft: 10}]}>
+        <View style={[{justifyContent: 'flex-end', marginBottom: 35, marginRight: 0, marginLeft: 10, marginTop: 25}]}>
             <Text style={[styles.textPrimary, {fontSize: 28, textAlign: 'center'}]}>{name}</Text>
             <Text style={[styles.textSecondary, {fontSize: 22, textAlign: 'center'}]}>{sets} sets {lowRepRange}-{highRepRange} reps</Text>
 

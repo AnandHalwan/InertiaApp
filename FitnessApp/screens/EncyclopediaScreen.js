@@ -23,15 +23,9 @@ function EncyclopediaScreen({navigation}) {
         <View style={styles.container}>
             <View style={styles.placeholderContainer}>
                 <Placeholder customText={"The encyclopedia page is still in development."}></Placeholder>
-                <View style={styles.buttonContainer}>
-                  <Text style={styles.buttonText}>
-                    Start
-                  </Text>
-                </View>
+
             </View>
-            <View style={styles.toolbarMenuContainer}>
-            <ToolbarMenu pPress={navigateProfileScreenHandler} wPress={navigateWorkoutScreenHandler} sPress={navigateStatisticsScreenHandler} nPress={navigateNutritionScreenHandler}></ToolbarMenu>
-            </View>
+
       </View>
     );
 }
