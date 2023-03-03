@@ -5,13 +5,22 @@ import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CircularProgress from 'react-native-circular-progress-indicator';
 import CurrentExericseItemFront from "./CurrentExerciseItemFront";
 import ExerciseTimer from "./ExerciseTimer";
-function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, handleEnterButton, setNumber}) {
+import IButton from "./IButton";
+function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, handleEnterButton, setNumber, navigation}) {
 
     const [weightText, setWeightText] = useState("Weight");
     const [repsText, setRepsText] = useState("Reps");
     const [initialFlip, setInitialFlip] = useState(false);
     const animate = useRef(new Animated.Value(0));
 
+
+    function infoButtonPressed() {
+        console.log("Info");
+        navigation.navigate("ExerciseInfoScreen");
+    }
+
+
+    
     const [isFlipped, setIsFlipped] = useState(false);
 
     function handleTextInputFocusWeight() {

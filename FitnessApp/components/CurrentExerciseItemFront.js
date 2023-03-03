@@ -1,15 +1,17 @@
 import { View, Image, Text , StyleSheet} from "react-native";
+import IButton from "./IButton";
 
 
 function CurrentExericseItemFront({setNumber, backgroundSrc, imgSrc, name, sets, lowRepRange, highRepRange, display}) {
     return (
         <View style={{display: display}}>
-            <View  style={{flexDirection: 'row',}}>
+            <View style={{flexDirection: 'row',}}>
                 <View style={{marginTop: 13, marginLeft: 20}}>
                 <Text style={{fontSize: 47, color: 'white', fontWeight: '600'}}>Set {setNumber}</Text>
 
                 </View>
             </View>
+            <IButton display={'flex'}></IButton>
             <View style={{top: -8, left: 74}}>
                 <Image source={backgroundSrc} style={{height: 230, width: 230}}>
                 </Image>

@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, Image, StyleSheet, Text, Animated} from "react-native";
 import { Pressable } from "react-native";
 import { back } from "react-native/Libraries/Animated/Easing";
-function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, startWorkout, startExercisem,}) {
+import IButton from "./IButton";
+function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, startWorkout, startExercisem, navigation}) {
 
     
     const [height, setHeight] = useState(101);
@@ -36,7 +37,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc,
 
     const [rightListItemMarginLeft, setRightListItemMarginLeft] = useState(0);
 
-
+    const [displayIButton, setDisplayIButton] = useState('none');
       function onPressHandler() {
         if (!startWorkout) {
         if(expanded) {
@@ -57,6 +58,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc,
             setRightListItemMarginBottom(0);
             setRightListItemMarginRight(8);
             setRightListItemMarginLeft(0);
+            setDisplayIButton('none');
 
         } else{
             setHeight(420);
@@ -76,6 +78,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc,
             setRightListItemMarginBottom(35);
             setRightListItemMarginRight(0);
             setRightListItemMarginLeft(10);
+            setDisplayIButton('flex');
 
         }
         setExpanded(!expanded);
@@ -101,16 +104,20 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc,
             setRightListItemMarginBottom(0);
             setRightListItemMarginRight(8);
             setRightListItemMarginLeft(0);
+            setDisplayIButton('none');
         }
       }, [startWorkout]);
 
-    
+    function infoButtonPressedHandler() {
+        navigation.navigate("ExerciseInfoScreen");
+    }
 
 
     return(
         <View>
         <Pressable onPress={onPressHandler}>
             <Animated.View style={[styles.listItemContainer, styles.front, {height: height, flexDirection: listItemContainerFlexDirection}]}>
+                <IButton display={displayIButton} onPress={infoButtonPressedHandler}></IButton>
                 <View style={{top: imgBackGroundTop, left: imgBackGroundLeft}}>
                     <Image source={backgroundSrc} style={{height: imgBackGroundHeight, width: imgBackGroundWidth}}>
                     </Image>
@@ -123,19 +130,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc,
 
                 </View>
             </Animated.View>
-            <Animated.View style={[styles.listItemContainer, styles.back, {height: height, flexDirection: listItemContainerFlexDirection}]}>
-                <View style={{top: imgBackGroundTop, left: imgBackGroundLeft}}>
-                    <Image source={backgroundSrc} style={{height: imgBackGroundHeight, width: imgBackGroundWidth}}>
-                    </Image>
-                    <Image source={imgSrc} style={{position: "absolute" , top: imgTop, left: imgLeft, height: imgHeight, width: imgWidth}}></Image>
-                </View>
 
-                <View style={[{justifyContent: rightListItemJustify, marginBottom: rightListItemMarginBottom, marginRight: rightListItemMarginRight, marginLeft: rightListItemMarginLeft}]}>
-                    <Text style={[styles.textPrimary, {fontSize: textPrimaryFontSize, textAlign: textAlignment}]}>{name}</Text>
-                    <Text style={[styles.textSecondary, {fontSize: textSecondaryFontSize, textAlign: textAlignment}]}>{sets} sets {lowRepRange}-{highRepRange} reps</Text>
-
-                </View>
-            </Animated.View>
         </Pressable>   
     </View>    
         );
@@ -254,4 +249,20 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         
     },
+
+
+
+                <Animated.View style={[styles.listItemContainer, styles.back, {height: height, flexDirection: listItemContainerFlexDirection}]}>
+                <View style={{top: imgBackGroundTop, left: imgBackGroundLeft}}>
+                    <Image source={backgroundSrc} style={{height: imgBackGroundHeight, width: imgBackGroundWidth}}>
+                    </Image>
+                    <Image source={imgSrc} style={{position: "absolute" , top: imgTop, left: imgLeft, height: imgHeight, width: imgWidth}}></Image>
+                </View>
+
+                <View style={[{justifyContent: rightListItemJustify, marginBottom: rightListItemMarginBottom, marginRight: rightListItemMarginRight, marginLeft: rightListItemMarginLeft}]}>
+                    <Text style={[styles.textPrimary, {fontSize: textPrimaryFontSize, textAlign: textAlignment}]}>{name}</Text>
+                    <Text style={[styles.textSecondary, {fontSize: textSecondaryFontSize, textAlign: textAlignment}]}>{sets} sets {lowRepRange}-{highRepRange} reps</Text>
+
+                </View>
+            </Animated.View>
 */

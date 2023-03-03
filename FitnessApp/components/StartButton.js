@@ -1,19 +1,38 @@
-import { View, Text, StyleSheet } from "react-native";
+
+import { useState, useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
 
 function StartButton({workoutStarted, onPress, showButton}) {
 
-    
+  const [fadeAnim] = useState(new Animated.Value(1));
+
+  useEffect(() => {
+    if (!showButton) {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  } else {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  }
+  }, [fadeAnim, showButton]);  
+
 
     return (
-        <View style={[styles.buttonContainer, {display: showButton ? 'flex' : 'none'}]}>
-        <Pressable onPress={onPress}>
+        <Animated.View style={[styles.buttonContainer, {opacity: fadeAnim}]}>
+          <TouchableOpacity onPress={onPress}>
               <Text style={styles.buttonText}>
                   {workoutStarted ? "Done" : "Start"}
               </Text>
-        </Pressable>
-      </View>
+            </TouchableOpacity>
+      </Animated.View>
 
 
     );
