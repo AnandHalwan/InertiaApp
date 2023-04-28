@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet, Text, FlatList, Animated, Modal, Dimensions } from "react-native";
+import { View, StyleSheet, Text, FlatList, Animated, Modal, Dimensions, Image } from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
 import { LinearGradient } from "expo-linear-gradient";
-function WorkoutContainerComponent({workout, date, startWorkout, navigation}) {
+function WorkoutContainerComponent({workout, date, startWorkout, navigation, endWorkout, closeSummary}) {
     const dateRel = date;
 
     const windowWidth = Dimensions.get('window').width;
@@ -22,7 +22,7 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation}) {
     const [listHeight, setListHeight] = useState(525);
     const [displayHeader, setDisplayHeader] = useState('flex');
     const [modalStartVisible, setModalStartVisible] = useState(false);  
-
+    const [modalEndVisible, setModalEndVisible] = useState(false);
     const daysOfWeek = [
         "SUNDAY",
         "MONDAY",
@@ -61,13 +61,17 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation}) {
     }, [startWorkout]);
 
 
+    useEffect(() => {
+        setModalEndVisible(false);
+    }, [closeSummary]);
+
+
     function modalPressHandler() {
         setModalStartVisible(false);
 
     }
 
     const [currentExercise, setCurrentExercise] = useState(0);
-    
     const [setCounter, setSetCounter] = useState(1);
 
     const completedSetHandler = (weight, reps, lastSet) => {
@@ -75,10 +79,13 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation}) {
         console.log("Child passed to parent");
         console.log(weight, reps);
         if (lastSet) {
-                if ((currentExercise - 1) === workout.exerciseCount){
-                    startWorkout = false;
+                if (currentExercise === (workout.exerciseCount - 1)){
+                    setModalEndVisible(true);
+                    console.log("Workout ended");
                 } else {
                     console.log("Last set!");
+                    console.log(currentExercise);
+                    console.log(workout.exerciseCount)
                     setCurrentExercise(currentExercise+1);
                     setSetCounter(1);
                 }
@@ -114,6 +121,10 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation}) {
 
     }, [fadeAnim, modalStartVisible, startWorkout]);  
 
+    function setEndVisible() {
+        setModalEndVisible(false);
+    }
+
     const workoutLocal = workout;
     return(
             <Animated.View style={styles.workoutScreenContainer}>
@@ -135,6 +146,92 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation}) {
                                         </Animated.View>
                                     </View>
                                 </Pressable>
+                            </Modal>
+
+                            <Modal
+                            transparent={true}
+                            animationType="fade"
+                            visible={modalEndVisible}
+                            
+                            >
+                                <View style={styles.endWorkoutModalContainer}>
+                                    <View style={styles.workoutSummaryContainer}>
+                                        <View>
+                                            <Text style={styles.workoutSummaryHeader}>
+                                                Summary
+                                            </Text>
+                                        </View>
+                                        <View style={styles.infoOneContainer}>
+                                            <View>
+                                                <Text style={styles.caloriesText}>
+                                                    Calories
+                                                </Text>
+                                                <View style={styles.calContainer}>
+                                                    <Text style={styles.caloriesValOne}>
+                                                        427
+                                                    </Text>
+                                                    <Text style={styles.caloriesValTwo}>
+                                                        CAL
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View>
+                                                <Text style={styles.caloriesText}>
+                                                    Avg Heart Rate
+                                                </Text>
+                                                <View style={styles.calContainer}>
+                                                    <Text style={styles.caloriesValOne}>
+                                                        117
+                                                    </Text>
+                                                    <Text style={styles.caloriesValTwo}>
+                                                        BPM
+                                                    </Text>
+                                                </View>
+
+                                            </View>
+                                        </View>
+                                        <View>
+                                            <View style={styles.timeRow}>
+                                                <Text style={styles.timeHeader}>
+                                                    Duration
+                                                </Text>
+                                                <Text style={styles.timeValue}>
+                                                    1:37:32
+                                                </Text>
+                                            </View>
+                                            <View style={styles.timeRow}>
+                                                <Text style={styles.timeHeader}>
+                                                    Active Time
+                                                </Text>
+                                                <Text style={styles.timeValue}>
+                                                    1:02:12
+                                                </Text>
+                                            </View>
+                                            <View style={styles.timeRow}>
+                                                <Text style={styles.timeHeader}>
+                                                    Avg Rest Time
+                                                </Text>
+                                                <Text style={styles.timeValue}>
+                                                    1:32
+                                                </Text>
+                                            </View>
+                                            <View style={[styles.timeRow, {marginTop: 22}]}>
+                                                <Text style={styles.timeHeader}>
+                                                    PRs
+                                                </Text>
+                                                <Text style={styles.timeValue}>
+                                                    3
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    <View style={styles.checkContainer}>
+                                        <Pressable onPress={endWorkout}>
+                                            <Image source={require('../assets/checkmark_copy.png')} style={{height: 120, width: 120, left: -4, top: -7}}></Image>
+                                        </Pressable>
+
+                                    </View>
+                                </View>
                             </Modal>
                 <View style={styles.headerContainer}>
                     <View style={styles.leftHeaderContainer}>
@@ -242,6 +339,82 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         marginTop: 1.75,
     },
+    endWorkoutModalContainer: {
+        height: 650,
+        alignSelf: 'center',
+        width: 400,
+        top: 115,
+        backgroundColor: 'black',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    workoutSummaryContainer: {
+        backgroundColor: '#1C1C1E',
+        height: 600,
+        top: -20,
+        width: 385,
+        borderRadius: 15,
+        paddingVertical: 20,
+        paddingHorizontal: 35,
+    },
+    workoutSummaryHeader: {
+        color: 'white',
+        fontSize: 50,
+        fontWeight: '600'
+    },
+    summaryText: {
+        color: 'white',
+        fontSize: 20,
+        fontWeight: '300'
+    },
+    infoOneContainer: {
+        marginTop: 20,
+        justifyContent: 'space-between',
+        flexDirection: 'row'
+    },
+    calContainer: {
+        flexDirection: 'row',
+        marginBottom: 24,
+    },
+    caloriesText: {
+        color: '#acacae',
+        fontSize: 22,
+        marginBottom: 10
+    },
+    caloriesValOne: {
+        color: '#f85b5b',
+        fontSize: 24
+    },
+    caloriesValTwo: {
+        color: '#f85b5b',
+        fontSize: 16,
+        marginTop: 8
+    },
+    timeRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    timeHeader: {
+        color: 'white',
+        fontSize: 28,
+        fontWeight: '300',
+        marginBottom: 12
+    },
+    timeValue: {
+        color: '#acacae',
+        fontSize: 28,
+        fontWeight: '300',
+        marginBottom: 12
+    },
+    checkContainer: {
+        backgroundColor: 'black',
+        height: 110,
+        width: 110,
+        borderRadius: 55,
+        position: 'absolute',
+        top: 539
+    }
+
 
   });
 

@@ -69,12 +69,12 @@ export const EXERCISES = [
 
 
 const w1 = new Workout("w1", "Push", pushWorkoutExercises, "20", "6", "60", "90");
-const w2 = new Workout("w2", "Pull", pullWorkoutExercises, "18", "5", "60", "70");
-const w3 = new Workout("w3", "Legs", legWorkoutExercises, "23", "8", "90", "120");
+const w2 = new Workout("w2", "Pull", pullWorkoutExercises, "18", "1", "60", "70");
+const w3 = new Workout("w3", "Legs", legWorkoutExercises, "23", "1", "90", "120");
 const w0 = new Workout("w0", "Rest", null, null, null, null, null);
 
 export let ppl = [
-    w0, w1, w2, w3, w1, w2, w3
+    w2, w1, w2, w3, w1, w2, w3
 ];
 
 

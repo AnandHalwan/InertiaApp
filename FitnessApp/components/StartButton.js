@@ -27,7 +27,7 @@ function StartButton({workoutStarted, onPress, showButton}) {
 
     return (
         <Animated.View style={[styles.buttonContainer, {opacity: fadeAnim}]}>
-          <TouchableOpacity onPress={onPress}>
+          <TouchableOpacity onPress={onPress} hitSlop={{top: 50, bottom: 50, left: 50, right: 50}}>
               <Text style={styles.buttonText}>
                   {workoutStarted ? "Done" : "Start"}
               </Text>

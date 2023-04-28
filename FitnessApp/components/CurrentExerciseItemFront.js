@@ -2,7 +2,14 @@ import { View, Image, Text , StyleSheet} from "react-native";
 import IButton from "./IButton";
 
 
-function CurrentExericseItemFront({setNumber, backgroundSrc, imgSrc, name, sets, lowRepRange, highRepRange, display}) {
+function CurrentExericseItemFront({setNumber, backgroundSrc, imgSrc, name, sets, lowRepRange, highRepRange, display, navigation}) {
+
+    function infoButtonPressed() {
+        console.log("Info");
+        navigation.navigate("ExerciseInfoScreen");
+    }
+
+
     return (
         <View style={{display: display}}>
             <View style={{flexDirection: 'row',}}>
@@ -11,7 +18,7 @@ function CurrentExericseItemFront({setNumber, backgroundSrc, imgSrc, name, sets,
 
                 </View>
             </View>
-            <IButton display={'flex'}></IButton>
+            <IButton display={'flex'} onPress={infoButtonPressed} ></IButton>
             <View style={{top: -8, left: 74}}>
                 <Image source={backgroundSrc} style={{height: 230, width: 230}}>
                 </Image>

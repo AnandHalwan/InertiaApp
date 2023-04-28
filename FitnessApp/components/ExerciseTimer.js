@@ -2,16 +2,22 @@ import { useEffect, useState, useRef } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import CircularProgress, {ProgressRef} from "react-native-circular-progress-indicator";
 
-function ExerciseTimer({display, setNumber, name, sets, lowRepRange, highRepRange, timer, start}) {
+function ExerciseTimer({display, setNumber, name, sets, lowRepRange, highRepRange, timer, start, initital}) {
 
     const progressRef = useRef(null);
 
     useEffect(()=> {
-        progressRef.current.pause();
-        timer = 5;
-        progressRef.current.play();
-        console.log("Restarted Timer");
-    }, [start])
+        if (timer < 0) {
+            progressRef.current.pause();
+            console.log("Paused");
+
+        } 
+        if (timer === initital) {
+            progressRef.current.reAnimate();
+        }
+    }, [timer]);
+
+    
 
 
     return (
@@ -19,7 +25,6 @@ function ExerciseTimer({display, setNumber, name, sets, lowRepRange, highRepRang
         <View style={{flexDirection: 'row'}}>
             <View style={{marginTop: 13, marginLeft: 20}}>
             <Text style={{fontSize: 47, color: 'white', fontWeight: '600'}}>Set {setNumber}</Text>
-
             </View>
         </View>
         <View style={{top: 0, left: 83}}>
@@ -46,6 +51,7 @@ function ExerciseTimer({display, setNumber, name, sets, lowRepRange, highRepRang
             inActiveStrokeWidth={0}
             progressFormatter={(value) => {
                 'worklet';
+
                 return (5-value).toFixed(0);
             }}
             />

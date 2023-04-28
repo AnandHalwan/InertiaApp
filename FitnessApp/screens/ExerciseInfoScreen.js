@@ -1,11 +1,81 @@
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity} from "react-native";
+import { useState, useEffect , useRef} from "react";
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Animated} from "react-native";
+import { LineChart } from "react-native-wagmi-charts";
+import { data1M, data1Y, data3M, data6M, dataLFT } from "../data/GraphDummyData";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
-
+import { Canvas, Group} from "@shopify/react-native-skia";
 function ExerciseInfoScreen({navigation}) {
-
+    const [data, setData] = useState(data6M);
+    const [coverPos, setCoverPos] = useState(0);
     function backPressHandler() {
         navigation.goBack();
     }
+ 
+
+    const [oneMPressed, setOneMPressed] = useState(true);
+    const [threeMPressed, setThreeMPressed] = useState(false);
+    const [sixMPressed, setSixMPressed] = useState(false);
+    const [oneYPressed, setOneYPressed] = useState(false);
+    const [lftMPressed, setLftPressed] = useState(false);
+    const [slideValue, setSlideValue] = useState(new Animated.Value(0));
+    const slideStyle = {
+        transform: [{ translateX: slideValue }],
+      };
+    function oneMPressHandler() {
+        setData(data1M);
+        setOneMPressed(true);
+        setThreeMPressed(false);
+        setSixMPressed(false);
+        setOneYPressed(false);
+        setLftPressed(false);
+        slideButton(0);
+    }
+    function threeMPressHandler() {
+        setData(data3M);
+        setOneMPressed(false);
+        setThreeMPressed(true);
+        setSixMPressed(false);
+        setOneYPressed(false);
+        setLftPressed(false);
+        slideButton(57);
+    }
+    function sixMPressHandler() {
+        setData(data6M);
+        setOneMPressed(false);
+        setThreeMPressed(false);
+        setSixMPressed(true);
+        setOneYPressed(false);
+        setLftPressed(false);
+        slideButton(115);
+    }
+    function oneYPressHandler() {
+        setData(data1Y);
+        setOneMPressed(false);
+        setThreeMPressed(false);
+        setSixMPressed(false);
+        setOneYPressed(true);
+        setLftPressed(false);
+        slideButton(172);
+    }
+    function LFTPressHandler() {
+        setData(dataLFT);
+        setOneMPressed(false);
+        setThreeMPressed(false);
+        setSixMPressed(false);
+        setOneYPressed(false);
+        setLftPressed(true);
+        slideButton(228);
+    }
+
+    function slideButton(newPosition) {
+        Animated.timing(slideValue, {
+            toValue: newPosition,
+            duration: 300,
+            useNativeDriver: true,
+          }).start();
+    }
+
+
     return(
         <View style={styles.infoContainer}>
             <View style={styles.dateContainer}>
@@ -35,6 +105,72 @@ function ExerciseInfoScreen({navigation}) {
                                 12/12
                             </Text>
                         </View>
+                    </View>
+                    <View style={styles.chartContainer}>
+                        <View style={styles.graphYAxis}>
+                            <Text style={styles.graphYAxisText}>
+                                170
+                            </Text>
+                            <Text style={styles.graphYAxisText}>
+                                165
+                            </Text>
+                            <Text style={styles.graphYAxisText}>
+                                160
+                            </Text>
+                        </View>
+                        <View style={styles.lineChartContainer}>
+                        <LineChart.Provider data={data} color={'white'}>
+                            <LineChart width={275} height={80}>
+                            <LineChart.Path color="white"  >
+                                <LineChart.Gradient  />
+                            </LineChart.Path>
+                            <LineChart.CursorCrosshair color="white" />
+
+                            </LineChart>
+                        </LineChart.Provider>
+                        </View>
+                    </View>
+                    <View style={styles.graphButtonContainer}>
+
+                            <Animated.View style={[styles.slidingButton, slideStyle]} >
+
+                            </Animated.View>
+                            <View style={styles.graphButtonContainer}>
+                                <Pressable onPress={oneMPressHandler}>
+                                    <Text style={styles.timeStepButtonTextTwo}>
+                                        1M
+                                    </Text >
+                                </Pressable>
+                            </View>
+                            <View style={styles.graphButtonContainer}>
+                                <Pressable onPress={threeMPressHandler}>
+                                    <Text style={styles.timeStepButtonTextOne}>
+                                        3M
+                                    </Text >
+                                </Pressable>
+                            </View>
+                            <View style={styles.graphButtonContainer}>
+                                <Pressable onPress={sixMPressHandler}>
+                                    <Text style={styles.timeStepButtonTextOne}>
+                                        6M
+                                    </Text >
+                                </Pressable>
+                            </View>
+                            <View style={styles.graphButtonContainer}>
+                                <Pressable onPress={oneYPressHandler}>
+                                    <Text style={styles.timeStepButtonTextOne}>
+                                        1Y
+                                    </Text >
+                                </Pressable>
+                            </View>
+                            <View style={styles.graphButtonContainer}>
+                                <Pressable onPress={LFTPressHandler}>
+                                    <Text style={styles.timeStepButtonTextOne}>
+                                        LFT
+                                    </Text >
+                                </Pressable>
+                            </View>
+
                     </View>
                 </View>
                 <View>
@@ -67,7 +203,6 @@ Remember to start with a weight that you can lift comfortably, and gradually inc
             </ScrollView>
         </View>
     );
-
 }
 
 export default ExerciseInfoScreen;
@@ -158,6 +293,66 @@ const styles = StyleSheet.create({
     instructionsText: {
         color: 'white',
         fontSize: 16
+    },
+    graphYAxisText: {
+        color: 'white',
+        marginTop: 25
+    },
+    graphYAxis: {
+        height: 200, 
+        flexDirection: 'column',
+        marginTop: -40,
+        marginLeft: 20,
+
+
+    },
+    chartContainer: {
+        flexDirection: 'row',
+        
+    },
+    lineChartContainer: {
+        top: 0,
+        left: 30
+    },
+    graphButtonContainer: {
+        top: -20,
+        left: 35,
+        flexDirection: 'row',
+
+        
+    },
+    timeStepButtonTextOne: {
+        color: 'black',
+        fontSize: 17,
+        marginRight: 33,
+        fontWeight: '600'
+
+    },
+    timeStepButtonTextTwo: {
+        color: 'black',
+        fontSize: 17,
+        marginRight: 33,
+        fontWeight: '600'
+
+    },
+    slidingButton: {
+        backgroundColor: 'white',
+        height: 35,
+        width: 56,
+        position: 'absolute',
+        zIndex:0,
+        top: -27,
+        left: 18,
+        
+        borderRadius: 11,
+        
+    },
+    timeButtonContainer: {
+        position: 'absolute',
+        top: 10,
+        left: -30,
+        zIndex: 1
     }
+
     
 });

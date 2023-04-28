@@ -9,14 +9,26 @@ function WorkoutScreen({navigation}) {
 
     const [workoutStarted, setWorkoutStarted] = useState(false);
     
+    const [startNumberPressed, setStartNumberPressed] = useState(0);
+
+    const [startButtonValue, setStartButtonValue] = useState("Start");
+
+    const [completedWorkout, setCompletedWorkout] = useState(false);
 
 
-
-
+    const [closeSummary, setCloseSummary] = useState(false);
     function startWorkoutHandler() {
+        setStartNumberPressed(startNumberPressed+1);
+        console.log(startNumberPressed);
         setWorkoutStarted(!workoutStarted);
     }
 
+    function completedWorkoutHandler() {
+        setWorkoutStarted(false);
+        setCompletedWorkout(true);
+        console.log("Completed Workout");
+        setCloseSummary(true);
+    }
 
     function infoButtonPressed() {
         navigation.navigate("ExerciseInfoScreen");
@@ -46,7 +58,7 @@ function WorkoutScreen({navigation}) {
 
                 <WorkoutContainerComponent navigation={navigation} workout={ppl[dateMinusOne.getDay()]} date={dateMinusOne}/>
 
-                <WorkoutContainerComponent navigation={navigation} workout={ppl[date.getDay()]} date={date} startWorkout={workoutStarted}/>
+                <WorkoutContainerComponent navigation={navigation} workout={ppl[date.getDay()]} date={date} startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}/>
 
                 <WorkoutContainerComponent navigation={navigation} workout={ppl[datePlusOne.getDay()]} date={datePlusOne}/>
 
@@ -55,7 +67,7 @@ function WorkoutScreen({navigation}) {
                 <WorkoutContainerComponent navigation={navigation} workout={ppl[datePlusThree.getDay()]} date={datePlusThree}/>
         </Swiper >
 
-        <StartButton showButton={currentIndex == 3} onPress={startWorkoutHandler} workoutStarted={workoutStarted}></StartButton>
+        <StartButton showButton={currentIndex == 3 && !completedWorkout} onPress={startWorkoutHandler} workoutStarted={workoutStarted}></StartButton>
 
 
         </View>
