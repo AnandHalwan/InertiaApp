@@ -8,6 +8,7 @@ import NutritionScreen from './screens/NutritionScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabRoot from './components/TabRoot';
+import Setup from './screens/Setup';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
       <StatusBar style='light'>
       </StatusBar>
       <Stack.Navigator screenOptions={{headerShown:false, animation: 'none'}} >
+        <Stack.Screen name='Setup' component={Setup}></Stack.Screen>
         <Stack.Screen name = "TabRoot" component={TabRoot}></Stack.Screen> 
       </Stack.Navigator>
     </NavigationContainer>
