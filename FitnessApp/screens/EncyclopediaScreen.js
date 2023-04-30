@@ -2,6 +2,7 @@ import { View, StyleSheet, Text, Pressable } from "react-native";
 import { useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { LineChart } from 'react-native-wagmi-charts';
+import DaysSetup from "./SetupComponents/DaysSetup";
 function EncyclopediaScreen({navigation}) {
 
     function navigateProfileScreenHandler() {
@@ -46,13 +47,7 @@ function EncyclopediaScreen({navigation}) {
 
     return (
         <View style={styles.container}>
-          <View style={{top: 100, left: 80}}>
-            <LineChart.Provider data={data}>
-              <LineChart width={150} height={150}>
-                <LineChart.Path />
-              </LineChart>
-            </LineChart.Provider>
-          </View>
+          <DaysSetup></DaysSetup>
       </View>
     );
 }
@@ -63,7 +58,7 @@ export default EncyclopediaScreen;
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: 'white',
+      backgroundColor: 'black',
 
     },
     placeholderContainer: {

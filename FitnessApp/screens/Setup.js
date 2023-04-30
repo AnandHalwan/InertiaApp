@@ -3,6 +3,7 @@ import Swiper from "react-native-swiper";
 import GoalSetup from "./SetupComponents/GoalSetup";
 import ExperienceSetup from "./SetupComponents/ExperienceSetup";
 import { useEffect, useState, useRef } from "react";
+import DaysSetup from "./SetupComponents/DaysSetup";
 
 function Setup() {
     const swiperRef = useRef(null);
@@ -19,6 +20,7 @@ function Setup() {
             activeDot={<View style={{ backgroundColor: '#FBFFFF', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 35 }}/>}>
                 <GoalSetup onPressDown={() =>scrollByIndex(1)}></GoalSetup>
                 <ExperienceSetup onPressDown={() =>scrollByIndex(1)}/>
+                <DaysSetup></DaysSetup>
             </Swiper>
         </View>
     );

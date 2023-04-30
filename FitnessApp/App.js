@@ -17,7 +17,6 @@ export default function App() {
       <StatusBar style='light'>
       </StatusBar>
       <Stack.Navigator screenOptions={{headerShown:false, animation: 'none'}} >
-        <Stack.Screen name='Setup' component={Setup}></Stack.Screen>
         <Stack.Screen name = "TabRoot" component={TabRoot}></Stack.Screen> 
       </Stack.Navigator>
     </NavigationContainer>
@@ -38,3 +37,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+/*
+        <Stack.Screen name='Setup' component={Setup}></Stack.Screen>
+
+*/
