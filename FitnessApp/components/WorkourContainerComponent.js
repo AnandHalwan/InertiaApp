@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { View, StyleSheet, Text, FlatList, Animated, Modal, Dimensions, Image } from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
 import { LinearGradient } from "expo-linear-gradient";
-function WorkoutContainerComponent({workout, date, startWorkout, navigation, endWorkout, closeSummary}) {
+function WorkoutContainerComponent({workout, date, startWorkout, navigation, endWorkout, closeSummary, index, currIndex}) {
     const dateRel = date;
 
     const windowWidth = Dimensions.get('window').width;
@@ -12,11 +12,6 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
 
 
     const [fadeAnim, setFadeAnime] = useState(new Animated.Value(0));
-
-
-
-
-
 
 
     const [listHeight, setListHeight] = useState(525);
@@ -99,7 +94,7 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
              startExercise = true;
              return <CurrentExerciseListItem name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} handleEnterButton={completedSetHandler} setNumber={setCounter} ></CurrentExerciseListItem>
         }
-        return <ExerciseListItem navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} startExercise={startExercise}></ExerciseListItem>
+        return <ExerciseListItem navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} startExercise={startExercise} expandedView={index === currIndex}></ExerciseListItem>
     }
 
     useEffect(() => {
@@ -124,7 +119,17 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
     function setEndVisible() {
         setModalEndVisible(false);
     }
+    const flatListRef = useRef(null);
 
+    useEffect(() => {
+        if (index != currIndex) {
+            scrollToTop();
+        }
+    }, [index === currIndex])
+
+    const scrollToTop = () => {
+        flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+      };
     const workoutLocal = workout;
     return(
             <Animated.View style={styles.workoutScreenContainer}>
@@ -263,7 +268,7 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
                                 
                     <View style={[styles.workoutContainer, {height: listHeight}]}>
 
-                            <FlatList data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
+                            <FlatList ref={flatListRef} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
 
                     </View>
             </Animated.View>

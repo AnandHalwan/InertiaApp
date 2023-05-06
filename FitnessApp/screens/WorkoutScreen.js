@@ -11,9 +11,12 @@ function WorkoutScreen({navigation}) {
     
     const [startNumberPressed, setStartNumberPressed] = useState(0);
 
-    const [startButtonValue, setStartButtonValue] = useState("Start");
 
     const [completedWorkout, setCompletedWorkout] = useState(false);
+
+
+    
+
 
 
     const [closeSummary, setCloseSummary] = useState(false);
@@ -42,7 +45,6 @@ function WorkoutScreen({navigation}) {
     const dateMinusThree = new Date(dateMinusTwo.getTime() - 86400000);
 
     const [currentIndex, setCurrentIndex] = useState(3);
-    
 
     return (
         <View style={styles.container}>
@@ -52,19 +54,19 @@ function WorkoutScreen({navigation}) {
             activeDot={<View style={{ backgroundColor: '#FBFFFF', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 35 }}/>}
                 onIndexChanged={index => setCurrentIndex(index)} scrollEnabled={!workoutStarted} showsPagination={!workoutStarted}>
                     
-                <WorkoutContainerComponent navigation={navigation} workout={ppl[dateMinusThree.getDay()]} date={dateMinusThree}/>
+                <WorkoutContainerComponent index={0} currIndex={currentIndex} navigation={navigation} workout={ppl[dateMinusThree.getDay()]} date={dateMinusThree}/>
 
-                <WorkoutContainerComponent navigation={navigation} workout={ppl[dateMinusTwo.getDay()]} date={dateMinusTwo}/>
+                <WorkoutContainerComponent index={1} currIndex={currentIndex} navigation={navigation} workout={ppl[dateMinusTwo.getDay()]} date={dateMinusTwo}/>
 
-                <WorkoutContainerComponent navigation={navigation} workout={ppl[dateMinusOne.getDay()]} date={dateMinusOne}/>
+                <WorkoutContainerComponent index={2} currentIndex={currentIndex} navigation={navigation} workout={ppl[dateMinusOne.getDay()]} date={dateMinusOne}/>
 
-                <WorkoutContainerComponent navigation={navigation} workout={ppl[date.getDay()]} date={date} startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}/>
+                <WorkoutContainerComponent index={3} currIndex={currentIndex} navigation={navigation} workout={ppl[date.getDay()]} date={date} startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}/>
 
-                <WorkoutContainerComponent navigation={navigation} workout={ppl[datePlusOne.getDay()]} date={datePlusOne}/>
+                <WorkoutContainerComponent index={4} currIndex={currentIndex} navigation={navigation} workout={ppl[datePlusOne.getDay()]} date={datePlusOne}/>
 
-                <WorkoutContainerComponent navigation={navigation} workout={ppl[datePlusTwo.getDay()]} date={datePlusTwo}/>
+                <WorkoutContainerComponent index={5} currIndex={currentIndex} navigation={navigation} workout={ppl[datePlusTwo.getDay()]} date={datePlusTwo}/>
                 
-                <WorkoutContainerComponent navigation={navigation} workout={ppl[datePlusThree.getDay()]} date={datePlusThree}/>
+                <WorkoutContainerComponent index={6} currIndex={currentIndex} navigation={navigation} workout={ppl[datePlusThree.getDay()]} date={datePlusThree}/>
         </Swiper >
 
         <StartButton showButton={currentIndex == 3 && !completedWorkout} onPress={startWorkoutHandler} workoutStarted={workoutStarted}></StartButton>

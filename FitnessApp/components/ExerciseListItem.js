@@ -3,7 +3,7 @@ import { View, Image, StyleSheet, Text, Animated} from "react-native";
 import { Pressable } from "react-native";
 import { back } from "react-native/Libraries/Animated/Easing";
 import IButton from "./IButton";
-function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, startWorkout, startExercisem, navigation}) {
+function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, startWorkout, startExercisem, navigation, expandedView}) {
 
     
     const [height, setHeight] = useState(101);
@@ -86,7 +86,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc,
       }
 
       useEffect(()=> {
-        if (startWorkout) {
+        if (startWorkout || !expandedView) {
             setHeight(101);
             setImgBackGroundHeight(87);
             setImgBackGroundWidth(87);
@@ -106,7 +106,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc,
             setRightListItemMarginLeft(0);
             setDisplayIButton('none');
         }
-      }, [startWorkout]);
+      }, [startWorkout, expandedView]);
 
     function infoButtonPressedHandler() {
         navigation.navigate("ExerciseInfoScreen");

@@ -1,6 +1,36 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { supabase } from "../../supabase/SupaBaseClient";
+import { userId } from "../Auth";
+
+export let goal = "";
 
 function GoalSetup({onPressDown}) {
+
+
+    async function updateRow(table, column, value, id) {
+        const { data, error } = await supabase
+          .from(table)
+          .update({ [column]: value  })
+          .eq("UID", id);
+      
+        if (error) {
+          console.log(error);
+          console.log("Error");
+        } else {
+          console.log(data);
+          console.log("Success");
+        }
+      };
+
+    function handleInput(input) {
+        onPressDown();
+        goal = input;
+        console.log(goal);
+        updateRow('Setup', 'Goal', input, userId);
+    }
+
+
+
     return (
         <View style={styles.container}>
             <Text style={styles.headerText}>
@@ -8,7 +38,7 @@ function GoalSetup({onPressDown}) {
             </Text>
             <View style={{top: 77}}>
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={onPressDown}>
+                    <TouchableOpacity onPress={() => handleInput('Lose')}>
                         <View style={[styles.buttonContainer, {top: -90, left: -8}]}>
                             <Text style={styles.buttonTextColor}>
                                 Lose Weight
@@ -18,7 +48,7 @@ function GoalSetup({onPressDown}) {
                             </Image>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={onPressDown}>
+                    <TouchableOpacity onPress={() => handleInput('Gain')}>
                         <View style={[styles.buttonContainer, {top: -90, left: 9}]}>
                             <Text style={styles.buttonTextColor}>
                                 Gain Mass
@@ -30,7 +60,7 @@ function GoalSetup({onPressDown}) {
                     </TouchableOpacity>
                 </View>
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={onPressDown}>
+                    <TouchableOpacity onPress={() => handleInput('Fit')}>
                         <View style={[styles.buttonContainer, {top: -90, left: -8}]}>
                         <Text style={styles.buttonTextColor}>
                                 Be Fit
@@ -40,7 +70,7 @@ function GoalSetup({onPressDown}) {
                             </Image>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={onPressDown}>
+                    <TouchableOpacity onPress={() => handleInput('Tracking')}>
                         <View style={[styles.buttonContainer, {top: -90, left: 9}]}>
                             <Text style={styles.buttonTextColor}>
                                 Tracking

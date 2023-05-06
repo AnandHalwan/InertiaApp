@@ -10,7 +10,7 @@ function ExerciseInfoScreen({navigation}) {
     function backPressHandler() {
         navigation.goBack();
     }
- 
+    
 
     const [oneMPressed, setOneMPressed] = useState(true);
     const [threeMPressed, setThreeMPressed] = useState(false);

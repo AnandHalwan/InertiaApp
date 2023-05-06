@@ -4,8 +4,15 @@ import GoalSetup from "./SetupComponents/GoalSetup";
 import ExperienceSetup from "./SetupComponents/ExperienceSetup";
 import { useEffect, useState, useRef } from "react";
 import DaysSetup from "./SetupComponents/DaysSetup";
+import YouSetup from "./SetupComponents/YouSetup";
+import ReadySetup from "./SetupComponents/ReadySetup";
+import { supabase } from '../supabase/SupaBaseClient'
+import { userId } from "./Auth";
 
-function Setup() {
+function Setup({navigation}) {
+    const id = userId;
+
+
     const swiperRef = useRef(null);
 
     const scrollByIndex = (index) => {
@@ -14,13 +21,22 @@ function Setup() {
       }
     };
 
+    function readySwipe() {
+        navigation.navigate("TabRoot");
+        console.log("Swiped");
+    }
+
+    const [currIndex, setCurrIndex] = useState(0);
+
     return (
         <View style={{ flex: 1}}>
-            <Swiper ref={swiperRef}  index={0} dot={<View style={{ backgroundColor: '#ABA6AC', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 35, }} />}
-            activeDot={<View style={{ backgroundColor: '#FBFFFF', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 35 }}/>}>
-                <GoalSetup onPressDown={() =>scrollByIndex(1)}></GoalSetup>
+            <Swiper loop={false} ref={swiperRef}  index={0} dot={<View style={{ backgroundColor: '#ABA6AC', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 35, }} />}
+            activeDot={<View style={{ backgroundColor: '#FBFFFF', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 35 }}/>} onIndexChanged={index => setCurrIndex(index)}>
+                <GoalSetup onPressDown={() => scrollByIndex(1)}></GoalSetup>
                 <ExperienceSetup onPressDown={() =>scrollByIndex(1)}/>
                 <DaysSetup></DaysSetup>
+                <YouSetup index={currIndex}></YouSetup>
+                <ReadySetup swipeLeft={readySwipe}></ReadySetup>
             </Swiper>
         </View>
     );

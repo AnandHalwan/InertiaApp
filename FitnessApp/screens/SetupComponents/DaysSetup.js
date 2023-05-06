@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { StyleSheet, View, Text, Pressable} from "react-native";
-import Carousel from "react-native-reanimated-carousel";
 
 function DaysSetup() {
     const [wedPressed, setWedPressed] = useState(false);
@@ -11,7 +10,6 @@ function DaysSetup() {
 
     return(
         <View style={styles.screenContainer}>
-        <Carousel windowSize={6} mode={"circular"} data={[...new Array(6).keys()]} width={300} height={200}  renderItem={({ index }) => (
         <Pressable onPress={pressHandler}>
         <View style={[styles.flowItemContainer, {backgroundColor: wedPressed ? '#60f077' : '#1c1c1c'}]}>
             <Text style={styles.flowItemText}>
@@ -19,9 +17,7 @@ function DaysSetup() {
             </Text>
         </View>
         </Pressable>
-        )}
-        >
-        </Carousel>
+
         </View>
     );
 }

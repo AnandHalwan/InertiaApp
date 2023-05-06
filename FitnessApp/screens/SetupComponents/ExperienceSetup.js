@@ -1,6 +1,27 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-
+import { userId } from "../Auth";
+import { supabase } from "../../supabase/SupaBaseClient";
 function ExperienceSetup({onPressDown}) {
+    function handleInput(input) {
+        onPressDown();
+        updateRow('Setup', 'Experience', input, userId);
+    }
+
+    async function updateRow(table, column, value, id) {
+        const { data, error } = await supabase
+          .from(table)
+          .update({ [column]: value  })
+          .eq("UID", id);
+      
+        if (error) {
+          console.log(error);
+          console.log("Error");
+        } else {
+          console.log(data);
+          console.log("Success");
+        }
+      };
+
 
     return (
         <View style={styles.container}>
@@ -9,7 +30,7 @@ function ExperienceSetup({onPressDown}) {
             </Text>
             <View style={{top: 77}}>
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={onPressDown}>
+                    <TouchableOpacity onPress={() => handleInput('B')}>
                         <View style={[styles.buttonContainer, {top: -90, left: -8}]}>
                             <Text style={styles.buttonTextColor}>
                                 Beginner
@@ -19,7 +40,7 @@ function ExperienceSetup({onPressDown}) {
                             </Image>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={onPressDown}>
+                    <TouchableOpacity onPress={() => handleInput('I')}>
                         <View style={[styles.buttonContainer, {top: -90, left: 9}]}>
                             <Text style={styles.buttonTextColor}>
                                 Intermediate
@@ -31,7 +52,7 @@ function ExperienceSetup({onPressDown}) {
                     </TouchableOpacity>
                 </View>
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity onPress={onPressDown}>
+                    <TouchableOpacity onPress={() => handleInput('A')}>
                         <View style={[styles.buttonContainer, {top: -90, left: -8}]}>
                         <Text style={styles.buttonTextColor}>
                                 Advanced
@@ -41,7 +62,7 @@ function ExperienceSetup({onPressDown}) {
                             </Image>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={onPressDown}>
+                    <TouchableOpacity onPress={() => handleInput('R')}>
                         <View style={[styles.buttonContainer, {top: -90, left: 9}]}>
                             <Text style={styles.buttonTextColor}>
                                 Rich Piana
