@@ -260,6 +260,7 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
                         <View style={{marginBottom: 5}}>
                             <Text style={styles.exerciseCountText} >{workout.exerciseCount} Exercises</Text>
                         </View>
+                        
                         <View>
                             <Text style={styles.setCountText}>{workout.totalSets} Sets</Text>
                         </View>
@@ -268,7 +269,7 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
                                 
                     <View style={[styles.workoutContainer, {height: listHeight}]}>
 
-                            <FlatList ref={flatListRef} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
+                            <FlatList fadingEdgeLength={100} ref={flatListRef} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
 
                     </View>
             </Animated.View>
