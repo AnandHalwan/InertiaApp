@@ -1,10 +1,12 @@
-import { View, StyleSheet, Text, FlatList } from "react-native";
-import ToolbarMenu from "../components/ToolbarMenu";
+import { View, StyleSheet, Text, FlatList, Animated } from "react-native";
 import { ppl } from "../data/DummyData";
 import Swiper from "react-native-swiper";
 import WorkoutContainerComponent from "../components/WorkourContainerComponent";
 import { useState } from "react";
 import StartButton from "../components/StartButton";
+import Pagination from "../components/Pagination";
+import { useRawData } from "@shopify/react-native-skia";
+import { useRef } from "react";
 function WorkoutScreen({navigation}) {
 
     const [workoutStarted, setWorkoutStarted] = useState(false);
@@ -44,32 +46,105 @@ function WorkoutScreen({navigation}) {
     const dateMinusTwo = new Date(dateMinusOne.getTime() - 86400000);
     const dateMinusThree = new Date(dateMinusTwo.getTime() - 86400000);
 
-    const [currentIndex, setCurrentIndex] = useState(3);
+
+
+    const dates = [
+        {
+            idx: 0,
+            date: dateMinusThree
+        },
+        {
+            idx: 1,
+            date: dateMinusTwo
+        },
+        {
+            idx: 2,
+            date: dateMinusOne
+        },
+        {
+            idx: 3,
+            date: date
+        },
+        {
+            idx: 4,
+            date: datePlusOne
+        },
+        {
+            idx: 5,
+            date: datePlusTwo
+        },
+        {
+            idx: 6,
+            date: datePlusThree
+        },
+
+    ]
+
+    function renderWorkout(itemData) {
+        if (itemData.item.idx != 3) {
+            return (
+                <WorkoutContainerComponent index={itemData.item.idx} currIndex={currentIndex} date={itemData.item.date} workout={ppl[itemData.item.date.getDay()]} navigation={navigation}  >
+                </WorkoutContainerComponent>
+            );
+        } else {
+            return(
+            <WorkoutContainerComponent index={itemData.item.idx} currIndex={currentIndex} date={itemData.item.date} workout={ppl[itemData.item.date.getDay()]} navigation={navigation}  startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}>
+            </WorkoutContainerComponent>
+            );
+        }
+    }
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const scrollX = useRef(new Animated.Value(0)).current;
+  
+    const handleOnScroll = event => {
+      Animated.event(
+        [
+          {
+            nativeEvent: {
+              contentOffset: {
+                x: scrollX,
+              },
+            },
+          },
+        ],
+        {
+          useNativeDriver: false,
+        },
+      )(event);
+    };
+
+    
+  
+    const onViewableItemsChanged = ({
+        viewableItems,
+      }) => {
+        setCurrentIndex(viewableItems[0].index)
+        console.log(currentIndex);
+      };
+
+      const viewabilityConfigCallbackPairs = useRef([
+        { onViewableItemsChanged },
+      ]);
 
     return (
         <View style={styles.container}>
 
-        <Swiper index={3} loop={false}
-            dot={<View style={{ backgroundColor: '#ABA6AC', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 35, }} />}
-            activeDot={<View style={{ backgroundColor: '#FBFFFF', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 35 }}/>}
-                onIndexChanged={index => setCurrentIndex(index)} scrollEnabled={!workoutStarted} showsPagination={!workoutStarted}>
-                    
-                <WorkoutContainerComponent index={0} currIndex={currentIndex} navigation={navigation} workout={ppl[dateMinusThree.getDay()]} date={dateMinusThree}/>
+            <FlatList data={dates}
+            renderItem={renderWorkout}
+            horizontal
+            pagingEnabled
+            snapToAlignment="center"
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleOnScroll}
+            viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
+            initialScrollIndex={3}
+            scrollEnabled={!workoutStarted}
+            >
+            
+            </FlatList>
+            <Pagination data={dates} scrollX={scrollX} show={!workoutStarted}></Pagination>
 
-                <WorkoutContainerComponent index={1} currIndex={currentIndex} navigation={navigation} workout={ppl[dateMinusTwo.getDay()]} date={dateMinusTwo}/>
-
-                <WorkoutContainerComponent index={2} currentIndex={currentIndex} navigation={navigation} workout={ppl[dateMinusOne.getDay()]} date={dateMinusOne}/>
-
-                <WorkoutContainerComponent index={3} currIndex={currentIndex} navigation={navigation} workout={ppl[date.getDay()]} date={date} startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}/>
-
-                <WorkoutContainerComponent index={4} currIndex={currentIndex} navigation={navigation} workout={ppl[datePlusOne.getDay()]} date={datePlusOne}/>
-
-                <WorkoutContainerComponent index={5} currIndex={currentIndex} navigation={navigation} workout={ppl[datePlusTwo.getDay()]} date={datePlusTwo}/>
-                
-                <WorkoutContainerComponent index={6} currIndex={currentIndex} navigation={navigation} workout={ppl[datePlusThree.getDay()]} date={datePlusThree}/>
-        </Swiper >
-
-        <StartButton showButton={currentIndex == 3 && !completedWorkout} onPress={startWorkoutHandler} workoutStarted={workoutStarted}></StartButton>
+            <StartButton showButton={currentIndex == 3 && !completedWorkout} onPress={startWorkoutHandler} workoutStarted={workoutStarted}></StartButton>
 
 
         </View>
