@@ -47,7 +47,7 @@ function EncyclopediaScreen({navigation}) {
 
     return (
         <View style={styles.container}>
-          <DaysSetup></DaysSetup>
+          <Text style={styles.buttonText}>Encyclopedia</Text>
       </View>
     );
 }
@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: 'black',
-
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     placeholderContainer: {
       flex: 8,
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
       color: 'white',
-      fontSize: 22,
+      fontSize: 30,
       textAlign: 'center'
     }
 
