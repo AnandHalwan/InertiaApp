@@ -24,15 +24,90 @@ export default function Auth({navigation}) {
       setShowLoginButtons('none');
       setShowEmailModal(false)
       userId = ((await supabase.auth.getUser()).data.user.id);
-      console.log(userId);
 
-      navigation.navigate("Setup");
+      getColumnValueByKey("profiles", "id", userId, "Setup")
+      .then((value) => {
+        const setup = value.Setup;
 
-      insertSetup();
+        if (setup) {
+          console.log("User is already setup");
+          navigation.navigate("TabRoot");
+        } else {
+          console.log("User is not setup");
+          const newData = {
+            WID: 0,
+            UID: userId,
+            // Add additional columns and values as needed
+          };
+
+          for (let i = 0; i < 7; i++) {
+            const newData = {
+              WID: i,
+              UID: userId,
+              // Add additional columns and values as needed
+            };
+            initializeUserWorkout('Workout', newData)
+            .then((insertedRow) => {
+              console.log('Inserted row:', insertedRow);
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+          }
+          navigation.navigate("Setup");
+        }
+
+        
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+      
+      //navigation.navigate("Setup");
+
+      //insertSetup();
     }
 
     if (error) Alert.alert(error.message)
     setLoading(false)
+  }
+
+
+  async function getColumnValueByKey(tableName, keyColumnName, keyValue, columnToRetrieve) {
+    try {
+      const { data, error } = await supabase
+        .from(tableName)
+        .select(columnToRetrieve)
+        .eq(keyColumnName, keyValue)
+        .single();
+  
+      if (error) {
+        throw error;
+      }
+  
+      // Return the column value
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error('Error retrieving column value:', error.message);
+      // Handle the error accordingly
+    }
+  }
+
+  async function initializeUserWorkout(tableName, data) {
+    try {
+      const { data: insertedData, error } = await supabase
+        .from(tableName)
+        .insert([data]);
+  
+      if (error) {
+        throw error;
+      }
+  
+    } catch (error) {
+      console.error('Error inserting into table:', error.message);
+      // Handle the error accordingly
+    }
   }
 
   async function signUpWithEmail() {

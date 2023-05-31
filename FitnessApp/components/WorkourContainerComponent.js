@@ -240,11 +240,11 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
                             </Modal>
                 <View style={styles.headerContainer}>
                     <View style={styles.leftHeaderContainer}>
-                        <View style={{marginBottom: -10, height: 25}}>
+                        <View style={{marginBottom: -10, height: 25, left: 12}}>
                             <Text style={styles.dateText}>{daysOfWeek[dateRel.getDay()]}, {months[date.getMonth()]} {date.getDate()}</Text>
                         </View>
                         <View style={{display: displayHeader}}>
-                            <View style={{marginBottom: -3, marginLeft: -3}}>
+                            <View style={{marginBottom: -3, marginLeft: 10}}>
                                 <Text style={styles.workoutNameText}>{workoutLocal.name}</Text>
                             </View>
                             <View>
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
     },
     workoutNameText: {
         color: 'white',
-        fontSize: 57,
+        fontSize: 65,
         fontWeight: 'bold',
         marginTop: 3,
     },

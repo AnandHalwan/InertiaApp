@@ -24,17 +24,36 @@ function Setup({navigation}) {
     function readySwipe() {
         navigation.navigate("TabRoot");
         console.log("Swiped");
+        updateRow("profiles", "Setup", true, userId);
+        
     }
+
+    async function updateRow(table, column, value, id) {
+        const { data, error } = await supabase
+          .from(table)
+          .update({ [column]: value  })
+          .eq("id", id);
+      
+        if (error) {
+          console.log(error);
+          console.log("Error");
+        } else {
+          console.log(data);
+          console.log("Success");
+        }
+      };
+
+    
 
     const [currIndex, setCurrIndex] = useState(0);
 
     return (
         <View style={{ flex: 1}}>
-            <Swiper loop={false} ref={swiperRef}  index={0} dot={<View style={{ backgroundColor: '#ABA6AC', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 35, }} />}
-            activeDot={<View style={{ backgroundColor: '#FBFFFF', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 35 }}/>} onIndexChanged={index => setCurrIndex(index)}>
+            <Swiper loop={false} ref={swiperRef}  index={0} dot={<View style={{ backgroundColor: '#ABA6AC', width: 8, height: 8, borderRadius: 4, marginLeft: 2, marginRight: 2, marginTop: 3, marginBottom: 35, top: -5 }} />}
+            activeDot={<View style={{ backgroundColor: '#FBFFFF', width: 8, height: 8, borderRadius: 4, marginLeft: 2, marginRight: 2, marginTop: 3, marginBottom: 35, top: -5 }}/>} onIndexChanged={index => setCurrIndex(index)}>
                 <GoalSetup onPressDown={() => scrollByIndex(1)}></GoalSetup>
                 <ExperienceSetup onPressDown={() =>scrollByIndex(1)}/>
-                <DaysSetup></DaysSetup>
+                <DaysSetup index={currIndex}></DaysSetup>
                 <YouSetup index={currIndex}></YouSetup>
                 <ReadySetup swipeLeft={readySwipe}></ReadySetup>
             </Swiper>
