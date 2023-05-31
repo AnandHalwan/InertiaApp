@@ -1,42 +1,160 @@
-import { useState } from "react";
-import { StyleSheet, View, Text, Pressable} from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet, View, Text, Dimensions, Image, TouchableOpacity} from "react-native";
+import { userId } from "../Auth";
+import { supabase } from "../../supabase/SupaBaseClient";
+function DaysSetup({index}) {
 
-function DaysSetup() {
+
+    const [monPressed, setMonPressed] = useState(false);
+    const [tuePressed, setTuePressed] = useState(false);
     const [wedPressed, setWedPressed] = useState(false);
-    function pressHandler() {
+    const [thuPressed, setThuPressed] = useState(false);
+    const [friPressed, setFriPressed] = useState(false);
+    const [satPressed, setSatPressed] = useState(false);
+    const [sunPressed, setSunPressed] = useState(false);
+
+
+    function monPressedHandler() {
+        setMonPressed(!monPressed);
+    }
+    function tuePressedHandler() {
+        setTuePressed(!tuePressed);
+    }
+    function wedPressedHandler() {
         setWedPressed(!wedPressed);
+    }
+    function thuPressedHandler() {
+        setThuPressed(!thuPressed);
+    }
+    function friPressedHandler() {
+        setFriPressed(!friPressed);
+    }
+    function satPressedHandler() {
+        setSatPressed(!satPressed);
+    }
+    function sunPressedHandler() {
+        setSunPressed(!sunPressed);
     }
 
 
+    function booleanToInt(bool) {
+        return bool ? "1" : "0"
+    }
+
+
+    const [daysSplit, setDaysSplit] = useState("0000000");
+
+    useEffect(() => {
+        let days = "";
+        days += booleanToInt(monPressed);
+        days += booleanToInt(tuePressed);
+        days += booleanToInt(wedPressed);
+        days += booleanToInt(thuPressed);
+        days += booleanToInt(friPressed);
+        days += booleanToInt(satPressed);
+        days += booleanToInt(sunPressed);
+        console.log(days);
+        setDaysSplit(days)
+    })
+    
+
+
+    useEffect(() => {
+        if (index === 3 ){
+            console.log("Update Days")
+            updateRow("Setup", "Days", daysSplit, userId);
+        }
+      }, [index]);
+
+
+
+      async function updateRow(table, column, value, id) {
+        const { data, error } = await supabase
+          .from(table)
+          .update({ [column]: value  })
+          .eq("UID", id);
+      
+        if (error) {
+          console.log(error);
+          console.log("Error");
+        } else {
+          console.log(data);
+          console.log("Success");
+        }
+      };
+    const width = Dimensions.get('window').width;
+    const height = Dimensions.get('window').height;
+
     return(
         <View style={styles.screenContainer}>
-        <Pressable onPress={pressHandler}>
-        <View style={[styles.flowItemContainer, {backgroundColor: wedPressed ? '#60f077' : '#1c1c1c'}]}>
-            <Text style={styles.flowItemText}>
-                Wed
-            </Text>
-        </View>
-        </Pressable>
+            <Image source={require("../../assets/layouts/days.png")} style={{height:height, width: width, position: 'absolute', opacity: 0.5, zIndex: 1}}>
 
+            </Image>
+            <View>
+                <Text style={{color: 'white', fontSize: 47, fontWeight: 'bold', left: 2, position: 'absolute', top: -176, left: -140, }}>
+                    Which Days?
+                </Text>
+                <View style={{flexDirection: 'row', top: -44, }}>
+                    <TouchableOpacity onPress={monPressedHandler}>
+                        <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: monPressed ? '#75e18a' : '#1c1c1e', left: -176, top: -22, alignItems: 'center', justifyContent: 'center',  position: 'absolute'}}>
+                            <Text style={{color: 'white', fontSize: 16}}>
+                                Mon
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={tuePressedHandler}>
+                        <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: tuePressed ? '#75e18a' : '#1c1c1e', left: -103, top: -22, alignItems: 'center', justifyContent: 'center',  position: 'absolute'}}>
+                            <Text style={{color: 'white', fontSize: 16}}>
+                                Tue
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={wedPressedHandler}>
+                        <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: wedPressed ? '#75e18a' : '#1c1c1e', left: -30, top: -22, alignItems: 'center', justifyContent: 'center',  position: 'absolute'}}>
+                            <Text style={{color: 'white', fontSize: 16}}>
+                                Wed
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={thuPressedHandler}>
+                        <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: thuPressed ? '#75e18a' : '#1c1c1e', left: 43, top: -22, alignItems: 'center', justifyContent: 'center',  position: 'absolute'}}>
+                            <Text style={{color: 'white', fontSize: 16}}>
+                                Thu
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={friPressedHandler}>
+                        <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: friPressed ? '#75e18a' : '#1c1c1e', left: 115.2, top: -22, alignItems: 'center', justifyContent: 'center' , position: 'absolute'}}>
+                            <Text style={{color: 'white', fontSize: 16}}>
+                                Fri
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <TouchableOpacity onPress={satPressedHandler}>
+                        <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: satPressed ? '#75e18a' : '#1c1c1e', left: -67, top: -12, alignItems: 'center', justifyContent: 'center',  position: 'absolute'}}>
+                            <Text style={{color: 'white', fontSize: 16}}>
+                                Sat
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={sunPressedHandler}>
+                        <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: sunPressed ? '#75e18a' : '#1c1c1e', left:6.5, top: -12, alignItems: 'center', justifyContent: 'center',  position: 'absolute'}}>
+                            <Text style={{color: 'white', fontSize: 16}}>
+                                Sun
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
     );
 }
 
 export default DaysSetup;
 const styles = StyleSheet.create({
-    flowItemContainer: {
-        backgroundColor: '#1c1c1c',
-        height: 160,
-        width: 160,
-        borderRadius: 45,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    flowItemText: {
-        color: 'white',
-        fontSize: 39,
-        fontWeight: '500'
-    },
+
     screenContainer: {
         backgroundColor: 'black',
         flex: 1,

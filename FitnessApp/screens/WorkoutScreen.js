@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, FlatList, Animated } from "react-native";
+import { View, StyleSheet, Text, FlatList, Animated, Dimensions, Image  } from "react-native";
 import { ppl } from "../data/DummyData";
 import Swiper from "react-native-swiper";
 import WorkoutContainerComponent from "../components/WorkourContainerComponent";
@@ -7,6 +7,7 @@ import StartButton from "../components/StartButton";
 import Pagination from "../components/Pagination";
 import { useRawData } from "@shopify/react-native-skia";
 import { useRef } from "react";
+
 function WorkoutScreen({navigation}) {
 
     const [workoutStarted, setWorkoutStarted] = useState(false);
@@ -126,9 +127,15 @@ function WorkoutScreen({navigation}) {
         { onViewableItemsChanged },
       ]);
 
+
+      const width = Dimensions.get('window').width;
+      const height = Dimensions.get('window').height;
+
     return (
         <View style={styles.container}>
+            <Image source={require("../assets/layouts/home.png")} style={{height:height, width: width, position: 'absolute', opacity: 0.5, zIndex: 1}}>
 
+            </Image>
             <FlatList data={dates}
             renderItem={renderWorkout}
             horizontal
@@ -137,7 +144,7 @@ function WorkoutScreen({navigation}) {
             showsHorizontalScrollIndicator={false}
             onScroll={handleOnScroll}
             viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-            initialScrollIndex={3}
+            initialScrollIndex={5}
             scrollEnabled={!workoutStarted}
             >
             
