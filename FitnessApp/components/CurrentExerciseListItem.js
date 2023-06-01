@@ -13,6 +13,9 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
     const [initialFlip, setInitialFlip] = useState(false);
     const animate = useRef(new Animated.Value(0));    
     const [isFlipped, setIsFlipped] = useState(false);
+    let relativeHighWeight = 0;
+    let highWeight = 0;
+    let highReps = 0;
 
     function handleTextInputFocusWeight() {
             setWeightText("");
@@ -86,21 +89,12 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
             const intervalId = setInterval(() => {
             if (timer <= 0) {
                 setShowTimer(false);
-                /*
-                setDefaultBack('none');
-                setEnterDisplay('flex');
-                */
-                doAFlip();
-                /*
-                setTimeout(() => {setTimerDisplay('none')
-                                    setDefaultFront('flex')}, 1000);
 
-                clearInterval(intervalId);
-                */
+                doAFlip();
+
             }
             if (showTimer) {
                 setTimer(timer - 1);
-                console.log(timer);
             }
 
             }, 1000); // repeat every second
@@ -116,22 +110,27 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
             if (!isNaN(weightValue) && !isNaN(repsValue)) {
                 setWeightText("Weight");
                 setRepsText("Reps");
-
+                console.log(weightValue);
+                console.log(repsValue);
                 setShowTimer(true);
+
+                const relativeWeight = parseInt(weightValue / (1.0278 - 0.0278 * repsValue));
+                if (relativeHighWeight < relativeWeight) {
+                    relativeHighWeight = relativeWeight;
+                    highWeight = weightValue;
+                    highReps = repsValue;
+                }
                 if (initialFlip) {
                     setTimerDisplay('flex');
                     setDefaultFront('none');
                 }
+                if (lastSet) {
+                    console.log("Call supabase to enter" + relativeHighWeight + "," + highWeight + "," + highReps);
+                }
                 doAFlip();
                 setTimeout(() => {setTimer(5)}, 1000);
 
-                //setDefaultBack('flex');
-                //setTimeout(() => {setDefaultBack('flex')
-                 //                   setEnterDisplay('none')}, 1000);
-                //setEnterDisplay('none');
-
-
-                handleEnterButton(weightValue, repsValue, lastSet);
+                handleEnterButton(weightValue, repsValue, lastSet, relativeHighWeight, highWeight, highReps);
 
             } else {
                 console.log("Please enter valid weight and reps values");
