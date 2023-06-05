@@ -4,8 +4,11 @@ import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
 import { LinearGradient } from "expo-linear-gradient";
+import { userId } from "../screens/Auth";
+import { supabase } from "../supabase/SupaBaseClient";
 function WorkoutContainerComponent({workout, date, startWorkout, navigation, endWorkout, closeSummary, index, currIndex}) {
     const dateRel = date;
+    const workoutLocal = workout;
 
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
@@ -69,24 +72,59 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
     const [currentExercise, setCurrentExercise] = useState(0);
     const [setCounter, setSetCounter] = useState(1);
 
-    const completedSetHandler = (weight, reps, lastSet) => {
+    const completedSetHandler = (weight, reps, lastSet, relativeHighWeight, highWeight, highReps) => {
         setSetCounter(setCounter+1);
         console.log("Child passed to parent");
         console.log(weight, reps);
         if (lastSet) {
+                console.log("Relative 1rp" + relativeHighWeight);
+                console.log("High Weight" + highWeight);
+                console.log("High reps" + highReps);
+                console.log("Last set!");
+                const currentDate = new Date();
+
+                const year = currentDate.getFullYear();
+                const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                const day = String(currentDate.getDate()).padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}`;
+                const data = {
+                    UID: userId,
+                    ExerciseId: workoutLocal.exercises[currentExercise].id,
+                    Date: formattedDate,
+                    RelWeight: relativeHighWeight,
+                    Weight: highWeight,
+                    Reps: highReps
+                }
+                console.log(data);
+                logExerciseWeightReps(data);
                 if (currentExercise === (workout.exerciseCount - 1)){
                     setModalEndVisible(true);
                     console.log("Workout ended");
                 } else {
-                    console.log("Last set!");
                     console.log(currentExercise);
                     console.log(workout.exerciseCount)
                     setCurrentExercise(currentExercise+1);
                     setSetCounter(1);
                 }
 
+
         }
     }
+    async function logExerciseWeightReps(data) {
+        try {
+          const { data: insertedData, error } = await supabase
+            .from("Log")
+            .insert([data]);
+      
+          if (error) {
+            throw error;
+          }
+      
+        } catch (error) {
+          console.error('Error inserting into table:', error.message);
+          // Handle the error accordingly
+        }
+      }
 
     function renderExerciseListItem(itemData) {
         let startExercise = false;
@@ -130,7 +168,6 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
     const scrollToTop = () => {
         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
       };
-    const workoutLocal = workout;
     return(
             <Animated.View style={styles.workoutScreenContainer}>
                       <Modal

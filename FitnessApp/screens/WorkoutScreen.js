@@ -133,9 +133,7 @@ function WorkoutScreen({navigation}) {
 
     return (
         <View style={styles.container}>
-            <Image source={require("../assets/layouts/home.png")} style={{height:height, width: width, position: 'absolute', opacity: 0.5, zIndex: 1}}>
 
-            </Image>
             <FlatList data={dates}
             renderItem={renderWorkout}
             horizontal
@@ -146,7 +144,7 @@ function WorkoutScreen({navigation}) {
             viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
             initialScrollIndex={5}
             scrollEnabled={!workoutStarted}
-            >
+        >
             
             </FlatList>
             <Pagination data={dates} scrollX={scrollX} show={!workoutStarted}></Pagination>
