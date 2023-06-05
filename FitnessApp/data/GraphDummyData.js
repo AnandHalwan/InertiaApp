@@ -93,3 +93,5 @@ export const data1M = [
       value: 33645.25,
     },
   ];
+
+ export const testData = [{"timestamp": 1685491200000, "value": 0}, {"timestamp": 1683504000000, "value": 0}, {"timestamp": 1683763200000, "value": 0}, {"timestamp": 1684108800000, "value": 0}, {"timestamp": 1684368000000, "value": 0}, {"timestamp": 1684713600000, "value": 0}, {"timestamp": 1684972800000, "value": 0}, {"timestamp": 1685318400000, "value": 0}, {"timestamp": 1685577600000, "value": 0}];

@@ -1,16 +1,17 @@
 import { useState, useEffect , useRef} from "react";
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Animated} from "react-native";
 import { LineChart } from "react-native-wagmi-charts";
-import { data1M, data1Y, data3M, data6M, dataLFT } from "../data/GraphDummyData";
+import { data1M, data1Y, data3M, data6M, dataLFT, testData } from "../data/GraphDummyData";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import { Canvas, Group} from "@shopify/react-native-skia";
-function ExerciseInfoScreen({navigation}) {
-    const [data, setData] = useState(data6M);
-    const [coverPos, setCoverPos] = useState(0);
+import { supabase } from "../supabase/SupaBaseClient";
+import { userId } from "./Auth";
+function ExerciseInfoScreen({navigation, route}) {
     function backPressHandler() {
         navigation.goBack();
     }
-    
+
+    const {eid, oneM, threeM, sixM, oneY, lft} = route.params;
 
     const [oneMPressed, setOneMPressed] = useState(true);
     const [threeMPressed, setThreeMPressed] = useState(false);
@@ -18,11 +19,24 @@ function ExerciseInfoScreen({navigation}) {
     const [oneYPressed, setOneYPressed] = useState(false);
     const [lftMPressed, setLftPressed] = useState(false);
     const [slideValue, setSlideValue] = useState(new Animated.Value(0));
+    const [data, setData] = useState(testData);
+
+
     const slideStyle = {
         transform: [{ translateX: slideValue }],
       };
+      const [initial, setInitial] = useState(false);
+      useEffect(() =>{
+        if (!initial) {
+            setTimeout(() => {
+                setData(oneM._z)
+                setInitial(true)
+                console.log("Delayed code executed!");
+              }, 200);
+        }
+      })
     function oneMPressHandler() {
-        setData(data1M);
+        setData(oneM._z);
         setOneMPressed(true);
         setThreeMPressed(false);
         setSixMPressed(false);
@@ -31,7 +45,7 @@ function ExerciseInfoScreen({navigation}) {
         slideButton(0);
     }
     function threeMPressHandler() {
-        setData(data3M);
+        setData(threeM._z);
         setOneMPressed(false);
         setThreeMPressed(true);
         setSixMPressed(false);
@@ -40,7 +54,7 @@ function ExerciseInfoScreen({navigation}) {
         slideButton(57);
     }
     function sixMPressHandler() {
-        setData(data6M);
+        setData(sixM._z);
         setOneMPressed(false);
         setThreeMPressed(false);
         setSixMPressed(true);
@@ -49,7 +63,7 @@ function ExerciseInfoScreen({navigation}) {
         slideButton(115);
     }
     function oneYPressHandler() {
-        setData(data1Y);
+        setData(oneY._z);
         setOneMPressed(false);
         setThreeMPressed(false);
         setSixMPressed(false);
@@ -58,7 +72,7 @@ function ExerciseInfoScreen({navigation}) {
         slideButton(172);
     }
     function LFTPressHandler() {
-        setData(dataLFT);
+        setData(lft._z);
         setOneMPressed(false);
         setThreeMPressed(false);
         setSixMPressed(false);
