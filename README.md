@@ -9,6 +9,7 @@ The home page is where you will see the workout split that was created for you. 
 ![img (1)](https://github.com/AnandHalwan/InertiaApp/assets/105897628/5fb22318-8aa9-4a16-af96-699559b982d7)
 
 
+## Workout Walkthrough
 
 
 https://github.com/AnandHalwan/InertiaApp/assets/105897628/66a59186-423e-41de-a081-0d927f14a937
