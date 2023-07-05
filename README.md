@@ -19,6 +19,7 @@ https://github.com/AnandHalwan/InertiaApp/assets/105897628/66a59186-423e-41de-a0
 
 Each exercise has an info screen that can be reached by pressing the little blue "i" icon showed in the above video. The exercise info screen for a particular exercise like bench press displays a graph of your progress over time for that exercise can be filtered by different date ranges.
 
-![unnamed (1)](https://github.com/AnandHalwan/InertiaApp/assets/105897628/be634de6-f1a7-46e5-9023-62dce0788161)
+![unnamed (2)](https://github.com/AnandHalwan/InertiaApp/assets/105897628/c81732f0-a992-4552-b080-abbb7cd68815)
+
 
 
