@@ -17,7 +17,7 @@ https://github.com/AnandHalwan/InertiaApp/assets/105897628/66a59186-423e-41de-a0
 
 ## Exercise Information
 
-Each exercise has an info screen that can be reached by pressing the little blue "i" icon showed in the above video. The exercise info screen for a particular exercise like bench press displays a graph of your progress over time for that exercise can be filtered by different date ranges.
+Each exercise has an info screen that can be reached by pressing the little blue "i" icon showed in the above video. The exercise info screen for a particular exercise like bench press displays a graph of your progress over time for that exercise can be filtered by different date ranges. When navigating to this page for a particular exercise, the client app queries Supabase for all of the exercise logs tied to that user and exercise so it can create the graph displayed below. Each exercise info screen also has a link to a video and a well written set of instructions for how to perform that particular exericse correctly.
 
 ![unnamed (2)](https://github.com/AnandHalwan/InertiaApp/assets/105897628/c81732f0-a992-4552-b080-abbb7cd68815)
 
