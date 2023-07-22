@@ -13,7 +13,9 @@ The home page is where you will see the workout split that was created for you. 
 
 When doing your workout, Inertia allows you to input the weight and reps that you performed for a particular set and start a rest timer for you. The inputted weight and reps are stored in Supabase along with the current date which is useful data for calculating your progress over time and displaying that progress on a graph which will be shown after this section.
 
-![Demo](demo.MOV)
+
+https://github.com/AnandHalwan/InertiaApp/assets/105897628/95e43427-1e58-4202-bcce-79b6ee19ca5e
+
 
 ## Exercise Information
 
