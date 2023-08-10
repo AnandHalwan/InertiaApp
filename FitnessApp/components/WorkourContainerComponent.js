@@ -3,18 +3,12 @@ import { View, StyleSheet, Text, FlatList, Animated, Modal, Dimensions, Image } 
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
-<<<<<<< HEAD
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;
 const widthRatio = windowWidth/390;
 
-=======
-import { LinearGradient } from "expo-linear-gradient";
-import { userId } from "../screens/Auth";
-import { supabase } from "../supabase/SupaBaseClient";
->>>>>>> 77dc22cf18aecc18c69d81f4804cabcf283727b7
 function WorkoutContainerComponent({workout, date, startWorkout, navigation, endWorkout, closeSummary, index, currIndex}) {
     const dateRel = date;
     const workoutLocal = workout;
@@ -122,11 +116,7 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
                     setCurrentExercise(currentExercise+1);
                     setSetCounter(1);
                 }
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 77dc22cf18aecc18c69d81f4804cabcf283727b7
         }
     }
     async function logExerciseWeightReps(data) {
@@ -151,11 +141,8 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
              startExercise = true;
              return <CurrentExerciseListItem name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} handleEnterButton={completedSetHandler} setNumber={setCounter} backgroundCircleColor={colors[itemData.index % 5]}></CurrentExerciseListItem>
         }
-<<<<<<< HEAD
         return <ExerciseListItem navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} startExercise={startExercise} expandedView={index === currIndex} backgroundCircleColor={colors[itemData.index % 5]} heightRatio={heightRatio} widthRatio={widthRatio}></ExerciseListItem>
-=======
-        return <ExerciseListItem navigation={navigation} id={15} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} startExercise={startExercise} expandedView={index === currIndex}></ExerciseListItem>
->>>>>>> 77dc22cf18aecc18c69d81f4804cabcf283727b7
+
     }
 
     useEffect(() => {
