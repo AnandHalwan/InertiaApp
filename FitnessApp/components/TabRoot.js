@@ -6,6 +6,7 @@ import StatisticsScreen from "../screens/StatisticsScreen";
 import WorkoutScreen from "../screens/WorkoutScreen";
 import { Image } from "react-native";
 import WorkoutRoot from "./WorkoutRoot";
+import EncyclopediaRoot from "./EncyclopediaRoot";
 const Tab = createBottomTabNavigator();
 
 function TabRoot() {
@@ -44,7 +45,7 @@ function TabRoot() {
                 ></Tab.Screen>
             <Tab.Screen 
                 name="Encyclopedia" 
-                component={EncyclopediaScreen}
+                component={EncyclopediaRoot}
                 options={{
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused }) => (

@@ -10,6 +10,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabRoot from './components/TabRoot';
 import Setup from './screens/Setup';
 import Auth from './screens/Auth';
+import Information from './components/Information';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -18,7 +19,7 @@ export default function App() {
       <StatusBar style='light'>
       </StatusBar>
       <Stack.Navigator screenOptions={{headerShown:false, animation: 'slide_from_left', gestureEnabled: false}} >
-        <Stack.Screen name = "TabRoot" component={TabRoot}></Stack.Screen> 
+        <Stack.Screen name = "TabRoot" component={TabRoot}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

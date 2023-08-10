@@ -3,6 +3,7 @@
     "name": "FitnessApp",
     "slug": "FitnessApp",
     "version": "1.0.0",
+    "platforms": ["ios", "android"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -15,7 +16,7 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/fonts/*"
     ],
     "ios": {
       "supportsTablet": true
@@ -28,6 +29,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "rnpm": {
+      "assets": [
+        "./FitnessApp/assets/fonts"
+      ]
     }
   }
 }
