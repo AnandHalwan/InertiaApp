@@ -2,12 +2,12 @@ import Exercise from "../models/Exercise";
 import Workout from "../models/Workout";
 
 
-const e1 =  new Exercise('e1', 'Barbell Bench Press', 4, 6, 8, require('../assets/Orange.png'), require('../assets/BenchPress.png'))
-const e2 =  new Exercise('e2', 'Incline Dumbbell Press', 3, 8, 12, require('../assets/Green.png'), null)
-const e3 =  new Exercise('e3', 'Cable Flys', 4, 10, 12, require('../assets/Blue.png'), null)
-const e4 =  new Exercise('e4', 'Front Raise', 2, 10, 12, require('../assets/Pink.png'), null)
-const e5 =  new Exercise('e5', 'Lateral Raise', 3, 10, 15, require('../assets/Orange.png'), null)
-const e6 =  new Exercise('e6', 'Tricep Cable Pushdown', 4, 10, 12, require('../assets/Green.png'), null)
+const e1 =  new Exercise('e1', 'Barbell Bench Press', 4, 6, 8, require('../assets/exercises/bench.png'))
+const e2 =  new Exercise('e2', 'Incline Dumbbell Press', 3, 8, 12, require('../assets/exercises/incline.png'))
+const e3 =  new Exercise('e3', 'Cable Flys', 4, 10, 12, require('../assets/exercises/flies.png'))
+const e4 =  new Exercise('e4', 'Tricep Cable Pushdown', 4, 10, 12, require('../assets/exercises/tricep.png'))
+const e5 =  new Exercise('e5', 'Front Raise', 2, 10, 12, null)
+const e6 =  new Exercise('e6', 'Lateral Raise', 3, 10, 15, null)
 
 const pushWorkoutExercises = new Array();
 pushWorkoutExercises.push(e1);
@@ -17,15 +17,11 @@ pushWorkoutExercises.push(e4);
 pushWorkoutExercises.push(e5);
 pushWorkoutExercises.push(e6);
 
-
-
-
-
-const e7 =  new Exercise('e7', 'Weighted Pullups', 4, 6, 8, require('../assets/Orange.png'),null)
-const e8 =  new Exercise('e8', 'T-bar Row', 4, 8, 12, require('../assets/Green.png'), null)
-const e9 =  new Exercise('e9', 'Straight Arm Pulldown', 3, 8, 12, require('../assets/Blue.png'), null)
-const e10 =  new Exercise('e10', 'Facepulls', 3, 10, 12, require('../assets/Pink.png'), null)
-const e11 =  new Exercise('e11', 'Dumbbell Bicep Curl', 4, 8, 12, require('../assets/Orange.png'), null)
+const e7 =  new Exercise('e7', 'Weighted Pullups', 4, 6, 8,null)
+const e8 =  new Exercise('e8', 'T-bar Row', 4, 8, 12, null)
+const e9 =  new Exercise('e9', 'Straight Arm Pulldown', 3, 8, 12, null)
+const e10 =  new Exercise('e10', 'Facepulls', 3, 10, 12, null)
+const e11 =  new Exercise('e11', 'Dumbbell Bicep Curl', 4, 8, 12, null)
 
 
 const pullWorkoutExercises = new Array();
@@ -36,14 +32,14 @@ pullWorkoutExercises.push(e10);
 pullWorkoutExercises.push(e11);
 
 
-const e12 =  new Exercise('e12', 'Leg Press', 4, 8, 12, require('../assets/Green.png'), null)
-const e13 =  new Exercise('e13', 'Romanian Deadlift', 3, 8, 12, require('../assets/Orange.png'), require('../assets/BenchPress.png'))
-const e14 =  new Exercise('e14', 'Leg Extension', 3, 10, 14, require('../assets/Green.png'), null)
-const e15 =  new Exercise('e15', 'Hamstring Curl', 3, 10, 12, require('../assets/Blue.png'), null)
-const e16 =  new Exercise('e16', 'Hip Abducctors', 2, 8, 12, require('../assets/Pink.png'), null)
-const e17 =  new Exercise('e17', 'Hip Adductors', 2, 8, 12, require('../assets/Orange.png'), null)
-const e18 =  new Exercise('e18', 'Standing Calf Raises', 3, 10, 15, require('../assets/Green.png'), null)
-const e19 =  new Exercise('e1', 'Seated Calf Raise', 3, 10, 15, require('../assets/Orange.png'), require('../assets/BenchPress.png'))
+const e12 =  new Exercise('e12', 'Leg Press', 4, 8, 12, null)
+const e13 =  new Exercise('e13', 'Romanian Deadlift', 3, 8, 12, null)
+const e14 =  new Exercise('e14', 'Leg Extension', 3, 10, 14, null)
+const e15 =  new Exercise('e15', 'Hamstring Curl', 3, 10, 12, null)
+const e16 =  new Exercise('e16', 'Hip Abducctors', 2, 8, 12, null)
+const e17 =  new Exercise('e17', 'Hip Adductors', 2, 8, 12, null)
+const e18 =  new Exercise('e18', 'Standing Calf Raises', 3, 10, 15, null)
+const e19 =  new Exercise('e1', 'Seated Calf Raise', 3, 10, 15, null)
 
 
 const legWorkoutExercises = new Array();

@@ -18,8 +18,7 @@ export default function App() {
       <StatusBar style='light'>
       </StatusBar>
       <Stack.Navigator screenOptions={{headerShown:false, animation: 'slide_from_left', gestureEnabled: false}} >
-        <Stack.Screen name="Auth" component={Auth}></Stack.Screen>
-        <Stack.Screen name='Setup' component={Setup}></Stack.Screen>
+
         <Stack.Screen name = "TabRoot" component={TabRoot}></Stack.Screen> 
       </Stack.Navigator>
     </NavigationContainer>

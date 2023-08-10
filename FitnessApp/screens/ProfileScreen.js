@@ -1,6 +1,7 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import Placeholder from "../components/Placeholder";
 import ToolbarMenu from "../components/ToolbarMenu";
+import { useEffect } from "react";
 function ProfileScreen({navigation}) {
 
     function navigateWorkoutScreenHandler() {
@@ -15,6 +16,12 @@ function ProfileScreen({navigation}) {
     function navigateNutritionScreenHandler() {
         navigation.navigate('NutritionScreen');
     }
+
+    const width = Dimensions.get('window').width;
+    useEffect(() => {
+      console.log(Math.round((8 * width)/390));
+    })
+
 
     return (
         <View style={styles.container}>

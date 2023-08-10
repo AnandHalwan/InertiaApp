@@ -2,7 +2,7 @@ import { View, Image, Text , StyleSheet} from "react-native";
 import IButton from "./IButton";
 
 
-function CurrentExericseItemFront({setNumber, backgroundSrc, imgSrc, name, sets, lowRepRange, highRepRange, display, navigation}) {
+function CurrentExericseItemFront({setNumber, backgroundCircleColor, imgSrc, name, sets, lowRepRange, highRepRange, display, navigation}) {
 
     function infoButtonPressed() {
         console.log("Info");
@@ -20,8 +20,8 @@ function CurrentExericseItemFront({setNumber, backgroundSrc, imgSrc, name, sets,
             </View>
             <IButton display={'flex'} onPress={infoButtonPressed} ></IButton>
             <View style={{top: -8, left: 74}}>
-                <Image source={backgroundSrc} style={{height: 230, width: 230}}>
-                </Image>
+                <View style={{height: 230, width: 230, backgroundColor: backgroundCircleColor, borderRadius: 180}}>
+                </View>
                 <Image source={imgSrc} style={{position: "absolute" , top: 20, left: 25, height: 185, width: 185}}></Image>
             </View>
 

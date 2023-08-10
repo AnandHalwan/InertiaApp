@@ -96,35 +96,35 @@ function ExerciseInfoScreen({navigation}) {
                                 Barbell Bench Press
                             </Text>
                             <Text style={styles.headerSecondText}>
-                                Max: 167
+                                Max: 190
                             </Text>
                             <Text style={styles.headerThirdText}>
-                                4 Reps
+                                1 Rep
                             </Text>
                             <Text style={styles.headerFourthText}>
-                                12/12
+                                03/02
                             </Text>
                         </View>
                     </View>
                     <View style={styles.chartContainer}>
                         <View style={styles.graphYAxis}>
                             <Text style={styles.graphYAxisText}>
+                                200
+                            </Text>
+                            <Text style={styles.graphYAxisText}>
+                                185
+                            </Text>
+                            <Text style={styles.graphYAxisText}>
                                 170
-                            </Text>
-                            <Text style={styles.graphYAxisText}>
-                                165
-                            </Text>
-                            <Text style={styles.graphYAxisText}>
-                                160
                             </Text>
                         </View>
                         <View style={styles.lineChartContainer}>
-                        <LineChart.Provider data={data} color={'white'}>
+                        <LineChart.Provider data={data} color={'red'}>
                             <LineChart width={275} height={80}>
-                            <LineChart.Path color="white"  >
+                            <LineChart.Path color="red"  >
                                 <LineChart.Gradient  />
                             </LineChart.Path>
-                            <LineChart.CursorCrosshair color="white" />
+                            <LineChart.CursorCrosshair color="red" />
 
                             </LineChart>
                         </LineChart.Provider>
@@ -137,7 +137,7 @@ function ExerciseInfoScreen({navigation}) {
                             </Animated.View>
                             <View style={styles.graphButtonContainer}>
                                 <Pressable onPress={oneMPressHandler}>
-                                    <Text style={styles.timeStepButtonTextTwo}>
+                                    <Text style={styles.timeStepButtonTextOne}>
                                         1M
                                     </Text >
                                 </Pressable>
@@ -151,7 +151,7 @@ function ExerciseInfoScreen({navigation}) {
                             </View>
                             <View style={styles.graphButtonContainer}>
                                 <Pressable onPress={sixMPressHandler}>
-                                    <Text style={styles.timeStepButtonTextOne}>
+                                    <Text style={styles.timeStepButtonTextTwo}>
                                         6M
                                     </Text >
                                 </Pressable>
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
         
     },
     timeStepButtonTextOne: {
-        color: 'black',
+        color: 'white',
         fontSize: 17,
         marginRight: 33,
         fontWeight: '600'

@@ -1,207 +1,115 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Image, StyleSheet, Text, Animated} from "react-native";
+import { View, Image, StyleSheet, Text, Animated, TouchableOpacity, Dimensions} from "react-native";
 import { Pressable } from "react-native";
 import { back } from "react-native/Libraries/Animated/Easing";
 import IButton from "./IButton";
-function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, startWorkout, startExercisem, navigation, expandedView}) {
 
-    
-    const [height, setHeight] = useState(101);
-    const [imgBackGroundHeight, setImgBackGroundHeight] = useState(87);
-    const [imgBackGroundWidth, setImgBackGroundWidth] = useState(87);
-    const [imgBackGroundTop, setImgBackGroundTop] = useState(0);
-    const [imgBackGroundLeft, setImgBackGroundLeft] = useState(0);
-
-    const [imgHeight, setImgHeight] = useState(70);
-    const [imgWidth, setImgWidth] = useState(70);
-    const [imgTop, setImgTop] = useState(8);
-    const [imgLeft, setImgLeft] = useState(8);
-    
-    const [rightListItemJustify, setRightListItemJustify] = useState('center');
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 
+function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCircleColor, imgSrc, navigation, widthRatio, heightRatio}) {
+    const styles = StyleSheet.create({
+        listItemContainer: {
+            color: '#1C1C1E',
+            backgroundColor: '#1C1C1E',
+            borderRadius: 16,
+            justifyContent: 'space-between',
+            padding: 7 * widthRatio,
+            width: 384 * widthRatio,
+            marginBottom: 9 * heightRatio,
+            left: 1 * widthRatio,
+        },
+        leftListItem: {
+            top: 0,
+            left: 0,
+            
+        },
+        imgBackground: {
+            width: 87 * widthRatio,
+            height: 87 * heightRatio,
+        },
+        rightListItem: {
+            marginLeft: 10 * widthRatio,
+            
+        },
+        textPrimary: {
+            color: 'white',
+            letterSpacing: -.1,
+            left: -1 * widthRatio,
+            top: -1 * heightRatio
+        },
+        textSecondary: {
+            color: '#808080',
+            fontWeight: "300",
+        },
+        listItemContainerPressed: {
+            color: '#1C1C1E',
+            backgroundColor: '#1C1C1E',
+            borderRadius: 16,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            padding: 7 * heightRatio,
+            width: 384 * widthRatio,
+            marginBottom: 17.5,
+            height: 200 *heightRatio,
+        },
+        imgContainer: {
+            position: 'absolute',
+            top: 8 * heightRatio,
+            left: 8 * widthRatio,
+            width: 70 * widthRatio,
+            height: 70 * heightRatio
+        },
+        back: {
+            backfaceVisibility: 'hidden',
+            position: 'absolute',
+        },
+        front: {
+            backfaceVisibility: 'hidden',
+        }
+    });
 
-    const [expanded, setExpanded] = useState(false);
-
-    const [listItemContainerFlexDirection, setListItemContainerFlexDirection] = useState('row');
-
-    const [textPrimaryFontSize, setTextPrimaryFontSize] = useState(22);
-    
-    const [textSecondaryFontSize, setTextSecondaryFontSize] = useState(17);
-
-    const [textAlignment, setTextAlignment] = useState('right');
-
-    const [rightListItemMarginBottom, setRightListItemMarginBottom] = useState(0);
-
-    const [rightListItemMarginRight, setRightListItemMarginRight] = useState(8);
-
-    const [rightListItemMarginLeft, setRightListItemMarginLeft] = useState(0);
 
     const [displayIButton, setDisplayIButton] = useState('none');
-      function onPressHandler() {
-        if (!startWorkout) {
-        if(expanded) {
-            setHeight(101);
-            setImgBackGroundHeight(87);
-            setImgBackGroundWidth(87);
-            setImgBackGroundTop(0);
-            setImgBackGroundLeft(0);
-            setImgHeight(70);
-            setImgWidth(70);
-            setImgTop(7);
-            setImgLeft(7);
-            setRightListItemJustify('center');
-            setListItemContainerFlexDirection('row');
-            setTextPrimaryFontSize(22);
-            setTextSecondaryFontSize(17);
-            setTextAlignment('right');
-            setRightListItemMarginBottom(0);
-            setRightListItemMarginRight(8);
-            setRightListItemMarginLeft(0);
-            setDisplayIButton('none');
 
-        } else{
-            setHeight(420);
-            setImgBackGroundHeight(230);
-            setImgBackGroundWidth(230);
-            setImgBackGroundTop(64);
-            setImgBackGroundLeft(74);
-            setImgHeight(185);
-            setImgWidth(185);
-            setImgTop(20);
-            setImgLeft(25);
-            setRightListItemJustify('flex-end');
-            setListItemContainerFlexDirection('column');
-            setTextPrimaryFontSize(28);
-            setTextSecondaryFontSize(22);
-            setTextAlignment('center');
-            setRightListItemMarginBottom(35);
-            setRightListItemMarginRight(0);
-            setRightListItemMarginLeft(10);
-            setDisplayIButton('flex');
-
-        }
-        setExpanded(!expanded);
+    function onPressHandler() {
+        navigation.navigate("ExerciseInfoScreen")
     }
-      }
-
-      useEffect(()=> {
-        if (startWorkout || !expandedView) {
-            setHeight(101);
-            setImgBackGroundHeight(87);
-            setImgBackGroundWidth(87);
-            setImgBackGroundTop(0);
-            setImgBackGroundLeft(0);
-            setImgHeight(70);
-            setImgWidth(70);
-            setImgTop(7);
-            setImgLeft(7);
-            setRightListItemJustify('center');
-            setListItemContainerFlexDirection('row');
-            setTextPrimaryFontSize(22);
-            setTextSecondaryFontSize(17);
-            setTextAlignment('right');
-            setRightListItemMarginBottom(0);
-            setRightListItemMarginRight(8);
-            setRightListItemMarginLeft(0);
-            setDisplayIButton('none');
-        }
-      }, [startWorkout, expandedView]);
 
     function infoButtonPressedHandler() {
         navigation.navigate("ExerciseInfoScreen");
     }
 
 
+    useEffect(() =>{
+        console.log(heightRatio);
+        console.log(widthRatio);   
+    })
+    const height = 101 * heightRatio
     return(
         <View>
-        <Pressable onPress={onPressHandler}>
-            <Animated.View style={[styles.listItemContainer, styles.front, {height: height, flexDirection: listItemContainerFlexDirection}]}>
+        <TouchableOpacity onPress={onPressHandler}>
+            <Animated.View style={[styles.listItemContainer, styles.front, {height: height, flexDirection: 'row'}]}>
                 <IButton display={displayIButton} onPress={infoButtonPressedHandler}></IButton>
-                <View style={{top: imgBackGroundTop, left: imgBackGroundLeft}}>
-                    <Image source={backgroundSrc} style={{height: imgBackGroundHeight, width: imgBackGroundWidth}}>
-                    </Image>
-                    <Image source={imgSrc} style={{position: "absolute" , top: imgTop, left: imgLeft, height: imgHeight, width: imgWidth}}></Image>
+                <View style={{top: 8 * heightRatio, left: 4 * widthRatio, width: height - (25*heightRatio), height: height - (25*heightRatio), borderRadius: 90, backgroundColor: backgroundCircleColor}}>
+                    
                 </View>
-
-                <View style={[{justifyContent: rightListItemJustify, marginBottom: rightListItemMarginBottom, marginRight: rightListItemMarginRight, marginLeft: rightListItemMarginLeft}]}>
-                    <Text style={[styles.textPrimary, {fontSize: textPrimaryFontSize, textAlign: textAlignment}]}>{name}</Text>
-                    <Text style={[styles.textSecondary, {fontSize: textSecondaryFontSize, textAlign: textAlignment}]}>{sets} sets {lowRepRange}-{highRepRange} reps</Text>
+                <Image source={imgSrc} style={{position: "absolute" , top: 25 * heightRatio, left: 24 * widthRatio, height: 50 * heightRatio, width: 50 * widthRatio}}></Image>
+                <View style={[{justifyContent: 'center', marginBottom: 0, marginRight: 8 * widthRatio, marginLeft: 0}]}>
+                    <Text style={[styles.textPrimary, {fontSize: 20 * widthRatio, textAlign: 'right'}]}>{name}</Text>
+                    <Text style={[styles.textSecondary, {fontSize: 17 * widthRatio, textAlign: 'right'}]}>{sets} sets {lowRepRange}-{highRepRange} reps</Text>
 
                 </View>
             </Animated.View>
 
-        </Pressable>   
+        </TouchableOpacity>   
     </View>    
         );
     }
 
-
-
-
-
-
-
-
-
 export default ExerciseListItem;
 
-const styles = StyleSheet.create({
-    listItemContainer: {
-        color: '#1C1C1E',
-        backgroundColor: '#1C1C1E',
-        borderRadius: 16,
-        justifyContent: 'space-between',
-        padding: 7,
-        width: 384,
-        marginBottom: 17.5,
-    },
-    leftListItem: {
-        top: 0,
-        left: 0,
-        
-    },
-    imgBackground: {
-        width: 87,
-        height: 87,
-    },
-    rightListItem: {
-        marginLeft: 10,
-        
-    },
-    textPrimary: {
-        color: 'white',
-    },
-    textSecondary: {
-        color: 'white',
-        fontWeight: "300",
-    },
-    listItemContainerPressed: {
-        color: '#1C1C1E',
-        backgroundColor: '#1C1C1E',
-        borderRadius: 16,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 7,
-        width: 384,
-        marginBottom: 17.5,
-        height: 200,
-    },
-    imgContainer: {
-        position: 'absolute',
-        top: 8,
-        left: 8,
-        width: 70,
-        height: 70
-    },
-    back: {
-        backfaceVisibility: 'hidden',
-        position: 'absolute',
-    },
-    front: {
-        backfaceVisibility: 'hidden',
-    }
-});
   
 
 /*

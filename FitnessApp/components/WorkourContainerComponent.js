@@ -3,18 +3,22 @@ import { View, StyleSheet, Text, FlatList, Animated, Modal, Dimensions, Image } 
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
-import { LinearGradient } from "expo-linear-gradient";
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const heightRatio = windowHeight/844;
+const widthRatio = windowWidth/390;
+
 function WorkoutContainerComponent({workout, date, startWorkout, navigation, endWorkout, closeSummary, index, currIndex}) {
     const dateRel = date;
 
-    const windowWidth = Dimensions.get('window').width;
-    const windowHeight = Dimensions.get('window').height;
-
-
     const [fadeAnim, setFadeAnime] = useState(new Animated.Value(0));
 
-
-    const [listHeight, setListHeight] = useState(525);
+    /*const [fontLoaded] = useFonts({
+        'SFProDisplay-Medium': require('../assets/fonts/SFProDisplay-Medium.ttf'),
+    });
+    */
+    const [listHeight, setListHeight] = useState(525 * heightRatio);
     const [displayHeader, setDisplayHeader] = useState('flex');
     const [modalStartVisible, setModalStartVisible] = useState(false);  
     const [modalEndVisible, setModalEndVisible] = useState(false);
@@ -42,15 +46,23 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
         "DEC"
     ]
 
+    const colors = [
+        "#FFB846",
+        "#9FFF91",
+        "#77C0FF",
+        "#FF89FA",
+        "#FF6565"
+    ]
+
     useEffect(() =>{
         if (startWorkout) {
             setModalStartVisible(true);
-            setListHeight(625);
+            setListHeight(625 * heightRatio);
             setDisplayHeader('none');
 
         } else {
             setModalStartVisible(false);
-            setListHeight(525);
+            setListHeight(525 * heightRatio);
             setDisplayHeader('flex');
         }
     }, [startWorkout]);
@@ -84,7 +96,6 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
                     setCurrentExercise(currentExercise+1);
                     setSetCounter(1);
                 }
-
         }
     }
 
@@ -92,9 +103,9 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
         let startExercise = false;
         if (itemData.index == currentExercise && startWorkout) {
              startExercise = true;
-             return <CurrentExerciseListItem name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} handleEnterButton={completedSetHandler} setNumber={setCounter} ></CurrentExerciseListItem>
+             return <CurrentExerciseListItem name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} handleEnterButton={completedSetHandler} setNumber={setCounter} backgroundCircleColor={colors[itemData.index % 5]}></CurrentExerciseListItem>
         }
-        return <ExerciseListItem navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} startExercise={startExercise} expandedView={index === currIndex}></ExerciseListItem>
+        return <ExerciseListItem navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} startExercise={startExercise} expandedView={index === currIndex} backgroundCircleColor={colors[itemData.index % 5]} heightRatio={heightRatio} widthRatio={widthRatio}></ExerciseListItem>
     }
 
     useEffect(() => {
@@ -144,8 +155,8 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
                             }}>
                                 <Pressable onPress={modalPressHandler}>
                                     <View style={{height: windowHeight, width: windowWidth, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center'}}>
-                                        <Animated.View style={{opacity: fadeAnim, marginLeft: 30, marginRight: 30}}>
-                                        <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>
+                                        <Animated.View style={{opacity: fadeAnim, marginLeft: 30 * widthRatio, marginRight: 30 * widthRatio}}>
+                                        <Text style={{color: 'white', fontSize: 20 * widthRatio, textAlign: 'center'}}>
                                             "The resistance that you fight physically in the gym and the resistance that you fight in life can only build a strong character."
                                         </Text>
                                         </Animated.View>
@@ -240,12 +251,12 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
                             </Modal>
                 <View style={styles.headerContainer}>
                     <View style={styles.leftHeaderContainer}>
-                        <View style={{marginBottom: -10, height: 25, left: 12}}>
+                        <View style={{marginBottom: -10, height: 25, left: 12 * widthRatio}}>
                             <Text style={styles.dateText}>{daysOfWeek[dateRel.getDay()]}, {months[date.getMonth()]} {date.getDate()}</Text>
                         </View>
                         <View style={{display: displayHeader}}>
-                            <View style={{marginBottom: -3, marginLeft: 10}}>
-                                <Text style={styles.workoutNameText}>{workoutLocal.name}</Text>
+                            <View style={{marginBottom: -3, marginLeft: 10 * widthRatio}}>
+                                <Text style={[styles.workoutNameText]}>{workoutLocal.name}</Text>
                             </View>
                             <View>
                                 <Text style={styles.durationText}>{workoutLocal.durationLow}-{workoutLocal.durationHigh} min</Text>
@@ -267,7 +278,7 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
                     </View>
                 </View>
                                 
-                    <View style={[styles.workoutContainer, {height: listHeight}]}>
+                    <View style={[styles.workoutContainer]}>
 
                             <FlatList fadingEdgeLength={100} ref={flatListRef} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
 
@@ -283,12 +294,12 @@ const styles = StyleSheet.create({
       flex: 10.08,
       justifyContent: 'center',
       alignItems: 'center',
-      width: 390,
+      width: 390 * widthRatio,
     },
     toolbarMenuContainer: {
       flex: 1,
       position: 'absolute',
-      top: 300,
+      top: 300 * heightRatio,
       backgroundColor: 'black',
     },
     headerContainer: {
@@ -296,105 +307,111 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 90,
-        width: 384,
-        marginRight: -2
+        width: 384 * widthRatio,
+        marginRight: -2 * widthRatio,
 
     },
     leftHeaderContainer: {
-        marginTop: -3,
+        marginTop: -3 * heightRatio,
         
     },
     rightHeaderContainer: {
-        marginTop: -1.75,
+        marginTop: -1.75 * heightRatio,
     },
     textContainer: {
         color: 'white',
     },
     workoutContainer: {
-        width: 384,
-        marginTop: -37.1,
-        marginLeft: 1.4,
-        
+        width: 384 * widthRatio,
+        top: 25,
+        marginLeft: 1.4 * widthRatio,
+        flex: 3.4 * heightRatio
     },
     dateText: {
         color: '#7F7E84',
-        fontSize: 16,
-        fontWeight: 'bold'
+        fontSize: 16 * widthRatio,
+        letterSpacing: 0,
     },
     workoutNameText: {
         color: 'white',
-        fontSize: 65,
+        fontSize: 60.5 * widthRatio,
         fontWeight: 'bold',
-        marginTop: 3,
+        marginTop: 2 * heightRatio,
+        letterSpacing: .1
     },
     durationText: {
         color: 'white',
-        fontSize: 26,
+        fontSize: 26 * widthRatio,
         fontWeight: '200',
-        marginTop: 3,
+        marginTop: 0,
+        left: 13 * widthRatio
 
     },
     exerciseCountText: {
         color: 'white',
-        fontSize: 26,
+        fontSize: 26 * widthRatio,
         textAlign: 'right',
+        left: -9 * widthRatio,
+        top: 1 * heightRatio,
+        letterSpacing: 0.03 
     },
     setCountText: {
         color: 'white',
-        fontSize: 26,
+        fontSize: 26 * widthRatio,
         textAlign: 'right',
-        marginTop: 1.75,
+        marginTop: 2 * heightRatio,
+        left: -10 * widthRatio
     },
     endWorkoutModalContainer: {
-        height: 650,
+        height: 650 * heightRatio,
         alignSelf: 'center',
-        width: 400,
-        top: 115,
+        width: 400 * widthRatio,
+        top: 115 * heightRatio,
         backgroundColor: 'black',
         alignItems: 'center',
         justifyContent: 'center'
     },
     workoutSummaryContainer: {
         backgroundColor: '#1C1C1E',
-        height: 600,
-        top: -20,
-        width: 385,
+        height: 600 * heightRatio,
+        top: -20 * heightRatio,
+        width: 385 * widthRatio,
         borderRadius: 15,
-        paddingVertical: 20,
-        paddingHorizontal: 35,
+        paddingVertical: 20 * heightRatio,
+        paddingHorizontal: 35 * widthRatio,
     },
     workoutSummaryHeader: {
         color: 'white',
-        fontSize: 50,
+        fontSize: 50 * widthRatio,
         fontWeight: '600'
     },
     summaryText: {
         color: 'white',
-        fontSize: 20,
+        fontSize: 20 * widthRatio,
         fontWeight: '300'
     },
     infoOneContainer: {
-        marginTop: 20,
+        marginTop: 20 * heightRatio,
         justifyContent: 'space-between',
         flexDirection: 'row'
     },
     calContainer: {
         flexDirection: 'row',
-        marginBottom: 24,
+        marginBottom: 24 * heightRatio,
     },
     caloriesText: {
         color: '#acacae',
-        fontSize: 22,
-        marginBottom: 10
+        fontSize: 22 * widthRatio,
+        marginBottom: 10 * heightRatio
     },
     caloriesValOne: {
         color: '#f85b5b',
-        fontSize: 24
+        fontSize: 24 * widthRatio
     },
     caloriesValTwo: {
         color: '#f85b5b',
-        fontSize: 16,
-        marginTop: 8
+        fontSize: 16 * widthRatio,
+        marginTop: 8 * heightRatio
     },
     timeRow: {
         flexDirection: 'row',
@@ -402,25 +419,23 @@ const styles = StyleSheet.create({
     },
     timeHeader: {
         color: 'white',
-        fontSize: 28,
+        fontSize: 28 * widthRatio,
         fontWeight: '300',
-        marginBottom: 12
+        marginBottom: 12 * heightRatio
     },
     timeValue: {
         color: '#acacae',
-        fontSize: 28,
+        fontSize: 28 * heightRatio,
         fontWeight: '300',
-        marginBottom: 12
+        marginBottom: 12 * heightRatio
     },
     checkContainer: {
         backgroundColor: 'black',
-        height: 110,
-        width: 110,
+        height: 110 * heightRatio,
+        width: 110 * widthRatio,
         borderRadius: 55,
         position: 'absolute',
-        top: 539
+        top: 539 * heightRatio
     }
-
-
   });
 

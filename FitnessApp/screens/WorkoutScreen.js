@@ -14,15 +14,10 @@ function WorkoutScreen({navigation}) {
     
     const [startNumberPressed, setStartNumberPressed] = useState(0);
 
-
     const [completedWorkout, setCompletedWorkout] = useState(false);
-
-
     
-
-
-
     const [closeSummary, setCloseSummary] = useState(false);
+    
     function startWorkoutHandler() {
         setStartNumberPressed(startNumberPressed+1);
         console.log(startNumberPressed);
@@ -46,8 +41,6 @@ function WorkoutScreen({navigation}) {
     const dateMinusOne = new Date(date.getTime() - 86400000);
     const dateMinusTwo = new Date(dateMinusOne.getTime() - 86400000);
     const dateMinusThree = new Date(dateMinusTwo.getTime() - 86400000);
-
-
 
     const dates = [
         {
@@ -133,9 +126,7 @@ function WorkoutScreen({navigation}) {
 
     return (
         <View style={styles.container}>
-            <Image source={require("../assets/layouts/home.png")} style={{height:height, width: width, position: 'absolute', opacity: 0.5, zIndex: 1}}>
-
-            </Image>
+            
             <FlatList data={dates}
             renderItem={renderWorkout}
             horizontal
@@ -166,74 +157,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#000000',
-    },
-    workoutScreenContainer: {
-      flex: 10.08,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    toolbarMenuContainer: {
-      flex: 1,
-      position: 'absolute',
-      top: 300,
-      backgroundColor: 'black',
-    },
-    headerContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 90,
-        width: 384,
-        marginRight: -2
-
-    },
-    leftHeaderContainer: {
-        marginTop: -3,
-        
-    },
-    rightHeaderContainer: {
-        marginTop: -1.75,
-    },
-    textContainer: {
-        color: 'white',
-    },
-    workoutContainer: {
-        flex: 2.9,
-        width: 384,
-        marginTop: -37.1,
-        marginLeft: 1.4,
-        
-    },
-    dateText: {
-        color: '#7F7E84',
-        fontSize: 16,
-        fontWeight: 'bold'
-    },
-    workoutNameText: {
-        color: 'white',
-        fontSize: 57,
-        fontWeight: 'bold',
-        marginTop: 3,
-    },
-    durationText: {
-        color: 'white',
-        fontSize: 26,
-        fontWeight: '200',
-        marginTop: 3,
-
-    },
-    exerciseCountText: {
-        color: 'white',
-        fontSize: 26,
-        textAlign: 'right',
-    },
-    setCountText: {
-        color: 'white',
-        fontSize: 26,
-        textAlign: 'right',
-        marginTop: 1.75,
-    },
-
+    }
   });
   
   /*
@@ -328,5 +252,9 @@ const styles = StyleSheet.create({
 
 
         <ToolbarMenu pPress={navigateProfileScreenHandler} ePress={navigateEncyclopediaScreenHandler} sPress={navigateStatisticsScreenHandler} nPress={navigateNutritionScreenHandler} selected={selected}></ToolbarMenu>
+
+
+
+                    <Image source={require('../assets/layouts/home.png')} style={{height: height, width: width, opacity:.5, position: 'absolute', zIndex: 1}}></Image>
 
                     */

@@ -6,7 +6,7 @@ import CircularProgress from 'react-native-circular-progress-indicator';
 import CurrentExericseItemFront from "./CurrentExerciseItemFront";
 import ExerciseTimer from "./ExerciseTimer";
 import IButton from "./IButton";
-function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, handleEnterButton, setNumber, navigation}) {
+function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, handleEnterButton, setNumber, navigation, backgroundCircleColor}) {
 
     const [weightText, setWeightText] = useState("Weight");
     const [repsText, setRepsText] = useState("Reps");
@@ -147,7 +147,7 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
         <View>
             <GestureRecognizer onSwipeLeft={gestureHandler}>
             <Animated.View style={[styles.listItemContainer, styles.front, {height: 420, flexDirection: 'column', }, rotateFront]}> 
-                <CurrentExericseItemFront navigation={navigation} display={defaultFront} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange}></CurrentExericseItemFront>
+                <CurrentExericseItemFront navigation={navigation} display={defaultFront} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} backgroundCircleColor={backgroundCircleColor}></CurrentExericseItemFront>
                 <ExerciseTimer start={showTimer} timer={timer} display={timerDisplay} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} setNumber={setNumber} initital={5}></ExerciseTimer>
             </Animated.View>
             <Animated.View style={[styles.listItemContainer, styles.back, {height: 420, flexDirection: 'column', justifyContent: 'space-between'}, rotateBack]}>
