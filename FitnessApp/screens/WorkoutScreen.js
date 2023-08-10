@@ -2,11 +2,13 @@ import { View, StyleSheet, Text, FlatList, Animated, Dimensions, Image  } from "
 import { ppl } from "../data/DummyData";
 import Swiper from "react-native-swiper";
 import WorkoutContainerComponent from "../components/WorkourContainerComponent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StartButton from "../components/StartButton";
 import Pagination from "../components/Pagination";
 import { useRawData } from "@shopify/react-native-skia";
 import { useRef } from "react";
+import { supabase } from "../supabase/SupaBaseClient";
+import { userId } from "./Auth";
 
 function WorkoutScreen({navigation}) {
 
@@ -124,9 +126,41 @@ function WorkoutScreen({navigation}) {
       const width = Dimensions.get('window').width;
       const height = Dimensions.get('window').height;
 
+
+      async function getWorkoutLogs(exerciseId, minusDays) {
+        var currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() - minusDays);
+
+        var year = currentDate.getFullYear();
+        var month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        var day = String(currentDate.getDate()).padStart(2, '0');
+
+        var formattedDate = year + '-' + month + '-' + day;
+        try {
+          const { data, error } = await supabase
+            .from("Log")
+            .select()
+            .eq("UID", userId)
+            .eq("ExerciseId", exerciseId)
+            .gte("Date", formattedDate)
+      
+          if (error) {
+            throw error;
+          }
+      
+          // Return the column value
+          console.log(data);
+          return data;
+        } catch (error) {
+          console.error('Error retrieving column value:', error.message);
+          // Handle the error accordingly
+        }
+      }
+
+
     return (
         <View style={styles.container}>
-            
+
             <FlatList data={dates}
             renderItem={renderWorkout}
             horizontal
@@ -137,7 +171,7 @@ function WorkoutScreen({navigation}) {
             viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
             initialScrollIndex={5}
             scrollEnabled={!workoutStarted}
-            >
+        >
             
             </FlatList>
             <Pagination data={dates} scrollX={scrollX} show={!workoutStarted}></Pagination>

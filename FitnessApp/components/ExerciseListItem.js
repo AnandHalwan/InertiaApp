@@ -1,8 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
+
 import { View, Image, StyleSheet, Text, Animated, TouchableOpacity, Dimensions} from "react-native";
 import { Pressable } from "react-native";
 import { back } from "react-native/Libraries/Animated/Easing";
 import IButton from "./IButton";
+
+import { supabase } from "../supabase/SupaBaseClient";
+import { userId } from "../screens/Auth";
+
+function ExerciseListItem({id, name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, startWorkout, startExercisem, navigation, expandedView}) {
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -77,6 +84,84 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
         navigation.navigate("ExerciseInfoScreen")
     }
 
+      }
+    async function navigateHandler() {
+        console.log(console.log(id));
+        const oneM = getWorkoutLogs(id, 30);
+        const threeM = getWorkoutLogs(id, 92);
+        const sixM = getWorkoutLogs(id, 184);
+        const oneY = getWorkoutLogs(id, 365);
+        const lft = getWorkoutLogs(id, 365);
+        navigation.navigate("ExerciseInfoScreen", {eid: id, oneM: oneM, threeM: threeM, sixM: sixM, oneY: oneY, lft: lft});
+    }
+
+    async function getWorkoutLogs(exerciseId, minusDays) {
+            var currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() - minusDays);
+
+            var year = currentDate.getFullYear();
+            var month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            var day = String(currentDate.getDate()).padStart(2, '0');
+
+            var formattedDate = year + '-' + month + '-' + day;
+            try {
+            const { data, error } = await supabase
+                .from("Log")
+                .select()
+                .eq("UID", userId)
+                .eq("ExerciseId", exerciseId)
+                .gte("Date", formattedDate)
+                .order('Date', {ascending: true})
+        
+            if (error) {
+                throw error;
+            }
+        
+            // Return the column value
+            console.log(data);
+
+            const formattedData = []
+            for (let i = 0; i < data.length; i++) {
+                var dateString = data[i].Date;
+                var date = new Date(dateString);
+                var dateInteger = Date.parse(date);
+                formattedData.push({
+                    timestamp: dateInteger,
+                    value: data[i].RelWeight
+                })
+            }
+            console.log(formattedData);
+            return formattedData;
+            } catch (error) {
+            console.error('Error retrieving column value:', error.message);
+            // Handle the error accordingly
+            }
+        
+    }
+
+      useEffect(()=> {
+        if (startWorkout || !expandedView) {
+            setHeight(101);
+            setImgBackGroundHeight(87);
+            setImgBackGroundWidth(87);
+            setImgBackGroundTop(0);
+            setImgBackGroundLeft(0);
+            setImgHeight(70);
+            setImgWidth(70);
+            setImgTop(7);
+            setImgLeft(7);
+            setRightListItemJustify('center');
+            setListItemContainerFlexDirection('row');
+            setTextPrimaryFontSize(22);
+            setTextSecondaryFontSize(17);
+            setTextAlignment('right');
+            setRightListItemMarginBottom(0);
+            setRightListItemMarginRight(8);
+            setRightListItemMarginLeft(0);
+            setDisplayIButton('none');
+        }
+      }, [startWorkout, expandedView]);
+
     function infoButtonPressedHandler() {
         navigation.navigate("ExerciseInfoScreen");
     }
@@ -89,6 +174,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
     const height = 101 * heightRatio
     return(
         <View>
+
         <TouchableOpacity onPress={onPressHandler}>
             <Animated.View style={[styles.listItemContainer, styles.front, {height: height, flexDirection: 'row'}]}>
                 <IButton display={displayIButton} onPress={infoButtonPressedHandler}></IButton>

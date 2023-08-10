@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Dimensions, Image, TouchableOpacity} from "react-native";
+import { StyleSheet, View, Text, Dimensions, Image, Pre, Pressable} from "react-native";
 import { userId } from "../Auth";
 import { supabase } from "../../supabase/SupaBaseClient";
 function DaysSetup({index}) {
@@ -87,65 +87,62 @@ function DaysSetup({index}) {
 
     return(
         <View style={styles.screenContainer}>
-            <Image source={require("../../assets/layouts/days.png")} style={{height:height, width: width, position: 'absolute', opacity: 0.5, zIndex: 1}}>
-
-            </Image>
             <View>
                 <Text style={{color: 'white', fontSize: 47, fontWeight: 'bold', left: 2, position: 'absolute', top: -176, left: -140, }}>
                     Which Days?
                 </Text>
                 <View style={{flexDirection: 'row', top: -44, }}>
-                    <TouchableOpacity onPress={monPressedHandler}>
+                    <Pressable onPress={monPressedHandler}>
                         <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: monPressed ? '#75e18a' : '#1c1c1e', left: -176, top: -22, alignItems: 'center', justifyContent: 'center',  position: 'absolute'}}>
                             <Text style={{color: 'white', fontSize: 16}}>
                                 Mon
                             </Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={tuePressedHandler}>
+                    </Pressable>
+                    <Pressable onPress={tuePressedHandler}>
                         <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: tuePressed ? '#75e18a' : '#1c1c1e', left: -103, top: -22, alignItems: 'center', justifyContent: 'center',  position: 'absolute'}}>
                             <Text style={{color: 'white', fontSize: 16}}>
                                 Tue
                             </Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={wedPressedHandler}>
+                    </Pressable>
+                    <Pressable onPress={wedPressedHandler}>
                         <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: wedPressed ? '#75e18a' : '#1c1c1e', left: -30, top: -22, alignItems: 'center', justifyContent: 'center',  position: 'absolute'}}>
                             <Text style={{color: 'white', fontSize: 16}}>
                                 Wed
                             </Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={thuPressedHandler}>
+                    </Pressable>
+                    <Pressable onPress={thuPressedHandler}>
                         <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: thuPressed ? '#75e18a' : '#1c1c1e', left: 43, top: -22, alignItems: 'center', justifyContent: 'center',  position: 'absolute'}}>
                             <Text style={{color: 'white', fontSize: 16}}>
                                 Thu
                             </Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={friPressedHandler}>
+                    </Pressable>
+                    <Pressable onPress={friPressedHandler}>
                         <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: friPressed ? '#75e18a' : '#1c1c1e', left: 115.2, top: -22, alignItems: 'center', justifyContent: 'center' , position: 'absolute'}}>
                             <Text style={{color: 'white', fontSize: 16}}>
                                 Fri
                             </Text>
                         </View>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
                 <View>
-                    <TouchableOpacity onPress={satPressedHandler}>
+                    <Pressable onPress={satPressedHandler}>
                         <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: satPressed ? '#75e18a' : '#1c1c1e', left: -67, top: -12, alignItems: 'center', justifyContent: 'center',  position: 'absolute'}}>
                             <Text style={{color: 'white', fontSize: 16}}>
                                 Sat
                             </Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={sunPressedHandler}>
+                    </Pressable>
+                    <Pressable onPress={sunPressedHandler}>
                         <View style={{height: 44, width: 62, borderRadius: 50, backgroundColor: sunPressed ? '#75e18a' : '#1c1c1e', left:6.5, top: -12, alignItems: 'center', justifyContent: 'center',  position: 'absolute'}}>
                             <Text style={{color: 'white', fontSize: 16}}>
                                 Sun
                             </Text>
                         </View>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
             </View>
         </View>

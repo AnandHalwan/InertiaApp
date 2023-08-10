@@ -3,14 +3,21 @@ import { View, StyleSheet, Text, FlatList, Animated, Modal, Dimensions, Image } 
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
+<<<<<<< HEAD
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;
 const widthRatio = windowWidth/390;
 
+=======
+import { LinearGradient } from "expo-linear-gradient";
+import { userId } from "../screens/Auth";
+import { supabase } from "../supabase/SupaBaseClient";
+>>>>>>> 77dc22cf18aecc18c69d81f4804cabcf283727b7
 function WorkoutContainerComponent({workout, date, startWorkout, navigation, endWorkout, closeSummary, index, currIndex}) {
     const dateRel = date;
+    const workoutLocal = workout;
 
     const [fadeAnim, setFadeAnime] = useState(new Animated.Value(0));
 
@@ -81,23 +88,62 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
     const [currentExercise, setCurrentExercise] = useState(0);
     const [setCounter, setSetCounter] = useState(1);
 
-    const completedSetHandler = (weight, reps, lastSet) => {
+    const completedSetHandler = (weight, reps, lastSet, relativeHighWeight, highWeight, highReps) => {
         setSetCounter(setCounter+1);
         console.log("Child passed to parent");
         console.log(weight, reps);
         if (lastSet) {
+                console.log("Relative 1rp" + relativeHighWeight);
+                console.log("High Weight" + highWeight);
+                console.log("High reps" + highReps);
+                console.log("Last set!");
+                const currentDate = new Date();
+
+                const year = currentDate.getFullYear();
+                const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                const day = String(currentDate.getDate()).padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}`;
+                const data = {
+                    UID: userId,
+                    ExerciseId: workoutLocal.exercises[currentExercise].id,
+                    Date: formattedDate,
+                    RelWeight: relativeHighWeight,
+                    Weight: highWeight,
+                    Reps: highReps
+                }
+                console.log(data);
+                logExerciseWeightReps(data);
                 if (currentExercise === (workout.exerciseCount - 1)){
                     setModalEndVisible(true);
                     console.log("Workout ended");
                 } else {
-                    console.log("Last set!");
                     console.log(currentExercise);
                     console.log(workout.exerciseCount)
                     setCurrentExercise(currentExercise+1);
                     setSetCounter(1);
                 }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 77dc22cf18aecc18c69d81f4804cabcf283727b7
         }
     }
+    async function logExerciseWeightReps(data) {
+        try {
+          const { data: insertedData, error } = await supabase
+            .from("Log")
+            .insert([data]);
+      
+          if (error) {
+            throw error;
+          }
+      
+        } catch (error) {
+          console.error('Error inserting into table:', error.message);
+          // Handle the error accordingly
+        }
+      }
 
     function renderExerciseListItem(itemData) {
         let startExercise = false;
@@ -105,7 +151,11 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
              startExercise = true;
              return <CurrentExerciseListItem name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} handleEnterButton={completedSetHandler} setNumber={setCounter} backgroundCircleColor={colors[itemData.index % 5]}></CurrentExerciseListItem>
         }
+<<<<<<< HEAD
         return <ExerciseListItem navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} startExercise={startExercise} expandedView={index === currIndex} backgroundCircleColor={colors[itemData.index % 5]} heightRatio={heightRatio} widthRatio={widthRatio}></ExerciseListItem>
+=======
+        return <ExerciseListItem navigation={navigation} id={15} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} startExercise={startExercise} expandedView={index === currIndex}></ExerciseListItem>
+>>>>>>> 77dc22cf18aecc18c69d81f4804cabcf283727b7
     }
 
     useEffect(() => {
@@ -141,7 +191,6 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
     const scrollToTop = () => {
         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
       };
-    const workoutLocal = workout;
     return(
             <Animated.View style={styles.workoutScreenContainer}>
                       <Modal
