@@ -1,8 +1,9 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { View, StyleSheet, Text, FlatList, Animated, Modal, Dimensions, Image } from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
+import { useFonts } from "expo-font";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -15,10 +16,10 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
 
     const [fadeAnim, setFadeAnime] = useState(new Animated.Value(0));
 
-    /*const [fontLoaded] = useFonts({
-        'SFProDisplay-Medium': require('../assets/fonts/SFProDisplay-Medium.ttf'),
+    const [fontLoaded] = useFonts({
+        'SFProDisplay-Medium': require('../assets/fonts/SFProDisplay-Medium.ttf')
     });
-    */
+
     const [listHeight, setListHeight] = useState(525 * heightRatio);
     const [displayHeader, setDisplayHeader] = useState('flex');
     const [modalStartVisible, setModalStartVisible] = useState(false);  
@@ -358,10 +359,10 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     workoutContainer: {
-        width: 384 * widthRatio,
+        width: 390 * widthRatio,
         top: 25,
-        marginLeft: 1.4 * widthRatio,
-        flex: 3.4 * heightRatio
+        flex: 3.4 * heightRatio,
+        alignItems: 'center'
     },
     dateText: {
         color: '#7F7E84',
@@ -371,9 +372,9 @@ const styles = StyleSheet.create({
     workoutNameText: {
         color: 'white',
         fontSize: 60.5 * widthRatio,
-        fontWeight: 'bold',
         marginTop: 2 * heightRatio,
-        letterSpacing: .1
+        letterSpacing: .1,
+        fontWeight: 'bold'
     },
     durationText: {
         color: 'white',

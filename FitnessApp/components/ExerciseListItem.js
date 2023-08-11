@@ -20,9 +20,9 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
             borderRadius: 16,
             justifyContent: 'space-between',
             padding: 7 * widthRatio,
-            width: 384 * widthRatio,
+            width: 372 * widthRatio,
             marginBottom: 9 * heightRatio,
-            left: 1 * widthRatio,
+
         },
         leftListItem: {
             top: 0,
@@ -125,11 +125,6 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
         
     }
 
-
-    useEffect(() =>{
-        console.log(heightRatio);
-        console.log(widthRatio);   
-    })
     const height = 101 * heightRatio
     return(
         <View>
@@ -155,7 +150,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
 
 export default ExerciseListItem;
 
-  
+
 
 /*
         top: 8,
