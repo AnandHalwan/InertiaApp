@@ -20,7 +20,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
             borderRadius: 16,
             justifyContent: 'space-between',
             padding: 7 * widthRatio,
-            width: 384 * widthRatio,
+            width: 370 * widthRatio,
             marginBottom: 9 * heightRatio,
             left: 1 * widthRatio,
         },
