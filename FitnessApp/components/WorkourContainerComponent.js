@@ -1,9 +1,10 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { View, StyleSheet, Text, FlatList, Animated, Modal, Dimensions, Image } from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
-
+import DraggableFlatList, {OpacityDecorator, ScaleDecorator} from 'react-native-draggable-flatlist'
+import { TouchableOpacity } from "react-native-gesture-handler";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;
@@ -11,14 +12,13 @@ const widthRatio = windowWidth/390;
 
 function WorkoutContainerComponent({workout, date, startWorkout, navigation, endWorkout, closeSummary, index, currIndex}) {
     const dateRel = date;
-    const workoutLocal = workout;
-
+    const workoutLocal = workout
     const [fadeAnim, setFadeAnime] = useState(new Animated.Value(0));
 
-    /*const [fontLoaded] = useFonts({
-        'SFProDisplay-Medium': require('../assets/fonts/SFProDisplay-Medium.ttf'),
-    });
-    */
+
+    
+
+
     const [listHeight, setListHeight] = useState(525 * heightRatio);
     const [displayHeader, setDisplayHeader] = useState('flex');
     const [modalStartVisible, setModalStartVisible] = useState(false);  
@@ -167,6 +167,7 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
     function setEndVisible() {
         setModalEndVisible(false);
     }
+    
     const flatListRef = useRef(null);
 
     useEffect(() => {
@@ -178,6 +179,7 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
     const scrollToTop = () => {
         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
       };
+      
     return(
             <Animated.View style={styles.workoutScreenContainer}>
                       <Modal
@@ -315,9 +317,7 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
                 </View>
                                 
                     <View style={[styles.workoutContainer]}>
-
-                            <FlatList fadingEdgeLength={100} ref={flatListRef} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
-
+                        <FlatList fadingEdgeLength={100} ref={flatListRef} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
                     </View>
             </Animated.View>
     );
@@ -361,7 +361,9 @@ const styles = StyleSheet.create({
         width: 384 * widthRatio,
         top: 25,
         marginLeft: 1.4 * widthRatio,
-        flex: 3.4 * heightRatio
+        flex: 3.4 * heightRatio,
+        alignItems: 'center',
+        marginBottom: 30
     },
     dateText: {
         color: '#7F7E84',
@@ -475,3 +477,7 @@ const styles = StyleSheet.create({
     }
   });
 
+/*
+                            <FlatList fadingEdgeLength={100} ref={flatListRef} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
+
+                            */

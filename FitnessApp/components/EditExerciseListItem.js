@@ -4,15 +4,16 @@ import { View, Image, StyleSheet, Text, Animated, TouchableOpacity, Dimensions} 
 import { Pressable } from "react-native";
 import { back } from "react-native/Libraries/Animated/Easing";
 import IButton from "./IButton";
-
 import { supabase } from "../supabase/SupaBaseClient";
 import { userId } from "../screens/Auth";
+import { Swipeable } from "react-native-gesture-handler";
+import DeleteButton from "./DeleteButton";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 
-function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCircleColor, imgSrc, navigation, widthRatio, heightRatio}) {
+function EditExerciseListItem({itemId, name, sets, lowRepRange, highRepRange, backgroundCircleColor, imgSrc, navigation, widthRatio, heightRatio}) {
     const styles = StyleSheet.create({
         listItemContainer: {
             color: '#1C1C1E',
@@ -21,8 +22,19 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
             justifyContent: 'space-between',
             padding: 7 * widthRatio,
             width: 370 * widthRatio,
+            left: 1 * widthRatio,
+            marginBottom: 9 *heightRatio
+        },
+        outerListItemContainer: {
+            color: '#1C1C1E',
+            backgroundColor: '#1C1C1E',
+            borderRadius: 16,
+            justifyContent: 'space-between',
+            padding: 7 * widthRatio,
+            width: 370 * widthRatio,
             marginBottom: 9 * heightRatio,
             left: 1 * widthRatio,
+            height: 101 * heightRatio
         },
         leftListItem: {
             top: 0,
@@ -81,74 +93,25 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
         console.log("Navigate")
     }
 
-    async function getWorkoutLogs(exerciseId, minusDays) {
-            var currentDate = new Date();
-            currentDate.setDate(currentDate.getDate() - minusDays);
-
-            var year = currentDate.getFullYear();
-            var month = String(currentDate.getMonth() + 1).padStart(2, '0');
-            var day = String(currentDate.getDate()).padStart(2, '0');
-
-            var formattedDate = year + '-' + month + '-' + day;
-            try {
-            const { data, error } = await supabase
-                .from("Log")
-                .select()
-                .eq("UID", userId)
-                .eq("ExerciseId", exerciseId)
-                .gte("Date", formattedDate)
-                .order('Date', {ascending: true})
-        
-            if (error) {
-                throw error;
-            }
-        
-            // Return the column value
-            console.log(data);
-
-            const formattedData = []
-            for (let i = 0; i < data.length; i++) {
-                var dateString = data[i].Date;
-                var date = new Date(dateString);
-                var dateInteger = Date.parse(date);
-                formattedData.push({
-                    timestamp: dateInteger,
-                    value: data[i].RelWeight
-                })
-            }
-            console.log(formattedData);
-            return formattedData;
-            } catch (error) {
-            console.error('Error retrieving column value:', error.message);
-            // Handle the error accordingly
-            }
-        
-    }
 
     const height = 101 * heightRatio
     return(
-        <View>
+                <View style={[styles.listItemContainer, styles.front, {height: height, flexDirection: 'row'}]}>
+                    <IButton display={displayIButton} onPress={onPressHandler}></IButton>
+                    <View style={{top: 8 * heightRatio, left: 4 * widthRatio, width: height - (25*heightRatio), height: height - (25*heightRatio), borderRadius: 90, backgroundColor: backgroundCircleColor}}>
+                        
+                    </View>
+                    <Image source={imgSrc} style={{position: "absolute" , top: 25 * heightRatio, left: 24 * widthRatio, height: 50 * heightRatio, width: 50 * widthRatio}}></Image>
+                    <View style={[{justifyContent: 'center', marginBottom: 0, marginRight: 8 * widthRatio, marginLeft: 0}]}>
+                        <Text style={[styles.textPrimary, {fontSize: 20 * widthRatio, textAlign: 'right'}]}>{name}</Text>
+                        <Text style={[styles.textSecondary, {fontSize: 17 * widthRatio, textAlign: 'right'}]}>{sets} sets {lowRepRange}-{highRepRange} reps</Text>
 
-
-            <Animated.View style={[styles.listItemContainer, styles.front, {height: height, flexDirection: 'row'}]}>
-                <IButton display={displayIButton} onPress={onPressHandler}></IButton>
-                <View style={{top: 8 * heightRatio, left: 4 * widthRatio, width: height - (25*heightRatio), height: height - (25*heightRatio), borderRadius: 90, backgroundColor: backgroundCircleColor}}>
-                    
+                    </View>
                 </View>
-                <Image source={imgSrc} style={{position: "absolute" , top: 25 * heightRatio, left: 24 * widthRatio, height: 50 * heightRatio, width: 50 * widthRatio}}></Image>
-                <View style={[{justifyContent: 'center', marginBottom: 0, marginRight: 8 * widthRatio, marginLeft: 0}]}>
-                    <Text style={[styles.textPrimary, {fontSize: 20 * widthRatio, textAlign: 'right'}]}>{name}</Text>
-                    <Text style={[styles.textSecondary, {fontSize: 17 * widthRatio, textAlign: 'right'}]}>{sets} sets {lowRepRange}-{highRepRange} reps</Text>
-
-                </View>
-            </Animated.View>
-
- 
-    </View>    
         );
     }
 
-export default ExerciseListItem;
+export default EditExerciseListItem;
 
   
 

@@ -9,6 +9,7 @@ import { useRawData } from "@shopify/react-native-skia";
 import { useRef } from "react";
 import { supabase } from "../supabase/SupaBaseClient";
 import { userId } from "./Auth";
+import EditWorkout from "../components/EditWorkout";
 
 function WorkoutScreen({navigation}) {
 
@@ -79,13 +80,13 @@ function WorkoutScreen({navigation}) {
     function renderWorkout(itemData) {
         if (itemData.item.idx != 3) {
             return (
-                <WorkoutContainerComponent index={itemData.item.idx} currIndex={currentIndex} date={itemData.item.date} workout={ppl[itemData.item.date.getDay()]} navigation={navigation}  >
-                </WorkoutContainerComponent>
+                <EditWorkout index={itemData.item.idx} currIndex={currentIndex} date={itemData.item.date} workout={ppl[itemData.item.date.getDay()]} navigation={navigation}  >
+                </EditWorkout>
             );
         } else {
             return(
-            <WorkoutContainerComponent index={itemData.item.idx} currIndex={currentIndex} date={itemData.item.date} workout={ppl[itemData.item.date.getDay()]} navigation={navigation}  startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}>
-            </WorkoutContainerComponent>
+            <EditWorkout index={itemData.item.idx} currIndex={currentIndex} date={itemData.item.date} workout={ppl[itemData.item.date.getDay()]} navigation={navigation}>
+            </EditWorkout>
             );
         }
     }
@@ -169,12 +170,11 @@ function WorkoutScreen({navigation}) {
             showsHorizontalScrollIndicator={false}
             onScroll={handleOnScroll}
             viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-            initialScrollIndex={5}
+            initialScrollIndex={1}
             scrollEnabled={!workoutStarted}
         >
             
             </FlatList>
-            <Pagination data={dates} scrollX={scrollX} show={!workoutStarted}></Pagination>
 
             <StartButton showButton={currentIndex == 3 && !completedWorkout} onPress={startWorkoutHandler} workoutStarted={workoutStarted}></StartButton>
 
@@ -195,6 +195,11 @@ const styles = StyleSheet.create({
   });
   
   /*
+
+            <Pagination data={dates} scrollX={scrollX} show={!workoutStarted}></Pagination>
+
+
+
                       <View style={{marginBottom: 17.5}}>
                         <ExerciseListItem name={"Barbell Bench Press"} sets={"4"} lowRepRange={"6"} highRepRange={"8"} backgroundSrc={require('../assets/Orange.png')} imgSrc={require('../assets/BenchPress.png')}></ExerciseListItem>
                     </View>
@@ -290,5 +295,15 @@ const styles = StyleSheet.create({
 
 
                     <Image source={require('../assets/layouts/home.png')} style={{height: height, width: width, opacity:.5, position: 'absolute', zIndex: 1}}></Image>
+
+
+
+
+
+
+
+
+            <EditWorkout index={itemData.item.idx} currIndex={currentIndex} date={itemData.item.date} workout={ppl[itemData.item.date.getDay()]} navigation={navigation}  startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}>
+            </EditWorkout>
 
                     */
