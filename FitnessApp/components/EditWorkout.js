@@ -7,16 +7,18 @@ import DraggableFlatList, {OpacityDecorator, ScaleDecorator} from 'react-native-
 import AddExerciseButton from "./AddExerciseButton";
 import EditExerciseListItem from "./EditExerciseListItem";
 import { Swipeable } from "react-native-gesture-handler";
-import DeleteButton from "./DeleteButton";
 import Exercise from "../models/Exercise";
+import { Easing, FadeOut, FadeOutLeft, JumpingTransition, SlideInLeft, SlideInUp, SlideOutLeft, Transition } from "react-native-reanimated";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;
 const widthRatio = windowWidth/390;
 
 function EditWorkout({workout, date, startWorkout, navigation, endWorkout, closeSummary, index, currIndex}) {
+
     const dateRel = date;
-    let [workoutExercises, setWorkoutExercises] = useState(workout.exercises);
+    const [workoutExercises, setWorkoutExercises] = useState(workout.exercises);
+
     const workoutLocal = workout
     const [fadeAnim, setFadeAnime] = useState(new Animated.Value(0));
 
@@ -48,18 +50,49 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
         "DEC"
     ]
 
-    function onPress()
-    {
-        console.log("Pressed")
-    }
 
+    function addExerciseHandler() {
+        const newExercise = new Exercise("test", "Test add", 3, 4, 6, require('../assets/exercises/bench.png'), '#FFB846')
+        setWorkoutExercises((workoutExercises) => [
+            ...workoutExercises, newExercise
+        ])
+      }
 
-    function deleteItemHandler() {
-        console.log("pressed");
+    function deleteItemHandler(id) {
+        setWorkoutExercises((workoutExercises) => {
+            return workoutExercises.filter((item) => item.id !== id);
+        })
+        console.log(workoutExercises);
     }
 
     const renderItem = useCallback(
         ({item, drag}) => {
+
+        function DeleteButton() {
+
+            return (
+                    <View style={{flexDirection: 'row'}}>
+                        <View style={{height: 101, width: 22, backgroundColor: '#1C1C1E', marginLeft: -18}}>
+
+                        </View>
+                        <TouchableOpacity onPress={() => deleteItemHandler(item.id)}>
+                            <View style={{height: 101,width: 85, backgroundColor: '#7a7980', justifyContent: 'center', alignItems: 'center'}}>
+                                <Image source={require('../assets/edit.png')} style={{width: 26, height: 26}}/>
+                                <Text style={{color: 'white', marginTop: 2}}>Edit</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => deleteItemHandler(item.id)}>
+                            <View style={{height: 101,width: 85, backgroundColor: '#383838', justifyContent: 'center', alignItems: 'center', borderTopRightRadius: 16, borderBottomRightRadius: 16}}>
+                                <Image source={require('../assets/trash.png')} style={{height:30, width: 30}}/>
+                                <Text style={{color: 'white', marginTop: -1}}>Delete</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                    </View>
+                )
+            }
+
           return (
             <OpacityDecorator>
                 <Swipeable renderRightActions={DeleteButton} heightRatio={heightRatio} widthRatio={widthRatio} overshootRight={false} rightThreshold={20}>
@@ -93,16 +126,12 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
     }, [fadeAnim, modalStartVisible, startWorkout]);  
 
 
-      function addExerciseHandler() {
-        const newExercise = new Exercise("test", "Test add", 3, 4, 6, require('../assets/exercises/bench.png'), '#FFB846')
-        setWorkoutExercises([...workoutExercises, newExercise]);
-      }
 
 
       
 
     return(
-            <Animated.View style={styles.workoutScreenContainer}>
+            <View style={styles.workoutScreenContainer}>
                 <View style={styles.headerContainer}>
                     <View style={styles.leftHeaderContainer}>
                         <View style={{marginBottom: -10, height: 25, left: 12 * widthRatio}}>
@@ -135,10 +164,10 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
                     <View style={[styles.workoutContainer]}>
                         <AddExerciseButton widthRatio={widthRatio} heightRatio={heightRatio} onPress={addExerciseHandler}></AddExerciseButton>
                         <View style={{flex: 1}}>
-                            <DraggableFlatList style={{flex: .8}} onDragBegin={({index}) => console.log("Started Dragging")} fadingEdgeLength={100} showsVerticalScrollIndicator={false} data={workoutExercises} renderItem={renderItem} keyExtractor={(item) => item.id} onDragEnd={({data}) => setWorkoutExercises(data)} onPlaceholderIndexChange={({index}) => console.log("Changed index")} onRelease={({index}) => console.log("Released")}></DraggableFlatList>
+                            <DraggableFlatList onDragBegin={({index}) => console.log("Started Dragging")} fadingEdgeLength={100} showsVerticalScrollIndicator={false} data={workoutExercises} renderItem={renderItem} keyExtractor={(item) => item.id} onDragEnd={({data}) => setWorkoutExercises(data)} onPlaceholderIndexChange={({index}) => console.log("Changed index")} onRelease={({index}) => console.log("Released")}></DraggableFlatList>
                         </View>
                     </View>
-            </Animated.View>
+            </View>
     );
 }
 export default EditWorkout;

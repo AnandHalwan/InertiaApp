@@ -7,7 +7,6 @@ import IButton from "./IButton";
 import { supabase } from "../supabase/SupaBaseClient";
 import { userId } from "../screens/Auth";
 import { Swipeable } from "react-native-gesture-handler";
-import DeleteButton from "./DeleteButton";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -96,8 +95,7 @@ function EditExerciseListItem({itemId, name, sets, lowRepRange, highRepRange, ba
 
     const height = 101 * heightRatio
     return(
-                <View style={[styles.listItemContainer, styles.front, {height: height, flexDirection: 'row'}]}>
-                    <IButton display={displayIButton} onPress={onPressHandler}></IButton>
+                <Animated.View style={[styles.listItemContainer, styles.front, {height: height, flexDirection: 'row'}]}>
                     <View style={{top: 8 * heightRatio, left: 4 * widthRatio, width: height - (25*heightRatio), height: height - (25*heightRatio), borderRadius: 90, backgroundColor: backgroundCircleColor}}>
                         
                     </View>
@@ -107,7 +105,7 @@ function EditExerciseListItem({itemId, name, sets, lowRepRange, highRepRange, ba
                         <Text style={[styles.textSecondary, {fontSize: 17 * widthRatio, textAlign: 'right'}]}>{sets} sets {lowRepRange}-{highRepRange} reps</Text>
 
                     </View>
-                </View>
+                </Animated.View>
         );
     }
 
