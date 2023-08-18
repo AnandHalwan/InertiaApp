@@ -6,7 +6,15 @@ Welcome to Inertia. This is a Fitness app that teaches you the best ways to make
 
 The home page is where you will see the workout split that was created for you. When setting up your account, the client filters different workout splits based on your goals (strength, hypertrophy, etc), your experience level, and how many days a week you stated you would be free to workout. All of the information about your split is stored in an instance of PostgreSQL which is hosted on Supabase. On the home page below you can view your workout for today and also swipe left to see what your future workouts will look like. Pressing the green "start" button will direct you to a walkthrough of today's workout.
 
-<img src="homepage.jpg" alt="drawing" width="350"/>
+![IMG-3519](https://github.com/AnandHalwan/InertiaApp/assets/105897628/37953cca-b253-481c-8521-62a6e643e63f)
+
+
+##Edit Workout
+
+Editing your workout is a crucial part of a tracking app and we allow users to modify their workouts with ease. If you want to add an exercise, just scroll to the bottom and press the + button. If you want to reorder your exercises just drag and drop them around. If you want to remove or edit an exercise, you can use the hidden menu to do so.
+
+
+https://github.com/AnandHalwan/InertiaApp/assets/105897628/692046d8-650b-4529-9c14-335b32cd1d22
 
 
 ## Workout Walkthrough
