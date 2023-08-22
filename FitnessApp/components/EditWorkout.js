@@ -8,7 +8,6 @@ import AddExerciseButton from "./AddExerciseButton";
 import EditExerciseListItem from "./EditExerciseListItem";
 import { Swipeable } from "react-native-gesture-handler";
 import Exercise from "../models/Exercise";
-import { Easing, FadeOut, FadeOutLeft, JumpingTransition, SlideInLeft, SlideInUp, SlideOutLeft, Transition } from "react-native-reanimated";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;

@@ -12,7 +12,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 
-function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCircleColor, imgSrc, navigation, widthRatio, heightRatio}) {
+function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCircleColor, imgSrc, navigation, widthRatio, heightRatio, onPress}) {
     const styles = StyleSheet.create({
         listItemContainer: {
             color: '#1C1C1E',
@@ -129,9 +129,8 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
     return(
         <View>
 
-
+        <TouchableOpacity onPress={onPress}>
             <Animated.View style={[styles.listItemContainer, styles.front, {height: height, flexDirection: 'row'}]}>
-                <IButton display={displayIButton} onPress={onPressHandler}></IButton>
                 <View style={{top: 8 * heightRatio, left: 4 * widthRatio, width: height - (25*heightRatio), height: height - (25*heightRatio), borderRadius: 90, backgroundColor: backgroundCircleColor}}>
                     
                 </View>
@@ -143,7 +142,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
                 </View>
             </Animated.View>
 
- 
+            </TouchableOpacity>
     </View>    
         );
     }

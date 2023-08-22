@@ -17,6 +17,10 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
     let highWeight = 0;
     let highReps = 0;
 
+    const [test, setTest] = useState(true);
+
+
+
     function handleTextInputFocusWeight() {
             setWeightText("");
     }
@@ -137,47 +141,87 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
             }
         }
     }
-
+    console.log(test)
     const [defaultFront, setDefaultFront] = useState('flex');
     const [timerDisplay, setTimerDisplay] = useState('none');
     const [enterDisplay, setEnterDisplay] = useState('flex');
     const [defaultBack, setDefaultBack] = useState('none');
-    return(
-        <View>
-            <GestureRecognizer onSwipeLeft={gestureHandler}>
-            <Animated.View style={[styles.listItemContainer, styles.front, {height: 420, flexDirection: 'column', }, rotateFront]}> 
-                <CurrentExericseItemFront navigation={navigation} display={defaultFront} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} backgroundCircleColor={backgroundCircleColor}></CurrentExericseItemFront>
-                <ExerciseTimer start={showTimer} timer={timer} display={timerDisplay} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} setNumber={setNumber} initital={5}></ExerciseTimer>
-            </Animated.View>
-            <Animated.View style={[styles.listItemContainer, styles.back, {height: 420, flexDirection: 'column', justifyContent: 'space-between'}, rotateBack]}>
-                <View style={{display: enterDisplay}}>
-                    <View style={{flexDirection: 'row'}}>
-                        <View style={{marginTop: 13, marginLeft: 20}}>
-                        <Text style={{fontSize: 47, color: 'white', fontWeight: '600'}}>Set {setNumber}</Text>
-
+    if (test) {
+        return(
+            <View>
+                <GestureRecognizer onSwipeLeft={gestureHandler}>
+                <Animated.View style={[styles.listItemContainer, styles.front, {height: 420, flexDirection: 'column', }, rotateFront]}> 
+                    <CurrentExericseItemFront navigation={navigation} display={defaultFront} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} backgroundCircleColor={backgroundCircleColor}></CurrentExericseItemFront>
+                    <ExerciseTimer start={showTimer} timer={timer} display={timerDisplay} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} setNumber={setNumber} initital={5}></ExerciseTimer>
+                </Animated.View>
+                <Animated.View style={[styles.listItemContainer, styles.back, {height: 420, flexDirection: 'column', justifyContent: 'space-between'}, rotateBack]}>
+                    <View style={{display: enterDisplay}}>
+                        <View style={{flexDirection: 'row'}}>
+                            <View style={{marginTop: 13, marginLeft: 20}}>
+                            <Text style={{fontSize: 47, color: 'white', fontWeight: '600'}}>Set {setNumber}</Text>
+    
+                            </View>
+                        </View>
+                        <View style={{ width:370, left: -6, flexDirection: 'column' ,justifyContent: 'space-between', top: 80, alignItems: 'center'}}>
+                            <TextInput value={weightText} keyboardType={'numeric'} onFocus={handleTextInputFocusWeight} onChangeText={handleTextInputChangeWeight} editable={isFlipped} style={{backgroundColor: '#3C3B40', height: 82, top: -50, borderRadius: 20,  fontSize: 27, color: 'white', paddingLeft: 15, marginBottom: 24, width: 333}}>
+                                
+                            </TextInput>
+                            <TextInput value={repsText} keyboardType={'numeric'} onFocus={handleTextInputFocusReps} onChangeText={handleTextInputChangeReps} editable={isFlipped} style={{backgroundColor: '#3C3B40', height: 82, top: -50, borderRadius: 20,  fontSize: 27, color: 'white', paddingLeft: 15, marginBottom: 10, width: 333}}>
+                                
+                            </TextInput>
+                            <Pressable onPress={enterButtonPressedHandler}>
+                                <View style={styles.enterButtonContainer}>
+                                    <Text style={styles.enterButtonText}>
+                                        Enter
+                                    </Text>
+                                </View>
+                            </Pressable>
                         </View>
                     </View>
-                    <View style={{ width:330, left: 20 , flexDirection: 'column' ,justifyContent: 'space-between', top: 80, alignItems: 'center'}}>
-                        <TextInput value={weightText} keyboardType={'numeric'} onFocus={handleTextInputFocusWeight} onChangeText={handleTextInputChangeWeight} editable={isFlipped} style={{backgroundColor: '#3C3B40', height: 82, top: -50, borderRadius: 20,  fontSize: 27, color: 'white', paddingLeft: 15, marginBottom: 24, width: 333}}>
-                            
-                        </TextInput>
-                        <TextInput value={repsText} keyboardType={'numeric'} onFocus={handleTextInputFocusReps} onChangeText={handleTextInputChangeReps} editable={isFlipped} style={{backgroundColor: '#3C3B40', height: 82, top: -50, borderRadius: 20,  fontSize: 27, color: 'white', paddingLeft: 15, marginBottom: 10, width: 333}}>
-                            
-                        </TextInput>
-                        <Pressable onPress={enterButtonPressedHandler}>
-                            <View style={styles.enterButtonContainer}>
-                                <Text style={styles.enterButtonText}>
-                                    Enter
-                                </Text>
+                    <CurrentExericseItemFront display={defaultBack} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange}></CurrentExericseItemFront>
+                </Animated.View>
+                </GestureRecognizer>
+        </View>    
+            );
+    } else {
+        return(
+            <View>
+                <GestureRecognizer onSwipeLeft={gestureHandler}>
+                <Animated.View style={[styles.listItemContainer, styles.front, {height: 420, flexDirection: 'column', }, rotateFront]}> 
+                    <CurrentExericseItemFront navigation={navigation} display={defaultFront} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} backgroundCircleColor={backgroundCircleColor}></CurrentExericseItemFront>
+                    <ExerciseTimer start={showTimer} timer={timer} display={timerDisplay} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} setNumber={setNumber} initital={5}></ExerciseTimer>
+                </Animated.View>
+                <Animated.View style={[styles.listItemContainer, styles.back, {height: 420, flexDirection: 'column', justifyContent: 'space-between'}, rotateBack]}>
+                    <View style={{display: enterDisplay}}>
+                        <View style={{flexDirection: 'row'}}>
+                            <View style={{marginTop: 13, marginLeft: 20}}>
+                            <Text style={{fontSize: 47, color: 'white', fontWeight: '600'}}>Set {setNumber}</Text>
+    
                             </View>
-                        </Pressable>
+                        </View>
+                        <View style={{ width:370, left: -6, flexDirection: 'column' ,justifyContent: 'space-between', top: 80, alignItems: 'center'}}>
+                            <TextInput value={weightText} keyboardType={'numeric'} onFocus={handleTextInputFocusWeight} onChangeText={handleTextInputChangeWeight} editable={isFlipped} style={{backgroundColor: '#3C3B40', height: 82, top: -50, borderRadius: 20,  fontSize: 27, color: 'white', paddingLeft: 15, marginBottom: 24, width: 333}}>
+                                
+                            </TextInput>
+                            <TextInput value={repsText} keyboardType={'numeric'} onFocus={handleTextInputFocusReps} onChangeText={handleTextInputChangeReps} editable={isFlipped} style={{backgroundColor: '#3C3B40', height: 82, top: -50, borderRadius: 20,  fontSize: 27, color: 'white', paddingLeft: 15, marginBottom: 10, width: 333}}>
+                                
+                            </TextInput>
+                            <Pressable onPress={enterButtonPressedHandler}>
+                                <View style={styles.enterButtonContainer}>
+                                    <Text style={styles.enterButtonText}>
+                                        Enter
+                                    </Text>
+                                </View>
+                            </Pressable>
+                        </View>
                     </View>
-                </View>
-                <CurrentExericseItemFront display={defaultBack} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange}></CurrentExericseItemFront>
-            </Animated.View>
-            </GestureRecognizer>
-    </View>    
-        );
+                    <CurrentExericseItemFront display={defaultBack} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange}></CurrentExericseItemFront>
+                </Animated.View>
+                </GestureRecognizer>
+        </View>    
+            );
+    }
+
     }
 
 
@@ -197,8 +241,8 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         justifyContent: 'space-between',
         padding: 7,
-        width: 384,
-        marginBottom: 17.5,
+        width: 370,
+        marginBottom: 9,
     },
     leftListItem: {
         top: 0,

@@ -5,6 +5,7 @@ import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
 import DraggableFlatList, {OpacityDecorator, ScaleDecorator} from 'react-native-draggable-flatlist'
 import { TouchableOpacity } from "react-native-gesture-handler";
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;
@@ -135,34 +136,21 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
         }
       }
 
+      function handleNavigate() {
+        navigation.navigate("ExerciseInfoScreen")
+      }
+
     function renderExerciseListItem(itemData) {
         let startExercise = false;
         if (itemData.index == currentExercise && startWorkout) {
              startExercise = true;
              return <CurrentExerciseListItem name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} handleEnterButton={completedSetHandler} setNumber={setCounter} backgroundCircleColor={colors[itemData.index % 5]}></CurrentExerciseListItem>
         }
-        return <ExerciseListItem navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} startExercise={startExercise} expandedView={index === currIndex} backgroundCircleColor={colors[itemData.index % 5]} heightRatio={heightRatio} widthRatio={widthRatio}></ExerciseListItem>
+        return <ExerciseListItem onPress={handleNavigate} navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} startExercise={startExercise} expandedView={index === currIndex} backgroundCircleColor={colors[itemData.index % 5]} heightRatio={heightRatio} widthRatio={widthRatio}></ExerciseListItem>
 
     }
 
-    useEffect(() => {
-        if (modalStartVisible) {
-            console.log("Start modal");
-            Animated.timing(fadeAnim, {
-                toValue: 1,
-                duration: 2000,
-                useNativeDriver: true,
-              }).start();
-        } else {
-            Animated.timing(fadeAnim, {
-                toValue: 0,
-                duration: 0,
-                useNativeDriver: true,
-              }).start();
-        }
 
-
-    }, [fadeAnim, modalStartVisible, startWorkout]);  
 
     function setEndVisible() {
         setModalEndVisible(false);
@@ -316,7 +304,7 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
                     </View>
                 </View>
                                 
-                    <View style={[styles.workoutContainer]}>
+                    <View style={[styles.workoutContainer, {flex: startWorkout ? 50.4 * heightRatio : 3.55 * heightRatio}, {top: startWorkout ? 18 : 29}]}>
                         <FlatList fadingEdgeLength={100} ref={flatListRef} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
                     </View>
             </Animated.View>
@@ -361,7 +349,6 @@ const styles = StyleSheet.create({
         width: 384 * widthRatio,
         top: 25,
         marginLeft: 1.4 * widthRatio,
-        flex: 3.4 * heightRatio,
         alignItems: 'center',
         marginBottom: 30
     },

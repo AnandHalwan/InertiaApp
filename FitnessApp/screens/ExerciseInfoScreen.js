@@ -1,16 +1,19 @@
-import { useState, useEffect , useRef} from "react";
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Animated} from "react-native";
+import { useState, useEffect , useRef, useCallback} from "react";
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Animated, Button} from "react-native";
 import { LineChart } from "react-native-wagmi-charts";
 import { data1M, data1Y, data3M, data6M, dataLFT, testData } from "../data/GraphDummyData";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import { Canvas, Group} from "@shopify/react-native-skia";
 import { supabase } from "../supabase/SupaBaseClient";
 import { userId } from "./Auth";
+import YoutubePlayer from "react-native-youtube-iframe";
+
+
 function ExerciseInfoScreen({navigation, route}) {
     function backPressHandler() {
         navigation.goBack();
     }
-
+    /*
     const {eid, oneM, threeM, sixM, oneY, lft} = route.params;
 
     const [oneMPressed, setOneMPressed] = useState(true);
@@ -22,19 +25,7 @@ function ExerciseInfoScreen({navigation, route}) {
     const [data, setData] = useState(testData);
 
 
-    const slideStyle = {
-        transform: [{ translateX: slideValue }],
-      };
-      const [initial, setInitial] = useState(false);
-      useEffect(() =>{
-        if (!initial) {
-            setTimeout(() => {
-                setData(oneM._z)
-                setInitial(true)
-                console.log("Delayed code executed!");
-              }, 200);
-        }
-      })
+
     function oneMPressHandler() {
         setData(oneM._z);
         setOneMPressed(true);
@@ -80,7 +71,7 @@ function ExerciseInfoScreen({navigation, route}) {
         setLftPressed(true);
         slideButton(228);
     }
-
+    */
     function slideButton(newPosition) {
         Animated.timing(slideValue, {
             toValue: newPosition,
@@ -89,6 +80,19 @@ function ExerciseInfoScreen({navigation, route}) {
           }).start();
     }
 
+
+    const [playing, setPlaying] = useState(false);
+
+    const onStateChange = useCallback((state) => {
+        if (state === "ended") {
+        setPlaying(false);
+        Alert.alert("video has finished playing!");
+        }
+    }, []);
+
+    const togglePlaying = useCallback(() => {
+        setPlaying((prev) => !prev);
+    }, []);
 
     return(
         <View style={styles.infoContainer}>
@@ -133,62 +137,20 @@ function ExerciseInfoScreen({navigation, route}) {
                             </Text>
                         </View>
                         <View style={styles.lineChartContainer}>
-                        <LineChart.Provider data={data} color={'red'}>
-                            <LineChart width={275} height={80}>
-                            <LineChart.Path color="red"  >
-                                <LineChart.Gradient  />
-                            </LineChart.Path>
-                            <LineChart.CursorCrosshair color="red" />
 
-                            </LineChart>
-                        </LineChart.Provider>
                         </View>
                     </View>
-                    <View style={styles.graphButtonContainer}>
 
-                            <Animated.View style={[styles.slidingButton, slideStyle]} >
-
-                            </Animated.View>
-                            <View style={styles.graphButtonContainer}>
-                                <Pressable onPress={oneMPressHandler}>
-                                    <Text style={styles.timeStepButtonTextOne}>
-                                        1M
-                                    </Text >
-                                </Pressable>
-                            </View>
-                            <View style={styles.graphButtonContainer}>
-                                <Pressable onPress={threeMPressHandler}>
-                                    <Text style={styles.timeStepButtonTextOne}>
-                                        3M
-                                    </Text >
-                                </Pressable>
-                            </View>
-                            <View style={styles.graphButtonContainer}>
-                                <Pressable onPress={sixMPressHandler}>
-                                    <Text style={styles.timeStepButtonTextTwo}>
-                                        6M
-                                    </Text >
-                                </Pressable>
-                            </View>
-                            <View style={styles.graphButtonContainer}>
-                                <Pressable onPress={oneYPressHandler}>
-                                    <Text style={styles.timeStepButtonTextOne}>
-                                        1Y
-                                    </Text >
-                                </Pressable>
-                            </View>
-                            <View style={styles.graphButtonContainer}>
-                                <Pressable onPress={LFTPressHandler}>
-                                    <Text style={styles.timeStepButtonTextOne}>
-                                        LFT
-                                    </Text >
-                                </Pressable>
-                            </View>
-
-                    </View>
                 </View>
-                <View>
-                    <Image source={require('../assets/Bench.png')} style={styles.exerciseImage}></Image>
+                <View style={{marginLeft: 8}}>
+                    <YoutubePlayer
+                    height={230}
+                    width={374}
+                    videoId={"vcBig73ojpE"}
+                    play={playing}
+                    onChangeState={onStateChange}
+                    />
+                    <Button title={playing ? "pause" : "play"} onPress={togglePlaying}/>
                 </View>
                 <View style={styles.instructionsContainer}>
                     <Text  style={styles.instructionsHeader}>Instructions</Text>
@@ -370,3 +332,60 @@ const styles = StyleSheet.create({
 
     
 });
+
+/*
+
+                        <LineChart.Provider data={data} color={'red'}>
+                            <LineChart width={275} height={80}>
+                            <LineChart.Path color="red"  >
+                                <LineChart.Gradient  />
+                            </LineChart.Path>
+                            <LineChart.CursorCrosshair color="red" />
+
+                            </LineChart>
+                        </LineChart.Provider>
+
+
+                                            <View style={styles.graphButtonContainer}>
+
+                            <Animated.View style={[styles.slidingButton, slideStyle]} >
+
+                            </Animated.View>
+                            <View style={styles.graphButtonContainer}>
+                                <Pressable onPress={oneMPressHandler}>
+                                    <Text style={styles.timeStepButtonTextOne}>
+                                        1M
+                                    </Text >
+                                </Pressable>
+                            </View>
+                            <View style={styles.graphButtonContainer}>
+                                <Pressable onPress={threeMPressHandler}>
+                                    <Text style={styles.timeStepButtonTextOne}>
+                                        3M
+                                    </Text >
+                                </Pressable>
+                            </View>
+                            <View style={styles.graphButtonContainer}>
+                                <Pressable onPress={sixMPressHandler}>
+                                    <Text style={styles.timeStepButtonTextTwo}>
+                                        6M
+                                    </Text >
+                                </Pressable>
+                            </View>
+                            <View style={styles.graphButtonContainer}>
+                                <Pressable onPress={oneYPressHandler}>
+                                    <Text style={styles.timeStepButtonTextOne}>
+                                        1Y
+                                    </Text >
+                                </Pressable>
+                            </View>
+                            <View style={styles.graphButtonContainer}>
+                                <Pressable onPress={LFTPressHandler}>
+                                    <Text style={styles.timeStepButtonTextOne}>
+                                        LFT
+                                    </Text >
+                                </Pressable>
+                            </View>
+
+                    </View>
+                        */

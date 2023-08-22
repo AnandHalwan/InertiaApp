@@ -6,6 +6,7 @@ import StatisticsScreen from "../screens/StatisticsScreen";
 import WorkoutScreen from "../screens/WorkoutScreen";
 import { Image } from "react-native";
 import WorkoutRoot from "./WorkoutRoot";
+import EncyclopediaRoot from "./EncyclopediaRoot";
 const Tab = createBottomTabNavigator();
 
 function TabRoot() {
@@ -30,6 +31,40 @@ function TabRoot() {
              }}
              ></Tab.Screen>
             <Tab.Screen 
+              name="Statistics" 
+              component={StatisticsScreen}
+              options={{
+                  tabBarShowLabel: false,
+                  tabBarIcon: ({ focused }) => (
+                      <Image
+                        source={focused ? require('../assets/Social1.png') :  require('../assets/Social.png')}
+                        style={{ width: 23, height: 23}}                        />
+                  ),
+            }}></Tab.Screen>
+            <Tab.Screen 
+              name="Encyclopedia" 
+              component={EncyclopediaRoot}
+              options={{
+                  tabBarShowLabel: false,
+                  tabBarIcon: ({ focused }) => (
+                      <Image                          source={focused ? require('../assets/Book1.png') :  require('../assets/Book.png')}
+                        style={{ width: 23, height: 23}}
+                        />
+                    ),
+            }}></Tab.Screen>
+            <Tab.Screen 
+              name="Nutrition" 
+              component={NutritionScreen}
+              options={{
+                  tabBarShowLabel: false,
+                  tabBarIcon: ({ focused }) => (
+                      <Image
+                          source={focused ? require('../assets/Leaf1.png') :  require('../assets/Leaf.png')}
+                          style={{ width: 23, height: 23}}
+                        />
+                      ),
+            }}></Tab.Screen>
+            <Tab.Screen 
                 name="Profile" 
                 component={ProfileScreen}
                 options={{
@@ -42,44 +77,6 @@ function TabRoot() {
                       ),
                  }}
                 ></Tab.Screen>
-            <Tab.Screen 
-                name="Encyclopedia" 
-                component={EncyclopediaScreen}
-                options={{
-                    tabBarShowLabel: false,
-                    tabBarIcon: ({ focused }) => (
-                        <Image
-                          source={focused ? require('../assets/Book1.png') :  require('../assets/Book.png')}
-                          style={{ width: 23, height: 23}}
-                        />
-                      ),
-                 }}></Tab.Screen>
-            <Tab.Screen 
-                name="Statistics" 
-                component={StatisticsScreen}
-                options={{
-                    tabBarShowLabel: false,
-                    tabBarIcon: ({ focused }) => (
-                        <Image
-                          source={focused ? require('../assets/Social1.png') :  require('../assets/Social.png')}
-                          style={{ width: 23, height: 23}}
-                        />
-                      ),
-                 }}></Tab.Screen>
-            <Tab.Screen 
-                name="Nutrition" 
-                component={NutritionScreen}
-                options={{
-                    tabBarShowLabel: false,
-                    tabBarIcon: ({ focused }) => (
-                        <Image
-                          source={focused ? require('../assets/Leaf1.png') :  require('../assets/Leaf.png')}
-                          style={{ width: 23, height: 23}}
-                        />
-                      ),
-                 }}></Tab.Screen>
-
-
         
         </Tab.Navigator>
     );

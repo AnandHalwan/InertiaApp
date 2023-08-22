@@ -1,15 +1,16 @@
-import { View, StyleSheet, Text, FlatList, Animated, Dimensions, Image  } from "react-native";
+import { View, StyleSheet, Text, FlatList, Animated, Dimensions, Image, TouchableOpacity, Modal} from "react-native";
 import { ppl } from "../data/DummyData";
 import Swiper from "react-native-swiper";
 import WorkoutContainerComponent from "../components/WorkourContainerComponent";
 import { useEffect, useState } from "react";
 import StartButton from "../components/StartButton";
 import Pagination from "../components/Pagination";
-import { useRawData } from "@shopify/react-native-skia";
+import {useRawData } from "@shopify/react-native-skia";
 import { useRef } from "react";
 import { supabase } from "../supabase/SupaBaseClient";
 import { userId } from "./Auth";
 import EditWorkout from "../components/EditWorkout";
+import { BlurView } from "@react-native-community/blur";
 
 function WorkoutScreen({navigation}) {
 
@@ -41,92 +42,56 @@ function WorkoutScreen({navigation}) {
     const datePlusOne = new Date(date.getTime() + 86400000);
     const datePlusTwo = new Date(datePlusOne.getTime() + 86400000);
     const datePlusThree = new Date(datePlusTwo.getTime() + 86400000);
-    const dateMinusOne = new Date(date.getTime() - 86400000);
-    const dateMinusTwo = new Date(dateMinusOne.getTime() - 86400000);
-    const dateMinusThree = new Date(dateMinusTwo.getTime() - 86400000);
+    const datePlusFour = new Date(datePlusThree.getTime() + 86400000);
+    const datePlusFive = new Date(datePlusFour.getTime() + 86400000);
+    const datePlusSix = new Date(datePlusFive.getTime() + 86400000);
 
+    const [currentIndex, setCurrentIndex] = useState(0);
     const dates = [
         {
             idx: 0,
-            date: dateMinusThree
-        },
-        {
-            idx: 1,
-            date: dateMinusTwo
-        },
-        {
-            idx: 2,
-            date: dateMinusOne
-        },
-        {
-            idx: 3,
             date: date
         },
         {
-            idx: 4,
+            idx: 1,
             date: datePlusOne
         },
         {
-            idx: 5,
+            idx: 2,
             date: datePlusTwo
         },
         {
-            idx: 6,
+            idx: 3,
             date: datePlusThree
+        },
+        {
+            idx: 4,
+            date: datePlusFour
+        },
+        {
+            idx: 5,
+            date: datePlusFive
+        },
+        {
+            idx: 6,
+            date: datePlusSix
         },
 
     ]
 
     function renderWorkout(itemData) {
-        if (itemData.item.idx != 3) {
+        if (dates[3].idx != 3) {
             return (
-                <EditWorkout index={itemData.item.idx} currIndex={currentIndex} date={itemData.item.date} workout={ppl[itemData.item.date.getDay()]} navigation={navigation}  >
-                </EditWorkout>
+              <EditWorkout index={dates[3].idx}date={dates[3].date} workout={ppl[dates[3].date.getDay()]} navigation={navigation}  startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}>
+              </EditWorkout>
             );
         } else {
             return(
-            <EditWorkout index={itemData.item.idx} currIndex={currentIndex} date={itemData.item.date} workout={ppl[itemData.item.date.getDay()]} navigation={navigation}>
-            </EditWorkout>
+              <EditWorkout index={dates[3].idx} date={dates[3].date} workout={ppl[dates[3].date.getDay()]} navigation={navigation}  startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}>
+              </EditWorkout>
             );
         }
     }
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const scrollX = useRef(new Animated.Value(0)).current;
-  
-    const handleOnScroll = event => {
-      Animated.event(
-        [
-          {
-            nativeEvent: {
-              contentOffset: {
-                x: scrollX,
-              },
-            },
-          },
-        ],
-        {
-          useNativeDriver: false,
-        },
-      )(event);
-    };
-
-    
-  
-    const onViewableItemsChanged = ({
-        viewableItems,
-      }) => {
-        setCurrentIndex(viewableItems[0].index)
-        console.log(currentIndex);
-      };
-
-      const viewabilityConfigCallbackPairs = useRef([
-        { onViewableItemsChanged },
-      ]);
-
-
-      const width = Dimensions.get('window').width;
-      const height = Dimensions.get('window').height;
-
 
       async function getWorkoutLogs(exerciseId, minusDays) {
         var currentDate = new Date();
@@ -158,27 +123,31 @@ function WorkoutScreen({navigation}) {
         }
       }
 
+      const selectData = [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+
+
+
+    const [selectWorkoutVisible, setSelectWorkoutVisible] = useState(false);
 
     return (
         <View style={styles.container}>
+          <Modal visible={selectWorkoutVisible} style={{backgroundColor: "black"}} animationType="fade">
+            <View style={{flex: 1}}>
 
-            <FlatList data={dates}
-            renderItem={renderWorkout}
-            horizontal
-            pagingEnabled
-            snapToAlignment="center"
-            showsHorizontalScrollIndicator={false}
-            onScroll={handleOnScroll}
-            viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-            initialScrollIndex={1}
-            scrollEnabled={!workoutStarted}
-        >
-            
-            </FlatList>
-
-            <StartButton showButton={currentIndex == 3 && !completedWorkout} onPress={startWorkoutHandler} workoutStarted={workoutStarted}></StartButton>
-
-
+            </View>
+          </Modal>
+          <TouchableOpacity style={{position: 'absolute', left: 350, top: 90, height:40, width:40, zIndex: 1}} hitSlop={{left: 40, top: 40, bottom: 40, right: 40}} onPress={() => setSelectWorkoutVisible(!selectWorkoutVisible)}>
+            <Image source={require("../assets/option.png")} style={{width: 27, height: 27}}></Image>
+          </TouchableOpacity>
+          <EditWorkout index={dates[currentIndex].idx} date={dates[currentIndex].date} workout={ppl[dates[currentIndex].date.getDay()]} navigation={navigation}  startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}></EditWorkout>
         </View>
 
     );
@@ -299,11 +268,12 @@ const styles = StyleSheet.create({
 
 
 
+            <WorkoutContainerComponent index={dates[3].idx} currIndex={currentIndex} date={dates[3].date} workout={ppl[dates[3].date.getDay()]} navigation={navigation}  startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}>
+            </WorkoutContainerComponent>
 
 
 
-
-            <EditWorkout index={itemData.item.idx} currIndex={currentIndex} date={itemData.item.date} workout={ppl[itemData.item.date.getDay()]} navigation={navigation}  startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}>
+            <EditWorkout index={dates[3].idx} currIndex={currentIndex} date={dates[3].date} workout={ppl[dates[3].date.getDay()]} navigation={navigation}  startWorkout={workoutStarted} endWorkout={completedWorkoutHandler} closeSummary={closeSummary}>
             </EditWorkout>
 
                     */
