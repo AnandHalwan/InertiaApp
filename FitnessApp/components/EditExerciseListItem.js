@@ -7,7 +7,7 @@ import IButton from "./IButton";
 import { supabase } from "../supabase/SupaBaseClient";
 import { userId } from "../screens/Auth";
 import { Swipeable } from "react-native-gesture-handler";
-import Animated, { useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -23,7 +23,6 @@ const EditExerciseListItem = (props, ref) => {
             padding: 7 * props.widthRatio,
             width: 370 * props.widthRatio,
             left: 1 * props.widthRatio,
-            marginBottom: 9 *props.heightRatio
         },
         outerListItemContainer: {
             color: '#1C1C1E',
@@ -86,11 +85,16 @@ const EditExerciseListItem = (props, ref) => {
         }
     });
     useImperativeHandle(ref, () => ({
-        test: (deleteId) => {
+        fadeOut: (deleteId) => {
             if (deleteId == props.itemId) {
                 console.log(deleteId);
-                heightAnimated.value = withTiming(heightAnimated.value +50)
+                opacityAnimated.value = withTiming(opacityAnimated.value - 1)
+                heightAnimated.value = withTiming(heightAnimated.value - 101)
+                marginAnimated.value = withTiming(marginAnimated.value - 9);
             }
+        },
+        moveUp: () => {
+            console.log(props.itemId)
         }
     }))
 
@@ -102,12 +106,29 @@ const EditExerciseListItem = (props, ref) => {
         console.log("Navigate")
     }
 
+    const opacityAnimated = useSharedValue(1);
+    const opacityAnimatedValue = useAnimatedStyle(() => {
+        return {
+            opacity: opacityAnimated.value
+        }
+    })
+
     const heightAnimated = useSharedValue(101);
+    const animateHeight = useAnimatedStyle(() => {
+        return {
+            height: heightAnimated.value
+        }
+    });
 
-
+    const marginAnimated = useSharedValue(9);
+    const animateMargin = useAnimatedStyle(() => {
+        return {
+            marginBottom: marginAnimated.value
+        }
+    })
     const [height, setHeight] = useState(101*props.heightRatio);
     return(
-                <Animated.View style={[styles.listItemContainer, styles.front, {opacity: 1, height: heightAnimated.value, flexDirection: 'row'}]}>
+                <Animated.View style={[styles.listItemContainer, styles.front, opacityAnimatedValue, animateHeight, animateMargin,{opacity: 1, flexDirection: 'row'}]}>
                     <View style={{top: 8 * props.heightRatio, left: 4 * props.widthRatio, width: height - (25*props.heightRatio), height: height - (25*props.heightRatio), borderRadius: 90, backgroundColor: props.backgroundCircleColor}}>
                         
                     </View>

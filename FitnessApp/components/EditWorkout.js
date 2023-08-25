@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useCallback } from "react";
-import { View, StyleSheet, Text, FlatList, Animated, Modal, Dimensions, Image, TouchableOpacity} from "react-native";
+import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image, TouchableOpacity} from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
@@ -8,6 +8,8 @@ import AddExerciseButton from "./AddExerciseButton";
 import EditExerciseListItem from "./EditExerciseListItem";
 import { Swipeable } from "react-native-gesture-handler";
 import Exercise from "../models/Exercise";
+import Animated, { useSharedValue , useAnimatedStyle, withTiming} from 'react-native-reanimated';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;
@@ -60,7 +62,12 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
         ])
       }
 
-
+      function deleteItemFromWorkout(id) {
+        setWorkoutExercises((workoutExercises) => {
+            return workoutExercises.filter((item) => item.id !== id);
+        })
+        console.log(workoutExercises);
+    }
 
     const renderItem = useCallback(
         ({item, drag}) => {
@@ -68,27 +75,46 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
         const itemRef = useRef();
 
         function deleteItemHandler(id) {
-            itemRef.current.test(id);
+            itemRef.current.fadeOut(id);
+            opacityAnimated.value = withTiming(opacityAnimated.value - 1);
+            heightAnimated.value = withTiming(heightAnimated.value - 101);
+            setTimeout(() => {
+                deleteItemFromWorkout(id);
+            }, 500);
         }
+
+        const opacityAnimated = useSharedValue(1);
+        const opacityAnimatedValue = useAnimatedStyle(() => {
+            return {
+                opacity: opacityAnimated.value
+            }
+        });
+
+        const heightAnimated = useSharedValue(101);
+        const animateHeight = useAnimatedStyle(() => {
+            return {
+                height: heightAnimated.value
+            }
+        });
         function DeleteButton() {
             
             return (
                     <View style={{flexDirection: 'row'}}>
-                        <View style={{height: 101, width: 22, backgroundColor: '#1C1C1E', marginLeft: -18}}>
+                        <Animated.View style={[opacityAnimatedValue, animateHeight,{ width: 22, backgroundColor: '#1C1C1E', marginLeft: -18}]}>
 
-                        </View>
+                        </Animated.View>
                         <TouchableOpacity onPress={() => deleteItemHandler(item.id)}>
-                            <View style={{height: 101,width: 85, backgroundColor: '#7a7980', justifyContent: 'center', alignItems: 'center'}}>
+                            <Animated.View style={[opacityAnimatedValue, animateHeight,{width: 85, backgroundColor: '#7a7980', justifyContent: 'center', alignItems: 'center'}]}>
                                 <Image source={require('../assets/edit.png')} style={{width: 26, height: 26}}/>
                                 <Text style={{color: 'white', marginTop: 2}}>Edit</Text>
-                            </View>
+                            </Animated.View>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={() => deleteItemHandler(item.id)}>
-                            <View style={{height: 101,width: 85, backgroundColor: '#383838', justifyContent: 'center', alignItems: 'center', borderTopRightRadius: 16, borderBottomRightRadius: 16}}>
+                            <Animated.View style={[opacityAnimatedValue, animateHeight,{width: 85, backgroundColor: '#383838', justifyContent: 'center', alignItems: 'center', borderTopRightRadius: 16, borderBottomRightRadius: 16}]}>
                                 <Image source={require('../assets/trash.png')} style={{height:30, width: 30}}/>
                                 <Text style={{color: 'white', marginTop: -1}}>Delete</Text>
-                            </View>
+                            </Animated.View>
                         </TouchableOpacity>
                     </View>
                 )
