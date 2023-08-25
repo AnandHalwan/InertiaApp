@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import React, {useEffect, useState, useRef, useCallback } from "react";
 import { View, StyleSheet, Text, FlatList, Animated, Modal, Dimensions, Image, TouchableOpacity} from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
@@ -25,6 +25,9 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
     const [displayHeader, setDisplayHeader] = useState('flex');
     const [modalStartVisible, setModalStartVisible] = useState(false);  
     const [modalEndVisible, setModalEndVisible] = useState(false);
+
+    const [deleteId, setDeleteId] = useState("none");
+
     const daysOfWeek = [
         "SUNDAY",
         "MONDAY",
@@ -57,18 +60,18 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
         ])
       }
 
-    function deleteItemHandler(id) {
-        setWorkoutExercises((workoutExercises) => {
-            return workoutExercises.filter((item) => item.id !== id);
-        })
-        console.log(workoutExercises);
-    }
+
 
     const renderItem = useCallback(
         ({item, drag}) => {
 
-        function DeleteButton() {
+        const itemRef = useRef();
 
+        function deleteItemHandler(id) {
+            itemRef.current.test(id);
+        }
+        function DeleteButton() {
+            
             return (
                     <View style={{flexDirection: 'row'}}>
                         <View style={{height: 101, width: 22, backgroundColor: '#1C1C1E', marginLeft: -18}}>
@@ -87,19 +90,19 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
                                 <Text style={{color: 'white', marginTop: -1}}>Delete</Text>
                             </View>
                         </TouchableOpacity>
-
                     </View>
                 )
             }
 
+
           return (
-            <OpacityDecorator>
+            <ScaleDecorator activeScale={1.02}>
                 <Swipeable renderRightActions={DeleteButton} heightRatio={heightRatio} widthRatio={widthRatio} overshootRight={false} rightThreshold={20}>
                     <Pressable onLongPress={drag} delayLongPress={100}  pressRetentionOffset={{ bottom: 10, left: 10, right: 10, top: 10}}>
-                        <EditExerciseListItem navigation={navigation} itemId={item.id} name={item.name} sets={item.sets} lowRepRange={item.lowRepRange} highRepRange={item.highRepRange} backgroundSrc={item.backgroundSrc} imgSrc={item.imgSrc} startWorkout={startWorkout} exerciseNumber={item.index} startExercise={false} expandedView={index === currIndex} backgroundCircleColor={item.color} heightRatio={heightRatio} widthRatio={widthRatio}></EditExerciseListItem>
+                        <EditExerciseListItem ref={itemRef} navigation={navigation} itemId={item.id} name={item.name} sets={item.sets} lowRepRange={item.lowRepRange} highRepRange={item.highRepRange} backgroundSrc={item.backgroundSrc} imgSrc={item.imgSrc} startWorkout={startWorkout} exerciseNumber={item.index} startExercise={false}  backgroundCircleColor={item.color} heightRatio={heightRatio} widthRatio={widthRatio} deleteId={deleteId}></EditExerciseListItem>
                     </Pressable>
                 </Swipeable>
-            </OpacityDecorator>
+            </ScaleDecorator>
           );
         },
         []

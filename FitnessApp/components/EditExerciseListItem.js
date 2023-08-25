@@ -1,39 +1,40 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } from "react";
 
-import { View, Image, StyleSheet, Text, Animated, TouchableOpacity, Dimensions} from "react-native";
+import { View, Image, StyleSheet, Text, TouchableOpacity, Dimensions} from "react-native";
 import { Pressable } from "react-native";
 import { back } from "react-native/Libraries/Animated/Easing";
 import IButton from "./IButton";
 import { supabase } from "../supabase/SupaBaseClient";
 import { userId } from "../screens/Auth";
 import { Swipeable } from "react-native-gesture-handler";
+import Animated, { useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 
-function EditExerciseListItem({itemId, name, sets, lowRepRange, highRepRange, backgroundCircleColor, imgSrc, navigation, widthRatio, heightRatio}) {
+const EditExerciseListItem = (props, ref) => {
     const styles = StyleSheet.create({
         listItemContainer: {
             color: '#1C1C1E',
             backgroundColor: '#1C1C1E',
             borderRadius: 16,
             justifyContent: 'space-between',
-            padding: 7 * widthRatio,
-            width: 370 * widthRatio,
-            left: 1 * widthRatio,
-            marginBottom: 9 *heightRatio
+            padding: 7 * props.widthRatio,
+            width: 370 * props.widthRatio,
+            left: 1 * props.widthRatio,
+            marginBottom: 9 *props.heightRatio
         },
         outerListItemContainer: {
             color: '#1C1C1E',
             backgroundColor: '#1C1C1E',
             borderRadius: 16,
             justifyContent: 'space-between',
-            padding: 7 * widthRatio,
-            width: 370 * widthRatio,
-            marginBottom: 9 * heightRatio,
-            left: 1 * widthRatio,
-            height: 101 * heightRatio
+            padding: 7 * props.widthRatio,
+            width: 370 * props.widthRatio,
+            marginBottom: 9 * props.heightRatio,
+            left: 1 * props.widthRatio,
+            height: 101 * props.heightRatio
         },
         leftListItem: {
             top: 0,
@@ -41,18 +42,18 @@ function EditExerciseListItem({itemId, name, sets, lowRepRange, highRepRange, ba
             
         },
         imgBackground: {
-            width: 87 * widthRatio,
-            height: 87 * heightRatio,
+            width: 87 * props.widthRatio,
+            height: 87 * props.heightRatio,
         },
         rightListItem: {
-            marginLeft: 10 * widthRatio,
+            marginLeft: 10 * props.widthRatio,
             
         },
         textPrimary: {
             color: 'white',
             letterSpacing: -.1,
-            left: -1 * widthRatio,
-            top: -1 * heightRatio
+            left: -1 * props.widthRatio,
+            top: -1 * props.heightRatio
         },
         textSecondary: {
             color: '#808080',
@@ -64,17 +65,17 @@ function EditExerciseListItem({itemId, name, sets, lowRepRange, highRepRange, ba
             borderRadius: 16,
             flexDirection: 'row',
             justifyContent: 'space-between',
-            padding: 7 * heightRatio,
-            width: 384 * widthRatio,
+            padding: 7 * props.heightRatio,
+            width: 384 * props.widthRatio,
             marginBottom: 17.5,
-            height: 200 *heightRatio,
+            height: 200 *props.heightRatio,
         },
         imgContainer: {
             position: 'absolute',
-            top: 8 * heightRatio,
-            left: 8 * widthRatio,
-            width: 70 * widthRatio,
-            height: 70 * heightRatio
+            top: 8 * props.heightRatio,
+            left: 8 * props.widthRatio,
+            width: 70 * props.widthRatio,
+            height: 70 * props.heightRatio
         },
         back: {
             backfaceVisibility: 'hidden',
@@ -84,6 +85,15 @@ function EditExerciseListItem({itemId, name, sets, lowRepRange, highRepRange, ba
             backfaceVisibility: 'hidden',
         }
     });
+    useImperativeHandle(ref, () => ({
+        test: (deleteId) => {
+            if (deleteId == props.itemId) {
+                console.log(deleteId);
+                heightAnimated.value = withTiming(heightAnimated.value +50)
+            }
+        }
+    }))
+
 
 
     const [displayIButton, setDisplayIButton] = useState('none');
@@ -92,24 +102,26 @@ function EditExerciseListItem({itemId, name, sets, lowRepRange, highRepRange, ba
         console.log("Navigate")
     }
 
+    const heightAnimated = useSharedValue(101);
 
-    const height = 101 * heightRatio
+
+    const [height, setHeight] = useState(101*props.heightRatio);
     return(
-                <Animated.View style={[styles.listItemContainer, styles.front, {height: height, flexDirection: 'row'}]}>
-                    <View style={{top: 8 * heightRatio, left: 4 * widthRatio, width: height - (25*heightRatio), height: height - (25*heightRatio), borderRadius: 90, backgroundColor: backgroundCircleColor}}>
+                <Animated.View style={[styles.listItemContainer, styles.front, {opacity: 1, height: heightAnimated.value, flexDirection: 'row'}]}>
+                    <View style={{top: 8 * props.heightRatio, left: 4 * props.widthRatio, width: height - (25*props.heightRatio), height: height - (25*props.heightRatio), borderRadius: 90, backgroundColor: props.backgroundCircleColor}}>
                         
                     </View>
-                    <Image source={imgSrc} style={{position: "absolute" , top: 25 * heightRatio, left: 24 * widthRatio, height: 50 * heightRatio, width: 50 * widthRatio}}></Image>
-                    <View style={[{justifyContent: 'center', marginBottom: 0, marginRight: 8 * widthRatio, marginLeft: 0}]}>
-                        <Text style={[styles.textPrimary, {fontSize: 20 * widthRatio, textAlign: 'right'}]}>{name}</Text>
-                        <Text style={[styles.textSecondary, {fontSize: 17 * widthRatio, textAlign: 'right'}]}>{sets} sets {lowRepRange}-{highRepRange} reps</Text>
+                    <Image source={props.imgSrc} style={{position: "absolute" , top: 25 * props.heightRatio, left: 24 * props.widthRatio, height: 50 * props.heightRatio, width: 50 * props.widthRatio}}></Image>
+                    <View style={[{justifyContent: 'center', marginBottom: 0, marginRight: 8 * props.widthRatio, marginLeft: 0}]}>
+                        <Text style={[styles.textPrimary, {fontSize: 20 * props.widthRatio, textAlign: 'right'}]}>{props.name}</Text>
+                        <Text style={[styles.textSecondary, {fontSize: 17 * props.widthRatio, textAlign: 'right'}]}>{props.sets} sets {props.lowRepRange}-{props.highRepRange} reps</Text>
 
                     </View>
                 </Animated.View>
         );
     }
 
-export default EditExerciseListItem;
+export default forwardRef(EditExerciseListItem);
 
   
 
@@ -174,4 +186,7 @@ export default EditExerciseListItem;
 
                 </View>
             </Animated.View>
+
+
+            {itemId, name, sets, lowRepRange, highRepRange, backgroundCircleColor, imgSrc, navigation, props.widthRatio, props.heightRatio, deleteId, ref}
 */

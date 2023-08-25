@@ -2,12 +2,12 @@ import Exercise from "../models/Exercise";
 import Workout from "../models/Workout";
 
 
-const e1 =  new Exercise('e1', 'Barbell Bench Press', 4, 6, 8, require('../assets/exercises/bench.png'), '#FFB846')
-const e2 =  new Exercise('e2', 'Incline Dumbbell Press', 3, 8, 12, require('../assets/exercises/incline.png'), '#9FFF91')
-const e3 =  new Exercise('e3', 'Cable Flys', 4, 10, 12, require('../assets/exercises/flies.png'), '#77C0FF')
-const e4 =  new Exercise('e4', 'Tricep Cable Pushdown', 4, 10, 12, require('../assets/exercises/tricep.png'), '#FF89FA')
-const e5 =  new Exercise('e5', 'Front Raise', 2, 10, 12, null, '#FF6565')
-const e6 =  new Exercise('e6', 'Lateral Raise', 3, 10, 15, null, '#FFB846')
+const e1 =  new Exercise('e1', 'Barbell Bench Press', 4, 6, 8, require('../assets/exercises/bench.png'), '#FFB846', false)
+const e2 =  new Exercise('e2', 'Incline Dumbbell Press', 3, 8, 12, require('../assets/exercises/incline.png'), '#9FFF91', false)
+const e3 =  new Exercise('e3', 'Cable Flys', 4, 10, 12, require('../assets/exercises/flies.png'), '#77C0FF', false)
+const e4 =  new Exercise('e4', 'Tricep Cable Pushdown', 4, 10, 12, require('../assets/exercises/tricep.png'), '#FF89FA', false)
+const e5 =  new Exercise('e5', 'Front Raise', 2, 10, 12, null, '#FF6565', false)
+const e6 =  new Exercise('e6', 'Lateral Raise', 3, 10, 15, null, '#FFB846', false)
 
 
 const pushWorkoutExercises = new Array();

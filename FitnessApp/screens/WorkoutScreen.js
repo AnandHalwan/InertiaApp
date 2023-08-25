@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, FlatList, Animated, Dimensions, Image, TouchableOpacity, Modal} from "react-native";
+import { View, StyleSheet, Text, FlatList, Animated, Dimensions, Image, TouchableOpacity, Modal, Touchable} from "react-native";
 import { ppl } from "../data/DummyData";
 import Swiper from "react-native-swiper";
 import WorkoutContainerComponent from "../components/WorkourContainerComponent";
@@ -139,9 +139,43 @@ function WorkoutScreen({navigation}) {
 
     return (
         <View style={styles.container}>
-          <Modal visible={selectWorkoutVisible} style={{backgroundColor: "black"}} animationType="fade">
-            <View style={{flex: 1}}>
-
+          <Modal visible={selectWorkoutVisible} animationType="fade" transparent={true}>
+            <View style={{height: 259, width: 130, top: 125, left: 245, backgroundColor: 'black', borderRadius: 11}}>
+                <TouchableOpacity onPress={() => setCurrentIndex(0)}>
+                    <View style={{height: 37, backgroundColor: "#181818", borderTopLeftRadius: 11, borderTopRightRadius: 11, justifyContent: 'center', paddingLeft: 16}}>
+                        <Text style={{color: 'white', fontSize: 18, fontWeight: '300'}}>Mon</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setCurrentIndex(1)}>
+                    <View style={{height: 37, backgroundColor: "#181818", justifyContent: 'center', paddingLeft: 16, borderTopWidth: .5, borderTopColor: "#3c3c3c"}}>
+                        <Text style={{color: 'white', fontSize: 18, fontWeight: '300'}}>Tues</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setCurrentIndex(2)}>
+                    <View style={{height: 37, backgroundColor: "#181818", justifyContent: 'center', paddingLeft: 16, borderTopWidth: .5, borderTopColor: "#3c3c3c"}}>
+                        <Text style={{color: 'white', fontSize: 18, fontWeight: '300'}}>Wed</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setCurrentIndex(3)}>
+                    <View style={{height: 37, backgroundColor: "#181818", justifyContent: 'center', paddingLeft: 16, borderTopWidth: .5, borderTopColor: "#3c3c3c"}}>
+                        <Text style={{color: 'white', fontSize: 18, fontWeight: '300'}}>Thurs</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setCurrentIndex(4)}>
+                    <View style={{height: 37, backgroundColor: "#181818", justifyContent: 'center', paddingLeft: 16, borderTopWidth: .5, borderTopColor: "#3c3c3c"}}>
+                        <Text style={{color: 'white', fontSize: 18, fontWeight: '300'}}>Fri</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setCurrentIndex(5)}>
+                    <View style={{height: 37, backgroundColor: "#181818", justifyContent: 'center', paddingLeft: 16, borderTopWidth: .5, borderTopColor: "#3c3c3c"}}>
+                        <Text style={{color: 'white', fontSize: 18, fontWeight: '300'}}>Sat</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setCurrentIndex(6)}>
+                    <View style={{height: 37, backgroundColor: "#181818", justifyContent: 'center', paddingLeft: 16, borderTopWidth: .5, borderTopColor: "#3c3c3c", borderBottomLeftRadius: 11, borderBottomRightRadius: 11}}>
+                        <Text style={{color: 'white', fontSize: 18, fontWeight: '300'}}>Sun</Text>
+                    </View>
+                </TouchableOpacity>
             </View>
           </Modal>
           <TouchableOpacity style={{position: 'absolute', left: 350, top: 90, height:40, width:40, zIndex: 1}} hitSlop={{left: 40, top: 40, bottom: 40, right: 40}} onPress={() => setSelectWorkoutVisible(!selectWorkoutVisible)}>

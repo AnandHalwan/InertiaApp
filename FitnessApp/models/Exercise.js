@@ -1,5 +1,5 @@
 class Exercise {
-    constructor(id, name, sets, lowRepRange, highRepRange, imgSrc, color) {
+    constructor(id, name, sets, lowRepRange, highRepRange, imgSrc, color, del) {
         this.id = id;
         this.name = name;
         this.sets = sets;
@@ -7,6 +7,7 @@ class Exercise {
         this.highRepRange = highRepRange;
         this.imgSrc = imgSrc;
         this.color = color;
+        this.del = del;
     }
 }
 
