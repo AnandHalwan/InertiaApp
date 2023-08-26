@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useCallback } from "react";
-import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image, TouchableOpacity} from "react-native";
+import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image, TouchableOpacity, Touchable} from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
@@ -8,7 +8,7 @@ import AddExerciseButton from "./AddExerciseButton";
 import EditExerciseListItem from "./EditExerciseListItem";
 import { Swipeable } from "react-native-gesture-handler";
 import Exercise from "../models/Exercise";
-import Animated, { useSharedValue , useAnimatedStyle, withTiming} from 'react-native-reanimated';
+import Animated, { useSharedValue , useAnimatedStyle, withTiming, withSpring} from 'react-native-reanimated';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -27,6 +27,8 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
     const [displayHeader, setDisplayHeader] = useState('flex');
     const [modalStartVisible, setModalStartVisible] = useState(false);  
     const [modalEndVisible, setModalEndVisible] = useState(false);
+
+    const [edit, setEdit] = useState(false);
 
     const [deleteId, setDeleteId] = useState("none");
 
@@ -69,6 +71,45 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
         console.log(workoutExercises);
     }
 
+
+    function openEditView() {
+        console.log("Open edit view now");
+        leftValueAnimated.value = withSpring(leftValueAnimated.value - 379);
+        listTopAnimated.value = withTiming(listTopAnimated.value + 70)
+        setEdit(true);
+    }
+
+
+    function closeEditScreen() {
+        console.log("Stop editing");
+        leftValueAnimated.value = withTiming(leftValueAnimated.value - 380);
+        setTimeout(() => {
+            leftValueAnimated.value = leftValueAnimated.value + 759;
+            listTopAnimated.value = withSpring(listTopAnimated.value - 70);
+        }, 300);
+        setEdit(false);
+    }
+
+    const listTopAnimated = useSharedValue(-5);
+    const animateListTop = useAnimatedStyle(() => {
+        return {
+            top: listTopAnimated.value
+        }
+    })
+
+    const leftValueAnimated = useSharedValue(380);
+    const animateLeftValue = useAnimatedStyle(() => {
+        return {
+            left: leftValueAnimated.value
+        }
+    });
+
+    function startWorkoutHandler() {
+        console.log("Start workout");
+    }
+
+
+
     const renderItem = useCallback(
         ({item, drag}) => {
 
@@ -78,6 +119,7 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
             itemRef.current.fadeOut(id);
             opacityAnimated.value = withTiming(opacityAnimated.value - 1);
             heightAnimated.value = withTiming(heightAnimated.value - 101);
+            animateMargin.value = withTiming(animateMargin.value - 9);
             setTimeout(() => {
                 deleteItemFromWorkout(id);
             }, 500);
@@ -96,25 +138,33 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
                 height: heightAnimated.value
             }
         });
+
+        const animateMargin = useSharedValue(9);
+        const animatedMarginValue = useAnimatedStyle(() => {
+            return {
+                marginBottom: animateMargin.value
+            }
+        });
+        
         function DeleteButton() {
             
             return (
                     <View style={{flexDirection: 'row'}}>
-                        <Animated.View style={[opacityAnimatedValue, animateHeight,{ width: 22, backgroundColor: '#1C1C1E', marginLeft: -18}]}>
+                        <View style={[{height: 101, width: 22, backgroundColor: '#1C1C1E', marginLeft: -18}]}>
 
-                        </Animated.View>
+                        </View>
                         <TouchableOpacity onPress={() => deleteItemHandler(item.id)}>
-                            <Animated.View style={[opacityAnimatedValue, animateHeight,{width: 85, backgroundColor: '#7a7980', justifyContent: 'center', alignItems: 'center'}]}>
+                            <View style={[{height: 101, width: 85, backgroundColor: '#7a7980', justifyContent: 'center', alignItems: 'center'}]}>
                                 <Image source={require('../assets/edit.png')} style={{width: 26, height: 26}}/>
                                 <Text style={{color: 'white', marginTop: 2}}>Edit</Text>
-                            </Animated.View>
+                            </View>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={() => deleteItemHandler(item.id)}>
-                            <Animated.View style={[opacityAnimatedValue, animateHeight,{width: 85, backgroundColor: '#383838', justifyContent: 'center', alignItems: 'center', borderTopRightRadius: 16, borderBottomRightRadius: 16}]}>
+                            <View style={[{height: 101,width: 85, backgroundColor: '#383838', justifyContent: 'center', alignItems: 'center', borderTopRightRadius: 16, borderBottomRightRadius: 16}]}>
                                 <Image source={require('../assets/trash.png')} style={{height:30, width: 30}}/>
                                 <Text style={{color: 'white', marginTop: -1}}>Delete</Text>
-                            </Animated.View>
+                            </View>
                         </TouchableOpacity>
                     </View>
                 )
@@ -122,16 +172,18 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
 
 
           return (
-            <ScaleDecorator activeScale={1.02}>
-                <Swipeable renderRightActions={DeleteButton} heightRatio={heightRatio} widthRatio={widthRatio} overshootRight={false} rightThreshold={20}>
-                    <Pressable onLongPress={drag} delayLongPress={100}  pressRetentionOffset={{ bottom: 10, left: 10, right: 10, top: 10}}>
+            <Animated.View style={[animateHeight, opacityAnimatedValue, animatedMarginValue]}>
+            <OpacityDecorator>
+                <Swipeable enabled={edit}  renderRightActions={DeleteButton} heightRatio={heightRatio} widthRatio={widthRatio} overshootRight={false} rightThreshold={20}>
+                    <Pressable onLongPress={edit ? drag : openEditView} delayLongPress={100}  pressRetentionOffset={{ bottom: 10, left: 10, right: 10, top: 10}}>
                         <EditExerciseListItem ref={itemRef} navigation={navigation} itemId={item.id} name={item.name} sets={item.sets} lowRepRange={item.lowRepRange} highRepRange={item.highRepRange} backgroundSrc={item.backgroundSrc} imgSrc={item.imgSrc} startWorkout={startWorkout} exerciseNumber={item.index} startExercise={false}  backgroundCircleColor={item.color} heightRatio={heightRatio} widthRatio={widthRatio} deleteId={deleteId}></EditExerciseListItem>
                     </Pressable>
                 </Swipeable>
-            </ScaleDecorator>
+            </OpacityDecorator>
+            </Animated.View>
           );
         },
-        []
+        [edit]
       );
 
     useEffect(() => {
@@ -160,6 +212,11 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
 
     return(
             <View style={styles.workoutScreenContainer}>
+                <TouchableOpacity style={{top: 700, position: 'absolute', zIndex: 1}} onPress={edit ? closeEditScreen : startWorkoutHandler}>
+                    <View style={{height: 45, width: 137, borderRadius: 60, backgroundColor: '#74e189', alignItems: 'center', justifyContent: 'center'}}>
+                        <Text style={{color: 'white', fontSize: 23}}>{edit ? "Done" : "Start"}</Text>
+                    </View>
+                </TouchableOpacity>
                 <View style={styles.headerContainer}>
                     <View style={styles.leftHeaderContainer}>
                         <View style={{marginBottom: -10, height: 25, left: 12 * widthRatio}}>
@@ -189,11 +246,13 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
                     </View>
                 </View>
                                 
-                    <View style={[styles.workoutContainer]}>
-                        <AddExerciseButton widthRatio={widthRatio} heightRatio={heightRatio} onPress={addExerciseHandler}></AddExerciseButton>
-                        <View style={{flex: 1}}>
+                    <View style={[{flex: 15 * heightRatio, top: 40},styles.workoutContainer]}>
+                            <Animated.View  style={[animateLeftValue,styles.buttonContainer]}>
+                                <Image source={require('../assets/plus.png')} style={{height: 40, width: 40,}}/>
+                            </Animated.View>
+                        <Animated.View style={[animateListTop,{flex: 1}]}>
                             <DraggableFlatList onDragBegin={({index}) => console.log("Started Dragging")} fadingEdgeLength={100} showsVerticalScrollIndicator={false} data={workoutExercises} renderItem={renderItem} keyExtractor={(item) => item.id} onDragEnd={({data}) => setWorkoutExercises(data)} onPlaceholderIndexChange={({index}) => console.log("Changed index")} onRelease={({index}) => console.log("Released")}></DraggableFlatList>
-                        </View>
+                        </Animated.View>
                     </View>
             </View>
     );
@@ -235,9 +294,7 @@ const styles = StyleSheet.create({
     },
     workoutContainer: {
         width: 384 * widthRatio,
-        top: 25,
         marginLeft: 1.4 * widthRatio,
-        flex: 3.4 * heightRatio,
         alignItems: 'center',
         marginBottom: 30
     },
@@ -284,6 +341,18 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         paddingVertical: 20 * heightRatio,
         paddingHorizontal: 35 * widthRatio,
+    },
+    buttonContainer: {
+        color: '#1C1C1E',
+        backgroundColor: '#1C1C1E',
+        borderRadius: 16,
+        padding: 7 * widthRatio,
+        width: 370 * widthRatio,
+        marginBottom: 9 * heightRatio,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 66 * heightRatio,
+        top: 65
     },
   });
 

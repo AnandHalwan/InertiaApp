@@ -88,9 +88,6 @@ const EditExerciseListItem = (props, ref) => {
         fadeOut: (deleteId) => {
             if (deleteId == props.itemId) {
                 console.log(deleteId);
-                opacityAnimated.value = withTiming(opacityAnimated.value - 1)
-                heightAnimated.value = withTiming(heightAnimated.value - 101)
-                marginAnimated.value = withTiming(marginAnimated.value - 9);
             }
         },
         moveUp: () => {
@@ -106,30 +103,11 @@ const EditExerciseListItem = (props, ref) => {
         console.log("Navigate")
     }
 
-    const opacityAnimated = useSharedValue(1);
-    const opacityAnimatedValue = useAnimatedStyle(() => {
-        return {
-            opacity: opacityAnimated.value
-        }
-    })
 
-    const heightAnimated = useSharedValue(101);
-    const animateHeight = useAnimatedStyle(() => {
-        return {
-            height: heightAnimated.value
-        }
-    });
-
-    const marginAnimated = useSharedValue(9);
-    const animateMargin = useAnimatedStyle(() => {
-        return {
-            marginBottom: marginAnimated.value
-        }
-    })
     const [height, setHeight] = useState(101*props.heightRatio);
     return(
-                <Animated.View style={[styles.listItemContainer, styles.front, opacityAnimatedValue, animateHeight, animateMargin,{opacity: 1, flexDirection: 'row'}]}>
-                    <View style={{top: 8 * props.heightRatio, left: 4 * props.widthRatio, width: height - (25*props.heightRatio), height: height - (25*props.heightRatio), borderRadius: 90, backgroundColor: props.backgroundCircleColor}}>
+                <View style={[styles.listItemContainer, styles.front,{opacity: 1, flexDirection: 'row', height: 101}]}>
+                    <View style={{top: 8 * props.heightRatio, left: 4 * props.widthRatio, width: 76, height: 76, borderRadius: 90, backgroundColor: props.backgroundCircleColor}}>
                         
                     </View>
                     <Image source={props.imgSrc} style={{position: "absolute" , top: 25 * props.heightRatio, left: 24 * props.widthRatio, height: 50 * props.heightRatio, width: 50 * props.widthRatio}}></Image>
@@ -138,7 +116,7 @@ const EditExerciseListItem = (props, ref) => {
                         <Text style={[styles.textSecondary, {fontSize: 17 * props.widthRatio, textAlign: 'right'}]}>{props.sets} sets {props.lowRepRange}-{props.highRepRange} reps</Text>
 
                     </View>
-                </Animated.View>
+                </View>
         );
     }
 

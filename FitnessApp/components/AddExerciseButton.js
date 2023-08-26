@@ -2,7 +2,7 @@ import { Image, StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 
-function AddExerciseButton({onPress, widthRatio, heightRatio}) {
+function AddExerciseButton({onPress, widthRatio, heightRatio, style}) {
     const styles = StyleSheet.create({
         buttonContainer: {
             color: '#1C1C1E',
@@ -11,15 +11,15 @@ function AddExerciseButton({onPress, widthRatio, heightRatio}) {
             padding: 7 * widthRatio,
             width: 370 * widthRatio,
             marginBottom: 9 * heightRatio,
-            left: 1 * widthRatio,
             justifyContent: 'center',
             alignItems: 'center',
-            height: 66 * heightRatio
+            height: 66 * heightRatio,
+
         },
     });
     return (
         <TouchableOpacity onPress={onPress}>
-            <View style={styles.buttonContainer}>
+            <View style={[style, styles.buttonContainer]}>
                 <Image source={require('../assets/plus.png')} style={{height: 40, width: 40}}/>
             </View>
         </TouchableOpacity>
