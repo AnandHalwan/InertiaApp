@@ -15,18 +15,15 @@ const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;
 const widthRatio = windowWidth/390;
 
-function EditWorkout({workout, date, startWorkout, navigation, endWorkout, closeSummary, index, currIndex}) {
+function EditWorkout({workout, date, startWorkout, navigation}) {
 
     const dateRel = date;
     const [workoutExercises, setWorkoutExercises] = useState(workout.exercises);
 
     const workoutLocal = workout
-    const [fadeAnim, setFadeAnime] = useState(new Animated.Value(0));
 
-    const [listHeight, setListHeight] = useState(525 * heightRatio);
     const [displayHeader, setDisplayHeader] = useState('flex');
-    const [modalStartVisible, setModalStartVisible] = useState(false);  
-    const [modalEndVisible, setModalEndVisible] = useState(false);
+
 
     const [edit, setEdit] = useState(false);
 
@@ -104,10 +101,6 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
         }
     });
 
-    function startWorkoutHandler() {
-        console.log("Start workout");
-    }
-
 
 
     const renderItem = useCallback(
@@ -116,7 +109,6 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
         const itemRef = useRef();
 
         function deleteItemHandler(id) {
-            itemRef.current.fadeOut(id);
             opacityAnimated.value = withTiming(opacityAnimated.value - 1);
             heightAnimated.value = withTiming(heightAnimated.value - 101);
             animateMargin.value = withTiming(animateMargin.value - 9);
@@ -176,7 +168,7 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
             <OpacityDecorator>
                 <Swipeable enabled={edit}  renderRightActions={DeleteButton} heightRatio={heightRatio} widthRatio={widthRatio} overshootRight={false} rightThreshold={20}>
                     <Pressable onLongPress={edit ? drag : openEditView} delayLongPress={100}  pressRetentionOffset={{ bottom: 10, left: 10, right: 10, top: 10}}>
-                        <EditExerciseListItem ref={itemRef} navigation={navigation} itemId={item.id} name={item.name} sets={item.sets} lowRepRange={item.lowRepRange} highRepRange={item.highRepRange} backgroundSrc={item.backgroundSrc} imgSrc={item.imgSrc} startWorkout={startWorkout} exerciseNumber={item.index} startExercise={false}  backgroundCircleColor={item.color} heightRatio={heightRatio} widthRatio={widthRatio} deleteId={deleteId}></EditExerciseListItem>
+                        <EditExerciseListItem ref={itemRef} navigation={navigation} itemId={item.id} name={item.name} sets={item.sets} lowRepRange={item.lowRepRange} highRepRange={item.highRepRange} backgroundSrc={item.backgroundSrc} imgSrc={item.imgSrc} exerciseNumber={item.index} startExercise={false}  backgroundCircleColor={item.color} heightRatio={heightRatio} widthRatio={widthRatio} deleteId={deleteId}></EditExerciseListItem>
                     </Pressable>
                 </Swipeable>
             </OpacityDecorator>
@@ -186,33 +178,9 @@ function EditWorkout({workout, date, startWorkout, navigation, endWorkout, close
         [edit]
       );
 
-    useEffect(() => {
-        if (modalStartVisible) {
-            console.log("Start modal");
-            Animated.timing(fadeAnim, {
-                toValue: 1,
-                duration: 2000,
-                useNativeDriver: true,
-              }).start();
-        } else {
-            Animated.timing(fadeAnim, {
-                toValue: 0,
-                duration: 0,
-                useNativeDriver: true,
-              }).start();
-        }
-
-
-    }, [fadeAnim, modalStartVisible, startWorkout]);  
-
-
-
-
-      
-
     return(
             <View style={styles.workoutScreenContainer}>
-                <TouchableOpacity style={{top: 700, position: 'absolute', zIndex: 1}} onPress={edit ? closeEditScreen : startWorkoutHandler}>
+                <TouchableOpacity style={{top: 700, position: 'absolute', zIndex: 1}} onPress={edit ? closeEditScreen : startWorkout}>
                     <View style={{height: 45, width: 137, borderRadius: 60, backgroundColor: '#74e189', alignItems: 'center', justifyContent: 'center'}}>
                         <Text style={{color: 'white', fontSize: 23}}>{edit ? "Done" : "Start"}</Text>
                     </View>

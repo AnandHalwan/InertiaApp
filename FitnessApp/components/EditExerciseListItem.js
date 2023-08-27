@@ -1,17 +1,6 @@
-import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } from "react";
+import React, { forwardRef } from "react";
 
-import { View, Image, StyleSheet, Text, TouchableOpacity, Dimensions} from "react-native";
-import { Pressable } from "react-native";
-import { back } from "react-native/Libraries/Animated/Easing";
-import IButton from "./IButton";
-import { supabase } from "../supabase/SupaBaseClient";
-import { userId } from "../screens/Auth";
-import { Swipeable } from "react-native-gesture-handler";
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
+import { View, Image, StyleSheet, Text} from "react-native";
 
 const EditExerciseListItem = (props, ref) => {
     const styles = StyleSheet.create({
@@ -84,30 +73,12 @@ const EditExerciseListItem = (props, ref) => {
             backfaceVisibility: 'hidden',
         }
     });
-    useImperativeHandle(ref, () => ({
-        fadeOut: (deleteId) => {
-            if (deleteId == props.itemId) {
-                console.log(deleteId);
-            }
-        },
-        moveUp: () => {
-            console.log(props.itemId)
-        }
-    }))
 
 
 
-    const [displayIButton, setDisplayIButton] = useState('none');
-
-    function onPressHandler() {
-        console.log("Navigate")
-    }
-
-
-    const [height, setHeight] = useState(101*props.heightRatio);
     return(
                 <View style={[styles.listItemContainer, styles.front,{opacity: 1, flexDirection: 'row', height: 101}]}>
-                    <View style={{top: 8 * props.heightRatio, left: 4 * props.widthRatio, width: 76, height: 76, borderRadius: 90, backgroundColor: props.backgroundCircleColor}}>
+                    <View style={{top: 6 * props.heightRatio, left: 4 * props.widthRatio, width: 76, height: 76, borderRadius: 90, backgroundColor: props.backgroundCircleColor}}>
                         
                     </View>
                     <Image source={props.imgSrc} style={{position: "absolute" , top: 25 * props.heightRatio, left: 24 * props.widthRatio, height: 50 * props.heightRatio, width: 50 * props.widthRatio}}></Image>

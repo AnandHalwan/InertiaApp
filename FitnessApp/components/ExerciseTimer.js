@@ -21,7 +21,7 @@ function ExerciseTimer({display, setNumber, name, sets, lowRepRange, highRepRang
 
 
     return (
-        <View style={{display: display}}>
+        <View style={{display: display, height: 420, }}>
         <View style={{flexDirection: 'row'}}>
             <View style={{marginTop: 13, marginLeft: 20}}>
             <Text style={{fontSize: 47, color: 'white', fontWeight: '600'}}>Set {setNumber}</Text>

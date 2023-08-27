@@ -143,7 +143,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
             </Animated.View>
 
             </TouchableOpacity>
-    </View>    
+        </View>    
         );
     }
 
