@@ -138,6 +138,9 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
                 }
                 if (lastSet) {
                     console.log("Call supabase to enter" + relativeHighWeight + "," + highWeight + "," + highReps);
+                    handleEnterButton(weightValue, repsValue, lastSet, relativeHighWeight, highWeight, highReps);
+                    
+                    return;
                 }
                 doAFlip();
                 setTimeout(() => {setTimer(5)}, 1000);

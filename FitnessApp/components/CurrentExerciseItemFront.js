@@ -9,6 +9,13 @@ const CurrentExericseItemFront = (props, ref) => {
         console.log("Info");
         navigation.navigate("ExerciseInfoScreen");
     }
+    const [makeLargeCounter, setMakeLargeCounter] = useState(0);
+    useEffect(() => {
+        if (props.currentExercise && !props.firstExercise) {
+            makeLarge();
+        }
+    })
+
 
     const styles = StyleSheet.create({
         listItemContainer: {
@@ -38,28 +45,32 @@ const CurrentExericseItemFront = (props, ref) => {
     }))
 
     function makeLarge() {
-        itemOpacity.value = withTiming(itemOpacity.value - 1);
-        setTimeout(() => {
-            itemHeight.value = withTiming(itemHeight.value + 319);
-            backgroundDimensions.value = withTiming(backgroundDimensions.value + 154);
-            backgroundLeft.value = withTiming(backgroundLeft.value + 60);
-            backgroundTop.value = withTiming(backgroundTop.value + 69);
-        }, 300)
-        setTimeout(() => {
-            setTextTop(152);
-            setTextAlign('center');
-            setJustifyContent('center')
-            setTextMarginRight(0);
-            setPrimaryFontSize(28);
-            setSecondaryFontSize(17);
-            setImageLeft(115);
-            setImageTop(120);
-            setImageDimensions(140);
-            setHeaderDisplay('flex');
-            itemOpacity.value = withTiming(itemOpacity.value + 1);
-            headerOpacity.value = withTiming(headerOpacity.value + 1);
-        }, 600)
-
+        if (makeLargeCounter === 0) {
+            setTimeout(() => {
+                itemOpacity.value = withTiming(itemOpacity.value - 1);
+            }, 300)
+            setTimeout(() => {
+                itemHeight.value = withTiming(itemHeight.value + 319);
+                backgroundDimensions.value = withTiming(backgroundDimensions.value + 154);
+                backgroundLeft.value = withTiming(backgroundLeft.value + 60);
+                backgroundTop.value = withTiming(backgroundTop.value + 69);
+            }, 600)
+            setTimeout(() => {
+                setTextTop(152);
+                setTextAlign('center');
+                setJustifyContent('center')
+                setTextMarginRight(0);
+                setPrimaryFontSize(28);
+                setSecondaryFontSize(17);
+                setImageLeft(115);
+                setImageTop(120);
+                setImageDimensions(140);
+                setHeaderDisplay('flex');
+                itemOpacity.value = withTiming(itemOpacity.value + 1);
+                headerOpacity.value = withTiming(headerOpacity.value + 1);
+            }, 900)
+            setMakeLargeCounter(1);
+        }
     }
 
     const itemHeight = useSharedValue(101);

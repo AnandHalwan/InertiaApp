@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image } from "reac
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming, scrollTo, Easing } from "react-native-reanimated";
 import { useTiming } from "@shopify/react-native-skia";
 import { userId } from "../screens/Auth";
 import { supabase } from "../supabase/SupaBaseClient";
@@ -115,13 +115,7 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
       }
 
     function renderExerciseListItem(itemData) {
-        console.log(setCounter);
         return <CurrentExerciseListItem handleEnterButton={completedSetHandler} currentExercise={itemData.index === currentExercise} firstExercise={itemData.index === 0}  onPress={handleNavigate} navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} exerciseNumber={itemData.index} backgroundCircleColor={colors[itemData.index % 5]} heightRatio={heightRatio} widthRatio={widthRatio} setNumber={setCounter}></CurrentExerciseListItem>
-    }
-
-
-    function updateQuoteOpacity() {
-        opacityAnimated.value = opacityAnimated.value + 1;
     }
 
     useEffect(() => {
@@ -243,7 +237,7 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
                 </View>
                                 
                 <View style={[styles.workoutContainer, {flex: 50.4 * heightRatio}, {top: 18}]}>
-                    <FlatList fadingEdgeLength={100} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
+                    <FlatList ref={flatListRef} fadingEdgeLength={100} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
                 </View>
             </Animated.View>
     );
