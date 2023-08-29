@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Image, StyleSheet, Text, Animated, TextInput} from "react-native";
+import { View, Image, StyleSheet, Text, Animated as DefaultAnimated, TextInput} from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CircularProgress from 'react-native-circular-progress-indicator';
@@ -7,12 +7,13 @@ import CurrentExericseItemFront from "./CurrentExerciseItemFront";
 import ExerciseTimer from "./ExerciseTimer";
 import IButton from "./IButton";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, handleEnterButton, setNumber, navigation, backgroundCircleColor, currentExercise, firstExercise}) {
 
     const [weightText, setWeightText] = useState("Weight");
     const [repsText, setRepsText] = useState("Reps");
     const [initialFlip, setInitialFlip] = useState(false);
-    const animate = useRef(new Animated.Value(0));    
+    const animate = useRef(new DefaultAnimated.Value(0));    
     const [isFlipped, setIsFlipped] = useState(false);
     let relativeHighWeight = 0;
     let highWeight = 0;
@@ -56,7 +57,7 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
     }
 
     const doAFlip = () => {
-        Animated.timing(animate.current, {
+        DefaultAnimated.timing(animate.current, {
             duration: 300,
             toValue: isFlipped ? 0:180,
             useNativeDriver: true,
@@ -139,7 +140,9 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
                 if (lastSet) {
                     console.log("Call supabase to enter" + relativeHighWeight + "," + highWeight + "," + highReps);
                     handleEnterButton(weightValue, repsValue, lastSet, relativeHighWeight, highWeight, highReps);
-                    
+                    itemHeight.value = withTiming(0);
+                    itemOpacity.value = withTiming(0);
+                    itemMargin.value = withTiming(0);
                     return;
                 }
                 doAFlip();
@@ -155,14 +158,25 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
     const [defaultFront, setDefaultFront] = useState('flex');
     const [timerDisplay, setTimerDisplay] = useState('none');
     const [enterDisplay, setEnterDisplay] = useState('flex');
+
+    const itemHeight = useSharedValue(101);
+    const itemOpacity = useSharedValue(1);
+    const itemMargin = useSharedValue(9);
+    useEffect(() => {
+        if (currentExercise) {
+            itemHeight.value = withTiming(420);
+        }
+    }, [currentExercise])
+
+
         return(
-            <View>
+            <Animated.View>
                 <GestureRecognizer onSwipeLeft={gestureHandler}>
-                    <Animated.View style={[styles.listItemContainer, styles.front, rotateFront]}>
+                    <DefaultAnimated.View style={[styles.listItemContainer, styles.front, rotateFront]}>
                             <CurrentExericseItemFront ref={expandRef} currentExercise={currentExercise} firstExercise={firstExercise} navigation={navigation} display={defaultFront} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} backgroundCircleColor={backgroundCircleColor}></CurrentExericseItemFront>
                             <ExerciseTimer display={timerDisplay} setNumber={setNumber} name={name} lowRepRange={lowRepRange} highRepRange={highRepRange} timer={timer} initital={5}></ExerciseTimer>
-                    </Animated.View>
-                    <Animated.View style={[styles.listItemContainer, styles.back, {flexDirection: 'column', justifyContent: 'space-between', height: 420,}, rotateBack]}>
+                    </DefaultAnimated.View>
+                    <DefaultAnimated.View style={[styles.listItemContainer, styles.back, {flexDirection: 'column', justifyContent: 'space-between', height: 420,}, rotateBack]}>
                         <View style={{display: enterDisplay,}}>
                             <View style={{flexDirection: 'row'}}>
                                 <View style={{marginTop: 13, marginLeft: 20}}>
@@ -186,9 +200,9 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
                                 </Pressable>
                             </View>
                         </View>
-                    </Animated.View>
+                    </DefaultAnimated.View>
                 </GestureRecognizer>
-            </View>    
+            </Animated.View>    
         );
 
     }

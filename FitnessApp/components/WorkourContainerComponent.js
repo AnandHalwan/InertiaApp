@@ -237,7 +237,7 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
                 </View>
                                 
                 <View style={[styles.workoutContainer, {flex: 50.4 * heightRatio}, {top: 18}]}>
-                    <FlatList ref={flatListRef} fadingEdgeLength={100} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
+                    <FlatList fadingEdgeLength={100} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
                 </View>
             </Animated.View>
     );

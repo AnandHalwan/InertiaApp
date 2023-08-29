@@ -48,13 +48,13 @@ const CurrentExericseItemFront = (props, ref) => {
         if (makeLargeCounter === 0) {
             setTimeout(() => {
                 itemOpacity.value = withTiming(itemOpacity.value - 1);
-            }, 300)
+            }, 600)
             setTimeout(() => {
                 itemHeight.value = withTiming(itemHeight.value + 319);
                 backgroundDimensions.value = withTiming(backgroundDimensions.value + 154);
                 backgroundLeft.value = withTiming(backgroundLeft.value + 60);
                 backgroundTop.value = withTiming(backgroundTop.value + 69);
-            }, 600)
+            }, 900)
             setTimeout(() => {
                 setTextTop(152);
                 setTextAlign('center');
@@ -68,7 +68,7 @@ const CurrentExericseItemFront = (props, ref) => {
                 setHeaderDisplay('flex');
                 itemOpacity.value = withTiming(itemOpacity.value + 1);
                 headerOpacity.value = withTiming(headerOpacity.value + 1);
-            }, 900)
+            }, 1200)
             setMakeLargeCounter(1);
         }
     }
