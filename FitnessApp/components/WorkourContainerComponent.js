@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image } from "react-native";
+import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image, TouchableOpacity } from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import ExerciseListItem from "./ExerciseListItem";
@@ -54,12 +54,10 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
         setModalStartVisible(false);
 
     }
-
     const [currentExercise, setCurrentExercise] = useState(0);
     const [setCounter, setSetCounter] = useState(1);
 
     const completedSetHandler = (weight, reps, lastSet, relativeHighWeight, highWeight, highReps) => {
-        setSetCounter(setCounter+1);
         console.log("Child passed to parent");
         console.log(weight, reps);
         if (lastSet) {
@@ -82,18 +80,33 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
                     Reps: highReps
                 }
                 console.log(data);
-                if (currentExercise === (workout.exerciseCount - 1)){
-                    setModalEndVisible(true);
-                    console.log("Workout ended");
-                } else {
-                    console.log(currentExercise);
-                    console.log(workout.exerciseCount)
-                    setCurrentExercise(currentExercise+1);
-                    setSetCounter(1);
-                }
 
+        } else {
+            setSetCounter(setCounter + 1);
         }
     }
+
+    const [contentHeight, setContentHeight] = useState(0);
+    
+    function handleNextExercise() {
+        if (currentExercise === (workout.exerciseCount - 1)){
+            setModalEndVisible(true);
+            console.log("Workout ended");
+        } else {
+            console.log(currentExercise);
+            console.log(workout.exerciseCount)
+            setTimeout(() => {
+                flatlistRef.current.scrollToOffset({index: 2, animated: true, viewOffset: 20});
+            }, 0)
+            setTimeout(() => {
+                setCurrentExercise(currentExercise+1);
+                setSetCounter(1);
+            }, 600)
+        }
+    }
+
+    const flatlistRef = useRef(null);
+
     async function logExerciseWeightReps(data) {
         try {
           const { data: insertedData, error } = await supabase
@@ -115,7 +128,10 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
       }
 
     function renderExerciseListItem(itemData) {
-        return <CurrentExerciseListItem handleEnterButton={completedSetHandler} currentExercise={itemData.index === currentExercise} firstExercise={itemData.index === 0}  onPress={handleNavigate} navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} exerciseNumber={itemData.index} backgroundCircleColor={colors[itemData.index % 5]} heightRatio={heightRatio} widthRatio={widthRatio} setNumber={setCounter}></CurrentExerciseListItem>
+        
+        return (
+                <CurrentExerciseListItem goNext={handleNextExercise} handleEnterButton={completedSetHandler} currentExercise={itemData.index === currentExercise} firstExercise={itemData.index === 0}  onPress={handleNavigate} navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} exerciseNumber={itemData.index} backgroundCircleColor={colors[itemData.index % 5]} heightRatio={heightRatio} widthRatio={widthRatio} setNumber={setCounter}></CurrentExerciseListItem>
+        );
     }
 
     useEffect(() => {
@@ -135,6 +151,7 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
                     animationType="none"
                     transparent={false}
                     visible={modalStartVisible}
+                    
                     onRequestClose={() => {
                         Alert.alert('Modal has been closed.');
                         setModalStartVisible(!modalStartVisible);
@@ -237,7 +254,7 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
                 </View>
                                 
                 <View style={[styles.workoutContainer, {flex: 50.4 * heightRatio}, {top: 18}]}>
-                    <FlatList fadingEdgeLength={100} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
+                    <FlatList ref={flatlistRef} fadingEdgeLength={100} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
                 </View>
             </Animated.View>
     );

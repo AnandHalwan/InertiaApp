@@ -1,7 +1,7 @@
-import { View, Image, Text , StyleSheet} from "react-native";
+import { View, Image, Text , StyleSheet, TouchableOpacity} from "react-native";
 import IButton from "./IButton";
 import { useEffect, useImperativeHandle, useState } from "react";
-import Animated, {useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
+import Animated, {useAnimatedStyle, useSharedValue, withTiming, } from "react-native-reanimated";
 import { forwardRef } from "react";
 const CurrentExericseItemFront = (props, ref) => {
 
@@ -46,15 +46,13 @@ const CurrentExericseItemFront = (props, ref) => {
 
     function makeLarge() {
         if (makeLargeCounter === 0) {
-            setTimeout(() => {
-                itemOpacity.value = withTiming(itemOpacity.value - 1);
-            }, 600)
+            itemOpacity.value = withTiming(itemOpacity.value - 1, {duration: 600});
             setTimeout(() => {
                 itemHeight.value = withTiming(itemHeight.value + 319);
                 backgroundDimensions.value = withTiming(backgroundDimensions.value + 154);
                 backgroundLeft.value = withTiming(backgroundLeft.value + 60);
                 backgroundTop.value = withTiming(backgroundTop.value + 69);
-            }, 900)
+            }, 600)
             setTimeout(() => {
                 setTextTop(152);
                 setTextAlign('center');
@@ -68,7 +66,7 @@ const CurrentExericseItemFront = (props, ref) => {
                 setHeaderDisplay('flex');
                 itemOpacity.value = withTiming(itemOpacity.value + 1);
                 headerOpacity.value = withTiming(headerOpacity.value + 1);
-            }, 1200)
+            }, 900)
             setMakeLargeCounter(1);
         }
     }
@@ -120,6 +118,7 @@ const CurrentExericseItemFront = (props, ref) => {
     })
     return (
         <Animated.View style={[styles.listItemContainer, styles.front,{flexDirection: 'row', alignItems: 'center', justifyContent: justifyContent, display: props.display}, animateItemHeight]}>
+
             <Animated.View style={[animateHeaderOpacity, {position: 'absolute', display: headerDisplay, top: 13, left: 25}]}>
                 <Text style={{fontSize: 47, color: 'white', fontWeight: '600'}}>Set {props.setNumber}</Text>
             </Animated.View>

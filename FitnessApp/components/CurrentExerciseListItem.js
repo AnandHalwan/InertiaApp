@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Image, StyleSheet, Text, Animated as DefaultAnimated, TextInput} from "react-native";
+import { View, Image, StyleSheet, Text, Animated as DefaultAnimated, TextInput, TouchableOpacity} from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CircularProgress from 'react-native-circular-progress-indicator';
 import CurrentExericseItemFront from "./CurrentExerciseItemFront";
 import ExerciseTimer from "./ExerciseTimer";
 import IButton from "./IButton";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, handleEnterButton, setNumber, navigation, backgroundCircleColor, currentExercise, firstExercise}) {
+function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, handleEnterButton, setNumber, navigation, backgroundCircleColor, currentExercise, firstExercise, goNext}) {
 
     const [weightText, setWeightText] = useState("Weight");
     const [repsText, setRepsText] = useState("Reps");
@@ -39,7 +38,6 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
     }
 
     const expandRef = useRef();
-
     const [expandCounter, setExpandCounter] = useState(0);
     useEffect(() => {
         if (firstExercise && (expandCounter === 0)) {
@@ -48,11 +46,13 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
         }
     })
     function gestureHandler() {
-            if (!initialFlip) {
+            if (!initialFlip && currentExercise) {
                 doAFlip();
                 setInitialFlip(true);
-                setDefaultFront('none');
-                setTimerDisplay('flex');
+                setTimeout(() => {
+                    setDefaultFront('none');
+                    setTimerDisplay('flex');
+                }, 300)
             }        
     }
 
@@ -115,12 +115,15 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
             // cleanup function to stop interval when component unmounts
             return () => clearInterval(intervalId);
         }, [timer, showTimer]); // empty array as second argument to useEffect, to only run effect once
+
+        const [expanded, setExpanded] = useState(false);
     function enterButtonPressedHandler() {
         if (isFlipped) {
+            setExpanded(true);
             const weightValue = parseInt(weightText, 10);
             const repsValue = parseInt(repsText);
             const lastSet = setNumber === sets ? true : false;
-            if (!isNaN(weightValue) && !isNaN(repsValue)) {
+            if (!isNaN(weightValue) && !isNaN(repsValue) && !lastSet) {
                 setWeightText("Weight");
                 setRepsText("Reps");
                 console.log(weightValue);
@@ -137,72 +140,90 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
                     setTimerDisplay('flex');
                     setDefaultFront('none');
                 }
-                if (lastSet) {
-                    console.log("Call supabase to enter" + relativeHighWeight + "," + highWeight + "," + highReps);
-                    handleEnterButton(weightValue, repsValue, lastSet, relativeHighWeight, highWeight, highReps);
-                    itemHeight.value = withTiming(0);
-                    itemOpacity.value = withTiming(0);
-                    itemMargin.value = withTiming(0);
-                    return;
-                }
+
                 doAFlip();
                 setTimeout(() => {setTimer(5)}, 1000);
 
                 handleEnterButton(weightValue, repsValue, lastSet, relativeHighWeight, highWeight, highReps);
 
-            } else {
+            } else if (lastSet) {
+                    console.log("Call supabase to enter" + relativeHighWeight + "," + highWeight + "," + highReps);
+                    handleEnterButton(weightValue, repsValue, lastSet, relativeHighWeight, highWeight, highReps);
+                    setTimerDisplay('none');
+                    setSummaryDisplay('flex');
+                    doAFlip();
+                    setTimeout(() => {
+                        setInputDisplay('none');
+                    }, 300);
+                    return;
+            }
+            else {
                 console.log("Please enter valid weight and reps values");
             }
         }
     }
+
+
+    function handleNext() {
+        goNext();
+    }
+
     const [defaultFront, setDefaultFront] = useState('flex');
     const [timerDisplay, setTimerDisplay] = useState('none');
     const [enterDisplay, setEnterDisplay] = useState('flex');
-
-    const itemHeight = useSharedValue(101);
-    const itemOpacity = useSharedValue(1);
-    const itemMargin = useSharedValue(9);
-    useEffect(() => {
-        if (currentExercise) {
-            itemHeight.value = withTiming(420);
-        }
-    }, [currentExercise])
+    const [summaryDisplay, setSummaryDisplay] = useState('none');
+    const [inputDisplay, setInputDisplay] = useState('flex');
 
 
         return(
-            <Animated.View>
+            <View>
                 <GestureRecognizer onSwipeLeft={gestureHandler}>
                     <DefaultAnimated.View style={[styles.listItemContainer, styles.front, rotateFront]}>
+
                             <CurrentExericseItemFront ref={expandRef} currentExercise={currentExercise} firstExercise={firstExercise} navigation={navigation} display={defaultFront} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} backgroundCircleColor={backgroundCircleColor}></CurrentExericseItemFront>
-                            <ExerciseTimer display={timerDisplay} setNumber={setNumber} name={name} lowRepRange={lowRepRange} highRepRange={highRepRange} timer={timer} initital={5}></ExerciseTimer>
+                            <View style={[{display: timerDisplay}]}>
+                                <ExerciseTimer display={timerDisplay} setNumber={setNumber} name={name} lowRepRange={lowRepRange} highRepRange={highRepRange} timer={timer} initital={5}></ExerciseTimer>
+                            </View>
+                            <Animated.View style={[styles.listItemContainer, {justifyContent: 'center', alignItems: 'center', display: summaryDisplay, height: 420}]}>
+                                <View style={[{ left: -6, flexDirection: 'column' ,justifyContent: 'space-between', top: 40, alignItems: 'center'}]}>
+                                    <Text style={{color: 'white', fontSize: 20, left: 6, marginBottom: 50}}>Exercise Summary Placeholder</Text>
+                                    <TouchableOpacity style={{zIndex: 5, left: 6}} onPress={handleNext}>
+                                        <View style={{height: 50, width: 100, borderRadius: '20', backgroundColor: 'green', justifyContent: 'center', alignItems: 'center'}}>
+                                            <Text style={{color: 'white', fontSize: 14}}>Next</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            </Animated.View>
                     </DefaultAnimated.View>
-                    <DefaultAnimated.View style={[styles.listItemContainer, styles.back, {flexDirection: 'column', justifyContent: 'space-between', height: 420,}, rotateBack]}>
-                        <View style={{display: enterDisplay,}}>
+                    <DefaultAnimated.View style={[styles.back, rotateBack, ]}>
+
+                        <Animated.View style={[ styles.listItemContainer,{display: inputDisplay, height: 420}]}>
                             <View style={{flexDirection: 'row'}}>
                                 <View style={{marginTop: 13, marginLeft: 20}}>
                                 <Text style={{fontSize: 47, color: 'white', fontWeight: '600'}}>Set {setNumber}</Text>
         
                                 </View>
                             </View>
-                            <View style={{ width:370, left: -6, flexDirection: 'column' ,justifyContent: 'space-between', top: 80, alignItems: 'center'}}>
-                                <TextInput value={weightText} keyboardType={'numeric'} onFocus={handleTextInputFocusWeight} onChangeText={handleTextInputChangeWeight} editable={isFlipped} style={{backgroundColor: '#3C3B40', height: 82, top: -50, borderRadius: 20,  fontSize: 27, color: 'white', paddingLeft: 15, marginBottom: 24, width: 333}}>
+                            <View style={[{ left: -6, flexDirection: 'column' ,justifyContent: 'space-between', top: -60, alignItems: 'center', display: inputDisplay}]}>
+
+                                <TextInput value={weightText} keyboardAppearance="dark" keyboardType={'numeric'} onFocus={handleTextInputFocusWeight} onChangeText={handleTextInputChangeWeight} editable={isFlipped} style={{backgroundColor: '#3C3B40', height: 82, top: -50, borderRadius: 20,  fontSize: 27, color: 'white', paddingLeft: 15, marginBottom: 24, width: 333}}>
                                     
                                 </TextInput>
-                                <TextInput value={repsText} keyboardType={'numeric'} onFocus={handleTextInputFocusReps} onChangeText={handleTextInputChangeReps} editable={isFlipped} style={{backgroundColor: '#3C3B40', height: 82, top: -50, borderRadius: 20,  fontSize: 27, color: 'white', paddingLeft: 15, marginBottom: 10, width: 333}}>
+                                <TextInput value={repsText} keyboardAppearance="dark" keyboardType={'numeric'} onFocus={handleTextInputFocusReps} onChangeText={handleTextInputChangeReps} editable={isFlipped} style={{backgroundColor: '#3C3B40', height: 82, top: -50, borderRadius: 20,  fontSize: 27, color: 'white', paddingLeft: 15, marginBottom: 10, width: 333}}>
                                     
                                 </TextInput>
-                                <Pressable onPress={enterButtonPressedHandler}>
+                                <TouchableOpacity onPress={enterButtonPressedHandler}>
                                     <View style={styles.enterButtonContainer}>
                                         <Text style={styles.enterButtonText}>
                                             Enter
                                         </Text>
                                     </View>
-                                </Pressable>
+                                </TouchableOpacity>
                             </View>
-                        </View>
+                        </Animated.View>
                     </DefaultAnimated.View>
                 </GestureRecognizer>
-            </Animated.View>    
+            </View>    
         );
 
     }
@@ -380,4 +401,12 @@ const styles = StyleSheet.create({
                             </Pressable>
                         </View>
                     </View>
+
+                    itemHeight.value = withTiming(0, {duration: 600});
+                    itemOpacity.value = withTiming(0, {duration: 600});
+                    setTimeout(() => {
+                        setTimerDisplay('none');
+                    }, 600)
+
+
 */
