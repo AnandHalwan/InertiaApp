@@ -1,11 +1,5 @@
 import { useState, useEffect , useRef, useCallback} from "react";
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Animated, Button} from "react-native";
-import { LineChart } from "react-native-wagmi-charts";
-import { data1M, data1Y, data3M, data6M, dataLFT, testData } from "../data/GraphDummyData";
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
-import { Canvas, Group} from "@shopify/react-native-skia";
-import { supabase } from "../supabase/SupaBaseClient";
-import { userId } from "./Auth";
 import YoutubePlayer from "react-native-youtube-iframe";
 
 

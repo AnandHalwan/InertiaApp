@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, Text, View, StyleSheet, Image } from "react-native";
+import { Pressable, View, StyleSheet, Image } from "react-native";
 
 function MenuItem({label, onPress, source}) {
     return( 

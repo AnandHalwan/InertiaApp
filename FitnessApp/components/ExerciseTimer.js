@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import CircularProgress, {ProgressRef} from "react-native-circular-progress-indicator";
+import CircularProgress from "react-native-circular-progress-indicator";
 
 function ExerciseTimer({display, setNumber, name, sets, lowRepRange, highRepRange, timer, start, initital}) {
 

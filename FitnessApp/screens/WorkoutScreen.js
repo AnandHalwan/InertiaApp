@@ -1,16 +1,10 @@
-import { View, StyleSheet, Text, FlatList, Animated, Dimensions, Image, TouchableOpacity, Modal, Touchable} from "react-native";
+import { View, StyleSheet, Text, Image, TouchableOpacity, Modal} from "react-native";
 import { ppl } from "../data/DummyData";
-import Swiper from "react-native-swiper";
 import WorkoutContainerComponent from "../components/WorkourContainerComponent";
-import { useEffect, useState } from "react";
-import StartButton from "../components/StartButton";
-import Pagination from "../components/Pagination";
-import {useRawData } from "@shopify/react-native-skia";
-import { useRef } from "react";
+import {useState } from "react";
 import { supabase } from "../supabase/SupaBaseClient";
 import { userId } from "./Auth";
 import EditWorkout from "../components/EditWorkout";
-import { BlurView } from "@react-native-community/blur";
 
 function WorkoutScreen({navigation}) {
 

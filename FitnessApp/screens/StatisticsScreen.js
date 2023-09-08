@@ -1,22 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import Placeholder from "../components/Placeholder";
-import ToolbarMenu from "../components/ToolbarMenu";
 function StatisticsScreen({navigation}) {
-
-
-
-    function navigateProfileScreenHandler() {
-        navigation.navigate('ProfileScreen');
-    }
-    function navigateEncyclopediaScreenHandler() {
-        navigation.navigate('EncyclopediaScreen');
-    }
-    function navigateWorkoutScreenHandler() {
-        navigation.navigate('WorkoutScreen');
-    }
-    function navigateNutritionScreenHandler() {
-        navigation.navigate('NutritionScreen');
-    }
 
 
     return (

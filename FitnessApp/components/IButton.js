@@ -1,5 +1,4 @@
-import { View, Image, Pressable, TouchableOpacity } from 'react-native';
-import { Defs } from 'react-native-svg';
+import { View, Image} from 'react-native';
 function IButton({style}) {
 
 

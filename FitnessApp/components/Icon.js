@@ -1,8 +1,6 @@
 import * as React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import Svg, { G, Path} from "react-native-svg";
 
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 const Icon = (props) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"

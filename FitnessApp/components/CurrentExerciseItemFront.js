@@ -1,5 +1,3 @@
-import { View, Image, Text , StyleSheet, TouchableOpacity} from "react-native";
-import IButton from "./IButton";
 import { useEffect, useImperativeHandle, useState } from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withTiming, } from "react-native-reanimated";
 import { forwardRef } from "react";

@@ -1,10 +1,8 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image, TouchableOpacity } from "react-native";
+import { useEffect, useState, useRef } from "react";
+import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image } from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
-import ExerciseListItem from "./ExerciseListItem";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming, scrollTo, Easing } from "react-native-reanimated";
-import { useTiming } from "@shopify/react-native-skia";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import { userId } from "../screens/Auth";
 import { supabase } from "../supabase/SupaBaseClient";
 const windowWidth = Dimensions.get('window').width;

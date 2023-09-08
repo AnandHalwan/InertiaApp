@@ -1,9 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import EncyclopediaScreen from "../screens/EncyclopediaScreen";
 import NutritionScreen from "../screens/NutritionScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import StatisticsScreen from "../screens/StatisticsScreen";
-import WorkoutScreen from "../screens/WorkoutScreen";
 import { Image } from "react-native";
 import WorkoutRoot from "./WorkoutRoot";
 import EncyclopediaRoot from "./EncyclopediaRoot";

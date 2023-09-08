@@ -1,10 +1,7 @@
-import React, {useEffect, useState, useRef, useCallback } from "react";
-import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image, TouchableOpacity, Touchable} from "react-native";
+import React, { useState, useRef, useCallback } from "react";
+import { View, StyleSheet, Text,  Dimensions, Image, TouchableOpacity, Touchable} from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
-import CurrentExerciseListItem from "./CurrentExerciseListItem";
-import ExerciseListItem from "./ExerciseListItem";
-import DraggableFlatList, {OpacityDecorator, ScaleDecorator} from 'react-native-draggable-flatlist'
-import AddExerciseButton from "./AddExerciseButton";
+import DraggableFlatList, {OpacityDecorator} from 'react-native-draggable-flatlist'
 import EditExerciseListItem from "./EditExerciseListItem";
 import { Swipeable } from "react-native-gesture-handler";
 import Exercise from "../models/Exercise";

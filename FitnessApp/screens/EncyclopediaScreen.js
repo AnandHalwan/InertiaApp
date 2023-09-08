@@ -1,13 +1,6 @@
 import { View, StyleSheet, Text, Pressable, Image, TextInput, Dimensions } from "react-native";
-import { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import DaysSetup from "./SetupComponents/DaysSetup";
-import Information from "../components/Information";
 import EncyclopediaCircle from "../components/EncyclopediaCircle";
 import * as React from 'react';
-import * as Font from 'expo-font';
-import { useFonts, useEffect } from "expo-font";
 
 
 const { width, height } = Dimensions.get('window');

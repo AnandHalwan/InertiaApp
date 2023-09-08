@@ -1,12 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Image, StyleSheet, Text, Animated as DefaultAnimated, TextInput, TouchableOpacity} from "react-native";
+import { View, StyleSheet, Text, Animated as DefaultAnimated, TextInput, TouchableOpacity} from "react-native";
 import GestureRecognizer from "react-native-swipe-gestures";
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
-import CircularProgress from 'react-native-circular-progress-indicator';
 import CurrentExericseItemFront from "./CurrentExerciseItemFront";
 import ExerciseTimer from "./ExerciseTimer";
-import IButton from "./IButton";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { } from "react-native-reanimated";
 function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, handleEnterButton, setNumber, navigation, backgroundCircleColor, currentExercise, firstExercise, goNext}) {
 
     const [weightText, setWeightText] = useState("Weight");

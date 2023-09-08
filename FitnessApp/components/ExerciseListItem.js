@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 
 import { View, Image, StyleSheet, Text, Animated, TouchableOpacity, Dimensions} from "react-native";
-import { Pressable } from "react-native";
-import { back } from "react-native/Libraries/Animated/Easing";
-import IButton from "./IButton";
+
 
 import { supabase } from "../supabase/SupaBaseClient";
 import { userId } from "../screens/Auth";

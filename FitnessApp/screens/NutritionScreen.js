@@ -1,6 +1,4 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import Placeholder from "../components/Placeholder";
-import ToolbarMenu from "../components/ToolbarMenu";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 function NutritionScreen({navigation}) {

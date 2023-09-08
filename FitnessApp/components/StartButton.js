@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from "react-native";
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
+import {Text, StyleSheet, TouchableOpacity, Animated } from "react-native";
 
 
 function StartButton({workoutStarted, onPress, showButton}) {

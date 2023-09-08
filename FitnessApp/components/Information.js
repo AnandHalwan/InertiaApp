@@ -1,11 +1,7 @@
-import { View, StyleSheet, Text, Pressable, Image, TextInput, TouchableOpacity, Dimensions} from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { useState } from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { LineChart } from 'react-native-wagmi-charts';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Dimensions} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 import * as React from 'react';
-import * as Font from 'expo-font';
-import { useFonts, useEffect } from "expo-font";
 
 
 const { width, height } = Dimensions.get('window');
