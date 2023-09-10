@@ -68,7 +68,7 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
 
     function openEditView() {
         console.log("Open edit view now");
-        leftValueAnimated.value = withSpring(leftValueAnimated.value - 379);
+        leftValueAnimated.value = withSpring(leftValueAnimated.value - 429);
         listTopAnimated.value = withTiming(listTopAnimated.value + 70)
         setEdit(true);
     }
@@ -76,9 +76,9 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
 
     function closeEditScreen() {
         console.log("Stop editing");
-        leftValueAnimated.value = withTiming(leftValueAnimated.value - 380);
+        leftValueAnimated.value = withTiming(leftValueAnimated.value - 420);
         setTimeout(() => {
-            leftValueAnimated.value = leftValueAnimated.value + 759;
+            leftValueAnimated.value = leftValueAnimated.value + 849;
             listTopAnimated.value = withSpring(listTopAnimated.value - 70);
         }, 300);
         setEdit(false);
@@ -91,7 +91,7 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
         }
     })
 
-    const leftValueAnimated = useSharedValue(380);
+    const leftValueAnimated = useSharedValue(430);
     const animateLeftValue = useAnimatedStyle(() => {
         return {
             left: leftValueAnimated.value

@@ -8,86 +8,33 @@ const EditExerciseListItem = (props, ref) => {
             color: '#1C1C1E',
             backgroundColor: '#1C1C1E',
             borderRadius: 16,
-            justifyContent: 'space-between',
-            padding: 7 * props.widthRatio,
-            width: 370 * props.widthRatio,
-            left: 1 * props.widthRatio,
-        },
-        outerListItemContainer: {
-            color: '#1C1C1E',
-            backgroundColor: '#1C1C1E',
-            borderRadius: 16,
-            justifyContent: 'space-between',
-            padding: 7 * props.widthRatio,
-            width: 370 * props.widthRatio,
-            marginBottom: 9 * props.heightRatio,
-            left: 1 * props.widthRatio,
-            height: 101 * props.heightRatio
-        },
-        leftListItem: {
-            top: 0,
-            left: 0,
-            
-        },
-        imgBackground: {
-            width: 87 * props.widthRatio,
-            height: 87 * props.heightRatio,
-        },
-        rightListItem: {
-            marginLeft: 10 * props.widthRatio,
-            
+            padding: 7,
+            width: 370*props.widthRatio,
+            left: 1,
         },
         textPrimary: {
             color: 'white',
             letterSpacing: -.1,
-            left: -1 * props.widthRatio,
-            top: -1 * props.heightRatio
         },
         textSecondary: {
             color: '#808080',
             fontWeight: "300",
         },
-        listItemContainerPressed: {
-            color: '#1C1C1E',
-            backgroundColor: '#1C1C1E',
-            borderRadius: 16,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            padding: 7 * props.heightRatio,
-            width: 384 * props.widthRatio,
-            marginBottom: 17.5,
-            height: 200 *props.heightRatio,
-        },
-        imgContainer: {
-            position: 'absolute',
-            top: 8 * props.heightRatio,
-            left: 8 * props.widthRatio,
-            width: 70 * props.widthRatio,
-            height: 70 * props.heightRatio
-        },
-        back: {
-            backfaceVisibility: 'hidden',
-            position: 'absolute',
-        },
-        front: {
-            backfaceVisibility: 'hidden',
-        }
     });
 
 
-
     return(
-                <View style={[styles.listItemContainer, styles.front,{opacity: 1, flexDirection: 'row', height: 101}]}>
-                    <View style={{top: 6 * props.heightRatio, left: 4 * props.widthRatio, width: 76, height: 76, borderRadius: 90, backgroundColor: props.backgroundCircleColor}}>
-                        
-                    </View>
-                    <Image source={props.imgSrc} style={{position: "absolute" , top: 25 * props.heightRatio, left: 24 * props.widthRatio, height: 50 * props.heightRatio, width: 50 * props.widthRatio}}></Image>
-                    <View style={[{justifyContent: 'center', marginBottom: 0, marginRight: 8 * props.widthRatio, marginLeft: 0}]}>
-                        <Text style={[styles.textPrimary, {fontSize: 20 * props.widthRatio, textAlign: 'right'}]}>{props.name}</Text>
-                        <Text style={[styles.textSecondary, {fontSize: 17 * props.widthRatio, textAlign: 'right'}]}>{props.sets} sets {props.lowRepRange}-{props.highRepRange} reps</Text>
+        <View style={[styles.listItemContainer, styles.front,{height: 101, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}]}>
+            <View style={[{borderRadius: 180, height: 76, width: 76, top: 12, left: 11,  backgroundColor: props.backgroundCircleColor, position: 'absolute'}]}>
+                
+            </View>
+            <Image source={props.imgSrc} style={[{position: "absolute" , top: 25, left: 24, height: 50, width: 50}]}></Image>
+            <View style={[{justifyContent: 'center', marginBottom: 0, marginRight: 8, marginLeft: 0, top: 0}]}>
+                <Text style={[styles.textPrimary, {fontSize: 20, textAlign: 'right', marginBottom: 0}]}>{props.name}</Text>
+                <Text style={[styles.textSecondary, {fontSize: 17, textAlign: 'right'}]}>{props.sets} sets {props.lowRepRange}-{props.highRepRange} reps</Text>
 
-                    </View>
-                </View>
+            </View>
+        </View>
         );
     }
 
