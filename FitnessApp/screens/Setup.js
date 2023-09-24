@@ -1,8 +1,8 @@
-import { Text, View, StyleSheet } from "react-native";
+import {View, StyleSheet } from "react-native";
 import Swiper from "react-native-swiper";
 import GoalSetup from "./SetupComponents/GoalSetup";
 import ExperienceSetup from "./SetupComponents/ExperienceSetup";
-import { useEffect, useState, useRef } from "react";
+import {useState, useRef } from "react";
 import DaysSetup from "./SetupComponents/DaysSetup";
 import YouSetup from "./SetupComponents/YouSetup";
 import ReadySetup from "./SetupComponents/ReadySetup";

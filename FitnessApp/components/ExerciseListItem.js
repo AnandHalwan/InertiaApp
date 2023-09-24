@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 
 import { View, Image, StyleSheet, Text, Animated, TouchableOpacity, Dimensions} from "react-native";
-import { Pressable } from "react-native";
-import { back } from "react-native/Libraries/Animated/Easing";
-import IButton from "./IButton";
+
 
 import { supabase } from "../supabase/SupaBaseClient";
 import { userId } from "../screens/Auth";
@@ -12,7 +10,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 
-function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCircleColor, imgSrc, navigation, widthRatio, heightRatio}) {
+function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCircleColor, imgSrc, navigation, widthRatio, heightRatio, onPress}) {
     const styles = StyleSheet.create({
         listItemContainer: {
             color: '#1C1C1E',
@@ -20,7 +18,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
             borderRadius: 16,
             justifyContent: 'space-between',
             padding: 7 * widthRatio,
-            width: 384 * widthRatio,
+            width: 370 * widthRatio,
             marginBottom: 9 * heightRatio,
             left: 1 * widthRatio,
         },
@@ -78,7 +76,7 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
     const [displayIButton, setDisplayIButton] = useState('none');
 
     function onPressHandler() {
-        navigation.navigate("ExerciseInfoScreen")
+        console.log("Navigate")
     }
 
     async function getWorkoutLogs(exerciseId, minusDays) {
@@ -125,18 +123,12 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
         
     }
 
-
-    useEffect(() =>{
-        console.log(heightRatio);
-        console.log(widthRatio);   
-    })
     const height = 101 * heightRatio
     return(
         <View>
 
-        <TouchableOpacity onPress={onPressHandler}>
+        <TouchableOpacity onPress={onPress}>
             <Animated.View style={[styles.listItemContainer, styles.front, {height: height, flexDirection: 'row'}]}>
-                <IButton display={displayIButton} onPress={onPressHandler}></IButton>
                 <View style={{top: 8 * heightRatio, left: 4 * widthRatio, width: height - (25*heightRatio), height: height - (25*heightRatio), borderRadius: 90, backgroundColor: backgroundCircleColor}}>
                     
                 </View>
@@ -148,8 +140,8 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
                 </View>
             </Animated.View>
 
-        </TouchableOpacity>   
-    </View>    
+            </TouchableOpacity>
+        </View>    
         );
     }
 

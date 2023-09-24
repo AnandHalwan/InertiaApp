@@ -1,27 +1,20 @@
 import { useEffect, useState, useRef } from "react";
-import { View, StyleSheet, Text, FlatList, Animated, Modal, Dimensions, Image } from "react-native";
+import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image } from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
-import ExerciseListItem from "./ExerciseListItem";
-
+import Animated, { useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
+import { userId } from "../screens/Auth";
+import { supabase } from "../supabase/SupaBaseClient";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;
 const widthRatio = windowWidth/390;
 
-function WorkoutContainerComponent({workout, date, startWorkout, navigation, endWorkout, closeSummary, index, currIndex}) {
+function WorkoutContainerComponent({workout, date, navigation, endWorkout, closeSummary}) {
     const dateRel = date;
-    const workoutLocal = workout;
-
+    const workoutLocal = workout
     const [fadeAnim, setFadeAnime] = useState(new Animated.Value(0));
-
-    /*const [fontLoaded] = useFonts({
-        'SFProDisplay-Medium': require('../assets/fonts/SFProDisplay-Medium.ttf'),
-    });
-    */
-    const [listHeight, setListHeight] = useState(525 * heightRatio);
-    const [displayHeader, setDisplayHeader] = useState('flex');
-    const [modalStartVisible, setModalStartVisible] = useState(false);  
+    const [modalStartVisible, setModalStartVisible] = useState(true);  
     const [modalEndVisible, setModalEndVisible] = useState(false);
     const daysOfWeek = [
         "SUNDAY",
@@ -55,35 +48,14 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
         "#FF6565"
     ]
 
-    useEffect(() =>{
-        if (startWorkout) {
-            setModalStartVisible(true);
-            setListHeight(625 * heightRatio);
-            setDisplayHeader('none');
-
-        } else {
-            setModalStartVisible(false);
-            setListHeight(525 * heightRatio);
-            setDisplayHeader('flex');
-        }
-    }, [startWorkout]);
-
-
-    useEffect(() => {
-        setModalEndVisible(false);
-    }, [closeSummary]);
-
-
     function modalPressHandler() {
         setModalStartVisible(false);
 
     }
-
     const [currentExercise, setCurrentExercise] = useState(0);
     const [setCounter, setSetCounter] = useState(1);
 
     const completedSetHandler = (weight, reps, lastSet, relativeHighWeight, highWeight, highReps) => {
-        setSetCounter(setCounter+1);
         console.log("Child passed to parent");
         console.log(weight, reps);
         if (lastSet) {
@@ -106,19 +78,33 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
                     Reps: highReps
                 }
                 console.log(data);
-                logExerciseWeightReps(data);
-                if (currentExercise === (workout.exerciseCount - 1)){
-                    setModalEndVisible(true);
-                    console.log("Workout ended");
-                } else {
-                    console.log(currentExercise);
-                    console.log(workout.exerciseCount)
-                    setCurrentExercise(currentExercise+1);
-                    setSetCounter(1);
-                }
 
+        } else {
+            setSetCounter(setCounter + 1);
         }
     }
+
+    const [contentHeight, setContentHeight] = useState(0);
+    
+    function handleNextExercise() {
+        if (currentExercise === (workout.exerciseCount - 1)){
+            setModalEndVisible(true);
+            console.log("Workout ended");
+        } else {
+            console.log(currentExercise);
+            console.log(workout.exerciseCount)
+            setTimeout(() => {
+                flatlistRef.current.scrollToOffset({index: 2, animated: true, viewOffset: 20});
+            }, 0)
+            setTimeout(() => {
+                setCurrentExercise(currentExercise+1);
+                setSetCounter(1);
+            }, 600)
+        }
+    }
+
+    const flatlistRef = useRef(null);
+
     async function logExerciseWeightReps(data) {
         try {
           const { data: insertedData, error } = await supabase
@@ -135,190 +121,139 @@ function WorkoutContainerComponent({workout, date, startWorkout, navigation, end
         }
       }
 
+      function handleNavigate() {
+        navigation.navigate("ExerciseInfoScreen")
+      }
+
     function renderExerciseListItem(itemData) {
-        let startExercise = false;
-        if (itemData.index == currentExercise && startWorkout) {
-             startExercise = true;
-             return <CurrentExerciseListItem name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} handleEnterButton={completedSetHandler} setNumber={setCounter} backgroundCircleColor={colors[itemData.index % 5]}></CurrentExerciseListItem>
-        }
-        return <ExerciseListItem navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} startWorkout={startWorkout} exerciseNumber={itemData.index} startExercise={startExercise} expandedView={index === currIndex} backgroundCircleColor={colors[itemData.index % 5]} heightRatio={heightRatio} widthRatio={widthRatio}></ExerciseListItem>
-
+        
+        return (
+                <CurrentExerciseListItem goNext={handleNextExercise} handleEnterButton={completedSetHandler} currentExercise={itemData.index === currentExercise} firstExercise={itemData.index === 0}  onPress={handleNavigate} navigation={navigation} name={itemData.item.name} sets={itemData.item.sets} lowRepRange={itemData.item.lowRepRange} highRepRange={itemData.item.highRepRange} backgroundSrc={itemData.item.backgroundSrc} imgSrc={itemData.item.imgSrc} exerciseNumber={itemData.index} backgroundCircleColor={colors[itemData.index % 5]} heightRatio={heightRatio} widthRatio={widthRatio} setNumber={setCounter}></CurrentExerciseListItem>
+        );
     }
 
     useEffect(() => {
-        if (modalStartVisible) {
-            console.log("Start modal");
-            Animated.timing(fadeAnim, {
-                toValue: 1,
-                duration: 2000,
-                useNativeDriver: true,
-              }).start();
-        } else {
-            Animated.timing(fadeAnim, {
-                toValue: 0,
-                duration: 0,
-                useNativeDriver: true,
-              }).start();
+        opacityAnimated.value = withTiming(opacityAnimated.value + 1, {duration: 1000})
+    })
+
+    const opacityAnimated = useSharedValue(0);
+    const animateOpacity = useAnimatedStyle(() => {
+        return {
+            opacity: opacityAnimated.value
         }
-
-
-    }, [fadeAnim, modalStartVisible, startWorkout]);  
-
-    function setEndVisible() {
-        setModalEndVisible(false);
-    }
-    const flatListRef = useRef(null);
-
-    useEffect(() => {
-        if (index != currIndex) {
-            scrollToTop();
-        }
-    }, [index === currIndex])
-
-    const scrollToTop = () => {
-        flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-      };
+    })
+      
     return(
             <Animated.View style={styles.workoutScreenContainer}>
-                      <Modal
-                        animationType="none"
-                        
-                        transparent={false}
-                        visible={modalStartVisible}
-                        onRequestClose={() => {
+                <Modal
+                    animationType="none"
+                    transparent={false}
+                    visible={modalStartVisible}
+                    
+                    onRequestClose={() => {
                         Alert.alert('Modal has been closed.');
                         setModalStartVisible(!modalStartVisible);
-                            }}>
-                                <Pressable onPress={modalPressHandler}>
-                                    <View style={{height: windowHeight, width: windowWidth, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center'}}>
-                                        <Animated.View style={{opacity: fadeAnim, marginLeft: 30 * widthRatio, marginRight: 30 * widthRatio}}>
-                                        <Text style={{color: 'white', fontSize: 20 * widthRatio, textAlign: 'center'}}>
-                                            "The resistance that you fight physically in the gym and the resistance that you fight in life can only build a strong character."
+                    }}>
+                    <Pressable onPress={modalPressHandler}>
+                        <View style={{height: windowHeight, width: windowWidth, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center'}}>
+                            <Animated.View style={[animateOpacity,{marginLeft: 30 * widthRatio, marginRight: 30 * widthRatio}]}>
+                                <Text style={{color: 'white', fontSize: 20 * widthRatio, textAlign: 'center'}}>
+                                    "The resistance that you fight physically in the gym and the resistance that you fight in life can only build a strong character."
+                                </Text>
+                            </Animated.View>
+                        </View>
+                    </Pressable>
+                </Modal>
+
+                <Modal transparent={true} animationType="fade" visible={modalEndVisible}>
+                   <View style={styles.endWorkoutModalContainer}>
+                        <View style={styles.workoutSummaryContainer}>
+                            <View>
+                                <Text style={styles.workoutSummaryHeader}>
+                                    Summary
+                                </Text>
+                            </View>
+                            <View style={styles.infoOneContainer}>
+                                <View>
+                                    <Text style={styles.caloriesText}>
+                                        Calories
+                                    </Text>
+                                    <View style={styles.calContainer}>
+                                        <Text style={styles.caloriesValOne}>
+                                            427
                                         </Text>
-                                        </Animated.View>
-                                    </View>
-                                </Pressable>
-                            </Modal>
-
-                            <Modal
-                            transparent={true}
-                            animationType="fade"
-                            visible={modalEndVisible}
-                            
-                            >
-                                <View style={styles.endWorkoutModalContainer}>
-                                    <View style={styles.workoutSummaryContainer}>
-                                        <View>
-                                            <Text style={styles.workoutSummaryHeader}>
-                                                Summary
-                                            </Text>
-                                        </View>
-                                        <View style={styles.infoOneContainer}>
-                                            <View>
-                                                <Text style={styles.caloriesText}>
-                                                    Calories
-                                                </Text>
-                                                <View style={styles.calContainer}>
-                                                    <Text style={styles.caloriesValOne}>
-                                                        427
-                                                    </Text>
-                                                    <Text style={styles.caloriesValTwo}>
-                                                        CAL
-                                                    </Text>
-                                                </View>
-                                            </View>
-                                            <View>
-                                                <Text style={styles.caloriesText}>
-                                                    Avg Heart Rate
-                                                </Text>
-                                                <View style={styles.calContainer}>
-                                                    <Text style={styles.caloriesValOne}>
-                                                        117
-                                                    </Text>
-                                                    <Text style={styles.caloriesValTwo}>
-                                                        BPM
-                                                    </Text>
-                                                </View>
-
-                                            </View>
-                                        </View>
-                                        <View>
-                                            <View style={styles.timeRow}>
-                                                <Text style={styles.timeHeader}>
-                                                    Duration
-                                                </Text>
-                                                <Text style={styles.timeValue}>
-                                                    1:37:32
-                                                </Text>
-                                            </View>
-                                            <View style={styles.timeRow}>
-                                                <Text style={styles.timeHeader}>
-                                                    Active Time
-                                                </Text>
-                                                <Text style={styles.timeValue}>
-                                                    1:02:12
-                                                </Text>
-                                            </View>
-                                            <View style={styles.timeRow}>
-                                                <Text style={styles.timeHeader}>
-                                                    Avg Rest Time
-                                                </Text>
-                                                <Text style={styles.timeValue}>
-                                                    1:32
-                                                </Text>
-                                            </View>
-                                            <View style={[styles.timeRow, {marginTop: 22}]}>
-                                                <Text style={styles.timeHeader}>
-                                                    PRs
-                                                </Text>
-                                                <Text style={styles.timeValue}>
-                                                    3
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    </View>
-                                    <View style={styles.checkContainer}>
-                                        <Pressable onPress={endWorkout}>
-                                            <Image source={require('../assets/checkmark_copy.png')} style={{height: 120, width: 120, left: -4, top: -7}}></Image>
-                                        </Pressable>
-
+                                        <Text style={styles.caloriesValTwo}>
+                                            CAL
+                                        </Text>
                                     </View>
                                 </View>
-                            </Modal>
+                                <View>
+                                    <Text style={styles.caloriesText}>
+                                        Avg Heart Rate
+                                    </Text>
+                                    <View style={styles.calContainer}>
+                                        <Text style={styles.caloriesValOne}>
+                                            117
+                                        </Text>
+                                        <Text style={styles.caloriesValTwo}>
+                                            BPM
+                                        </Text>
+                                    </View>
+                                </View>
+                            </View>
+                            <View>
+                                <View style={styles.timeRow}>
+                                    <Text style={styles.timeHeader}>
+                                        Duration
+                                    </Text>
+                                    <Text style={styles.timeValue}>
+                                        1:37:32
+                                    </Text>
+                                </View>
+                                <View style={styles.timeRow}>
+                                    <Text style={styles.timeHeader}>
+                                        Active Time
+                                    </Text>
+                                    <Text style={styles.timeValue}>
+                                        1:02:12
+                                    </Text>
+                                </View>
+                                <View style={styles.timeRow}>
+                                    <Text style={styles.timeHeader}>
+                                        Avg Rest Time
+                                    </Text>
+                                    <Text style={styles.timeValue}>
+                                        1:32
+                                    </Text>
+                                </View>
+                                <View style={[styles.timeRow, {marginTop: 22}]}>
+                                    <Text style={styles.timeHeader}>
+                                        PRs
+                                    </Text>
+                                    <Text style={styles.timeValue}>
+                                        3
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
+                        <View style={styles.checkContainer}>
+                            <Pressable onPress={endWorkout}>
+                                <Image source={require('../assets/checkmark_copy.png')} style={{height: 120, width: 120, left: -4, top: -7}}></Image>
+                            </Pressable>
+                        </View>
+                    </View>
+                </Modal>
                 <View style={styles.headerContainer}>
                     <View style={styles.leftHeaderContainer}>
                         <View style={{marginBottom: -10, height: 25, left: 12 * widthRatio}}>
                             <Text style={styles.dateText}>{daysOfWeek[dateRel.getDay()]}, {months[date.getMonth()]} {date.getDate()}</Text>
                         </View>
-                        <View style={{display: displayHeader}}>
-                            <View style={{marginBottom: -3, marginLeft: 10 * widthRatio}}>
-                                <Text style={[styles.workoutNameText]}>{workoutLocal.name}</Text>
-                            </View>
-                            <View>
-                                <Text style={styles.durationText}>{workoutLocal.durationLow}-{workoutLocal.durationHigh} min</Text>
-                            </View>
-                        </View>
-                    </View>
-
-                    <View style={[styles.rightHeaderContainer, {display: displayHeader}]}>
-                        <View style={{marginBottom: 30}}>
-                            <Text> </Text>
-                        </View>
-                        <View style={{marginBottom: 5}}>
-                            <Text style={styles.exerciseCountText} >{workout.exerciseCount} Exercises</Text>
-                        </View>
-                        
-                        <View>
-                            <Text style={styles.setCountText}>{workout.totalSets} Sets</Text>
-                        </View>
                     </View>
                 </View>
                                 
-                    <View style={[styles.workoutContainer]}>
-
-                            <FlatList fadingEdgeLength={100} ref={flatListRef} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
-
-                    </View>
+                <View style={[styles.workoutContainer, {flex: 50.4 * heightRatio}, {top: 18}]}>
+                    <FlatList ref={flatlistRef} fadingEdgeLength={100} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
+                </View>
             </Animated.View>
     );
 }
@@ -361,7 +296,8 @@ const styles = StyleSheet.create({
         width: 384 * widthRatio,
         top: 25,
         marginLeft: 1.4 * widthRatio,
-        flex: 3.4 * heightRatio
+        alignItems: 'center',
+        marginBottom: 30
     },
     dateText: {
         color: '#7F7E84',
@@ -474,4 +410,3 @@ const styles = StyleSheet.create({
         top: 539 * heightRatio
     }
   });
-
