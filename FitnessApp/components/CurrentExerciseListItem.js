@@ -91,28 +91,11 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
       };
 
 
-    const [timer, setTimer] = useState(5);
-    const [showTimer, setShowTimer] = useState(false);
+    const timerRef = useRef();
 
-        useEffect(() => {
-            const intervalId = setInterval(() => {
-            if (timer <= 0) {
-                setShowTimer(false);
-
-                doAFlip();
-
-            }
-            if (showTimer) {
-                setTimer(timer - 1);
-                console.log(timer);
-            }
-
-            }, 1000); // repeat every second
-        
-            // cleanup function to stop interval when component unmounts
-            return () => clearInterval(intervalId);
-        }, [timer, showTimer]); // empty array as second argument to useEffect, to only run effect once
-
+    function endTimer() {
+        doAFlip();        
+    }
         const [expanded, setExpanded] = useState(false);
     function enterButtonPressedHandler() {
         if (isFlipped) {
@@ -125,7 +108,6 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
                 setRepsText("Reps");
                 console.log(weightValue);
                 console.log(repsValue);
-                setShowTimer(true);
 
                 const relativeWeight = parseInt(weightValue / (1.0278 - 0.0278 * repsValue));
                 if (relativeHighWeight < relativeWeight) {
@@ -139,7 +121,9 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
                 }
 
                 doAFlip();
-                setTimeout(() => {setTimer(5)}, 1000);
+                setTimeout(() => {
+                    timerRef.current.startTimer();
+                }, 500);
 
                 handleEnterButton(weightValue, repsValue, lastSet, relativeHighWeight, highWeight, highReps);
 
@@ -179,7 +163,7 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
 
                             <CurrentExericseItemFront ref={expandRef} currentExercise={currentExercise} firstExercise={firstExercise} navigation={navigation} display={defaultFront} setNumber={setNumber} backgroundSrc={backgroundSrc} imgSrc={imgSrc} name={name} sets={sets} lowRepRange={lowRepRange} highRepRange={highRepRange} backgroundCircleColor={backgroundCircleColor}></CurrentExericseItemFront>
                             <View style={[{display: timerDisplay}]}>
-                                <ExerciseTimer display={timerDisplay} setNumber={setNumber} name={name} lowRepRange={lowRepRange} highRepRange={highRepRange} timer={timer} initital={5}></ExerciseTimer>
+                                <ExerciseTimer ref={timerRef} completeTimer={endTimer} setNumber={setNumber} lowRepRange={lowRepRange} highRepRange={highRepRange} name={name}></ExerciseTimer>
                             </View>
                             <Animated.View style={[styles.listItemContainer, {justifyContent: 'center', alignItems: 'center', display: summaryDisplay, height: 420}]}>
                                 <View style={[{ left: -6, flexDirection: 'column' ,justifyContent: 'space-between', top: 40, alignItems: 'center'}]}>

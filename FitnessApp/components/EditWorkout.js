@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 import { View, StyleSheet, Text,  Dimensions, Image, TouchableOpacity, Touchable} from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import DraggableFlatList, {OpacityDecorator} from 'react-native-draggable-flatlist'
@@ -98,7 +98,9 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
         }
     });
 
-
+    function goToEditWorkout() {
+        navigation.navigate("AddEditExerciseScreen")
+    }
 
     const renderItem = useCallback(
         ({item, drag}) => {
@@ -142,7 +144,7 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
                         <View style={[{height: 101, width: 22, backgroundColor: '#1C1C1E', marginLeft: -18}]}>
 
                         </View>
-                        <TouchableOpacity onPress={() => deleteItemHandler(item.id)}>
+                        <TouchableOpacity onPress={goToEditWorkout}>
                             <View style={[{height: 101, width: 85, backgroundColor: '#7a7980', justifyContent: 'center', alignItems: 'center'}]}>
                                 <Image source={require('../assets/edit.png')} style={{width: 26, height: 26}}/>
                                 <Text style={{color: 'white', marginTop: 2}}>Edit</Text>

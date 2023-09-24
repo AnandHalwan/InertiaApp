@@ -1,8 +1,6 @@
 import { View, StyleSheet, Text, Pressable, Image, TextInput, Dimensions } from "react-native";
 import EncyclopediaCircle from "../components/EncyclopediaCircle";
 import * as React from 'react';
-
-
 const { width, height } = Dimensions.get('window');
 
 const EncyclopediaScreen = ({navigation}) => {

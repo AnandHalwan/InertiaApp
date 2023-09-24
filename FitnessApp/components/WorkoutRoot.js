@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ExerCiseInfoScreen from "../screens/ExerciseInfoScreen";
 import WorkoutScreen from "../screens/WorkoutScreen";
+import AddEditExerciseScreen from "../screens/AddEditExerciseScreen";
 
 
 const WorkoutStack = createNativeStackNavigator();
@@ -10,6 +11,7 @@ const WorkoutRoot = () => {
         <WorkoutStack.Navigator screenOptions={{headerShown: false}}>
             <WorkoutStack.Screen name={"WorkoutHome"} component={WorkoutScreen}></WorkoutStack.Screen>
             <WorkoutStack.Screen name={"ExerciseInfoScreen"} component={ExerCiseInfoScreen}></WorkoutStack.Screen>
+            <WorkoutStack.Screen name={"AddEditExerciseScreen"} component={AddEditExerciseScreen}></WorkoutStack.Screen>
         </WorkoutStack.Navigator>
     );
 }

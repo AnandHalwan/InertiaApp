@@ -2,7 +2,7 @@ import Exercise from "../models/Exercise";
 import Workout from "../models/Workout";
 
 
-const e1 =  new Exercise('e1', 'Barbell Bench Press', 1, 6, 8, require('../assets/exercises/bench.png'), '#FFB846', false)
+const e1 =  new Exercise('e1', 'Barbell Bench Press', 2, 6, 8, require('../assets/exercises/bench.png'), '#FFB846', false)
 const e2 =  new Exercise('e2', 'Incline Dumbbell Press', 3, 8, 12, require('../assets/exercises/incline.png'), '#9FFF91', false)
 const e3 =  new Exercise('e3', 'Cable Flys', 4, 10, 12, require('../assets/exercises/flies.png'), '#77C0FF', false)
 const e4 =  new Exercise('e4', 'Tricep Cable Pushdown', 4, 10, 12, require('../assets/exercises/tricep.png'), '#FF89FA', false)
