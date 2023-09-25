@@ -1,6 +1,8 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import Logo from "../assets/SeatedFly.svg";
+import { db } from "./firebaseConfig";
+import { addDoc, collection } from "firebase/firestore";
 
 function NutritionScreen({navigation}) {
 
@@ -15,12 +17,26 @@ function NutritionScreen({navigation}) {
     width.value = withSpring(width.value + 50);
   };
 
+  const data = {
+    name: "Anand Halwan",
+    email: "ahalwan124@gmail.com",
+    age: 23,
+  };
+
+  const colRef = collection(db, 'User')
+
+
+  function pressed() {
+    addDoc(colRef, data)
+  }
+
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Animated.View style={[styles.listItemContainer,{justifyContent: 'center', alignItems: 'center', height: 420}]}>
-          <View style={[{ left: -6, flexDirection: 'column' ,justifyContent: 'space-between', top: 40, alignItems: 'center'}]}>
+          <TouchableOpacity style={[{ left: -6, flexDirection: 'column' ,justifyContent: 'space-between', top: 40, alignItems: 'center'}]} onPress={pressed}>
             <Logo width={120} height={120}></Logo>
-          </View>
+          </TouchableOpacity>
       </Animated.View>
     </View>
   );
