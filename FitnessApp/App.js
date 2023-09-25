@@ -10,6 +10,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabRoot from './components/TabRoot';
 import Setup from './screens/Setup';
 import Auth from './screens/Auth';
+import { app, db } from './screens/firebaseConfig';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
