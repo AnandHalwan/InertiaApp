@@ -55,9 +55,11 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
     const [currentExercise, setCurrentExercise] = useState(0);
     const [setCounter, setSetCounter] = useState(1);
 
+
     const completedSetHandler = (weight, reps, lastSet, relativeHighWeight, highWeight, highReps) => {
         console.log("Child passed to parent");
         console.log(weight, reps);
+        
         if (lastSet) {
                 console.log("Relative 1rp" + relativeHighWeight);
                 console.log("High Weight" + highWeight);

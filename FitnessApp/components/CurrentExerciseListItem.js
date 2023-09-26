@@ -4,6 +4,7 @@ import GestureRecognizer from "react-native-swipe-gestures";
 import CurrentExericseItemFront from "./CurrentExerciseItemFront";
 import ExerciseTimer from "./ExerciseTimer";
 import Animated, { } from "react-native-reanimated";
+import { FlatList } from "react-native";
 function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundSrc, imgSrc, handleEnterButton, setNumber, navigation, backgroundCircleColor, currentExercise, firstExercise, goNext}) {
 
     const [weightText, setWeightText] = useState("Weight");
@@ -103,6 +104,11 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
             const weightValue = parseInt(weightText, 10);
             const repsValue = parseInt(repsText);
             const lastSet = setNumber === sets ? true : false;
+
+            if (!isNaN(weightValue) && !isNaN(repsValue)) {
+                setExerciseStats(exerciseStats.concat([[weightValue, repsValue]]))
+            }
+
             if (!isNaN(weightValue) && !isNaN(repsValue) && !lastSet) {
                 setWeightText("Weight");
                 setRepsText("Reps");
@@ -127,7 +133,7 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
 
                 handleEnterButton(weightValue, repsValue, lastSet, relativeHighWeight, highWeight, highReps);
 
-            } else if (lastSet) {
+            } else if (!isNaN(weightValue) && !isNaN(repsValue) && lastSet) {
                     console.log("Call supabase to enter" + relativeHighWeight + "," + highWeight + "," + highReps);
                     handleEnterButton(weightValue, repsValue, lastSet, relativeHighWeight, highWeight, highReps);
                     setTimerDisplay('none');
@@ -156,6 +162,22 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
     const [inputDisplay, setInputDisplay] = useState('flex');
 
 
+    const [exerciseStats, setExerciseStats] = useState([]);
+
+    useEffect(() => {
+        if (exerciseStats.length > 0) {
+            console.log(exerciseStats[exerciseStats.length - 1])
+        }
+    }, [exerciseStats])
+
+    function renderSetData(item) {
+        return (
+            <View>
+                <Text style={{color: 'white', fontSize: 20}}>Set {item.index}: {item.item[0]}x{item.item[1]}</Text>
+            </View>
+        )
+    }
+
         return(
             <View>
                 <GestureRecognizer onSwipeLeft={gestureHandler}>
@@ -168,6 +190,9 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
                             <Animated.View style={[styles.listItemContainer, {justifyContent: 'center', alignItems: 'center', display: summaryDisplay, height: 420}]}>
                                 <View style={[{ left: -6, flexDirection: 'column' ,justifyContent: 'space-between', top: 40, alignItems: 'center'}]}>
                                     <Text style={{color: 'white', fontSize: 20, left: 6, marginBottom: 50}}>Exercise Summary Placeholder</Text>
+                                    <FlatList data={exerciseStats} renderItem={renderSetData}>
+
+                                    </FlatList>
                                     <TouchableOpacity style={{zIndex: 5, left: 6}} onPress={handleNext}>
                                         <View style={{height: 50, width: 100, borderRadius: '20', backgroundColor: 'green', justifyContent: 'center', alignItems: 'center'}}>
                                             <Text style={{color: 'white', fontSize: 14}}>Next</Text>

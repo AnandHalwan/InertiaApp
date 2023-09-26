@@ -182,7 +182,7 @@ const ExerciseTimer = (props, ref) => {
                 <View>
                     <CountdownCircleTimer
                     isPlaying={playing}
-                    duration={2000}
+                    duration={5}
                     colors={['#004777', '#F7B801', '#A30000', '#A30000']}
                     colorsTime={[50, 35, 20, 0]}
                     onComplete={props.completeTimer}
