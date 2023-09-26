@@ -1,7 +1,7 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import Logo from "../assets/SeatedFly.svg";
-import { db } from "./firebaseConfig";
+import { db } from "../firebaseConfig";
 import { addDoc, collection } from "firebase/firestore";
 
 function NutritionScreen({navigation}) {

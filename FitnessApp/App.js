@@ -1,16 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet} from 'react-native';
-import WorkoutScreen from './screens/WorkoutScreen';
-import ProfileScreen from './screens/ProfileScreen';
-import EncyclopediaScreen from './screens/EncyclopediaScreen';
-import StatisticsScreen from './screens/StatisticsScreen';
-import NutritionScreen from './screens/NutritionScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabRoot from './components/TabRoot';
 import Setup from './screens/Setup';
 import Auth from './screens/Auth';
-import { app, db } from './screens/firebaseConfig';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
