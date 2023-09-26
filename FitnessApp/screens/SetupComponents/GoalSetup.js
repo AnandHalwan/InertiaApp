@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { supabase } from "../../supabase/SupaBaseClient";
 import { userId } from "../Auth";
 
 export let goal = "";
@@ -7,26 +6,10 @@ export let goal = "";
 function GoalSetup({onPressDown}) {
 
 
-    async function updateRow(table, column, value, id) {
-        const { data, error } = await supabase
-          .from(table)
-          .update({ [column]: value  })
-          .eq("UID", id);
-      
-        if (error) {
-          console.log(error);
-          console.log("Error");
-        } else {
-          console.log(data);
-          console.log("Success");
-        }
-      };
-
     function handleInput(input) {
         onPressDown();
         goal = input;
         console.log(goal);
-        updateRow('Setup', 'Goal', input, userId);
     }
 
 

@@ -2,7 +2,6 @@ import { View, StyleSheet, Text, Image, TouchableOpacity, Modal} from "react-nat
 import { ppl } from "../data/DummyData";
 import WorkoutContainerComponent from "../components/WorkourContainerComponent";
 import {useState } from "react";
-import { supabase } from "../supabase/SupaBaseClient";
 import { userId } from "./Auth";
 import EditWorkout from "../components/EditWorkout";
 
@@ -55,37 +54,6 @@ function WorkoutScreen({navigation}) {
         },
 
     ]
-
-      async function getWorkoutLogs(exerciseId, minusDays) {
-        var currentDate = new Date();
-        currentDate.setDate(currentDate.getDate() - minusDays);
-
-        var year = currentDate.getFullYear();
-        var month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        var day = String(currentDate.getDate()).padStart(2, '0');
-
-        var formattedDate = year + '-' + month + '-' + day;
-        try {
-          const { data, error } = await supabase
-            .from("Log")
-            .select()
-            .eq("UID", userId)
-            .eq("ExerciseId", exerciseId)
-            .gte("Date", formattedDate)
-      
-          if (error) {
-            throw error;
-          }
-      
-          // Return the column value
-          console.log(data);
-          return data;
-        } catch (error) {
-          console.error('Error retrieving column value:', error.message);
-          // Handle the error accordingly
-        }
-      }
-
 
     const [selectWorkoutVisible, setSelectWorkoutVisible] = useState(false);
     if (workoutStarted) {

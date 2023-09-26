@@ -1,27 +1,9 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { userId } from "../Auth";
-import { supabase } from "../../supabase/SupaBaseClient";
 function ExperienceSetup({onPressDown}) {
     function handleInput(input) {
         onPressDown();
-        updateRow('Setup', 'Experience', input, userId);
     }
-
-    async function updateRow(table, column, value, id) {
-        const { data, error } = await supabase
-          .from(table)
-          .update({ [column]: value  })
-          .eq("UID", id);
-      
-        if (error) {
-          console.log(error);
-          console.log("Error");
-        } else {
-          console.log(data);
-          console.log("Success");
-        }
-      };
-
 
     return (
         <View style={styles.container}>

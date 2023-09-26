@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Dimensions, Image, Pre, Pressable} from "react-native";
 import { userId } from "../Auth";
-import { supabase } from "../../supabase/SupaBaseClient";
 function DaysSetup({index}) {
 
 
@@ -58,30 +57,6 @@ function DaysSetup({index}) {
     })
     
 
-
-    useEffect(() => {
-        if (index === 3 ){
-            console.log("Update Days")
-            updateRow("Setup", "Days", daysSplit, userId);
-        }
-      }, [index]);
-
-
-
-      async function updateRow(table, column, value, id) {
-        const { data, error } = await supabase
-          .from(table)
-          .update({ [column]: value  })
-          .eq("UID", id);
-      
-        if (error) {
-          console.log(error);
-          console.log("Error");
-        } else {
-          console.log(data);
-          console.log("Success");
-        }
-      };
     const width = Dimensions.get('window').width;
     const height = Dimensions.get('window').height;
 
