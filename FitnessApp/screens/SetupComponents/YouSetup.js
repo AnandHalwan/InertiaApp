@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { userId } from "../Auth";
-import { supabase } from "../../supabase/SupaBaseClient";
 function YouSetup({onPressDown, index}) {
 
     const [weightVal, setWeightVal] = useState("150");
@@ -113,41 +112,9 @@ function YouSetup({onPressDown, index}) {
       }
 
 
-
-      async function updateRow(table, column, value, id) {
-        const { data, error } = await supabase
-          .from(table)
-          .update({ [column]: value  })
-          .eq("UID", id);
-      
-        if (error) {
-          console.log(error);
-          console.log("Error");
-        } else {
-          console.log(data);
-          console.log("Success");
-        }
-      };
-
-
-
-      async function insertNutrition(data) {
-        supabase.from('Nutrition')
-            .insert(data)
-            .then(result => {
-                console.log('Data inserted successfully:', result);
-            })
-            .catch(error => {
-                console.error('Error inserting data:', error);
-            });
-      }
-
       useEffect(() => {
         if (index === 4) {
-            updateRow("Setup", "Weight", parseInt(weightVal), userId);
-            updateRow("Setup", "Height", parseInt(heightVal + inchesVal), userId);
-            updateRow("Setup", "Age", parseInt(ageVal), userId);
-            updateRow("Setup", "Sex", sexVal === "M" ? true : false, userId);
+
             const calories = parseInt(weightVal) * 15;
             const protein = parseInt(weightVal);
             const fats = parseInt(parseInt(weightVal) * .45);
@@ -160,7 +127,6 @@ function YouSetup({onPressDown, index}) {
                 Fats: fats,
                 Protein: protein
               };
-              insertNutrition(data);
 
 
 

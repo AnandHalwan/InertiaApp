@@ -4,7 +4,6 @@ import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import { userId } from "../screens/Auth";
-import { supabase } from "../supabase/SupaBaseClient";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;
@@ -107,25 +106,10 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
 
     const flatlistRef = useRef(null);
 
-    async function logExerciseWeightReps(data) {
-        try {
-          const { data: insertedData, error } = await supabase
-            .from("Log")
-            .insert([data]);
-      
-          if (error) {
-            throw error;
-          }
-      
-        } catch (error) {
-          console.error('Error inserting into table:', error.message);
-          // Handle the error accordingly
-        }
-      }
 
-      function handleNavigate() {
+    function handleNavigate() {
         navigation.navigate("ExerciseInfoScreen")
-      }
+    }
 
     function renderExerciseListItem(itemData) {
         

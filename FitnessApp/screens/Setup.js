@@ -6,7 +6,6 @@ import {useState, useRef } from "react";
 import DaysSetup from "./SetupComponents/DaysSetup";
 import YouSetup from "./SetupComponents/YouSetup";
 import ReadySetup from "./SetupComponents/ReadySetup";
-import { supabase } from '../supabase/SupaBaseClient'
 import { userId } from "./Auth";
 
 function Setup({navigation}) {
@@ -24,25 +23,8 @@ function Setup({navigation}) {
     function readySwipe() {
         navigation.navigate("TabRoot");
         console.log("Swiped");
-        updateRow("profiles", "Setup", true, userId);
         
     }
-
-    async function updateRow(table, column, value, id) {
-        const { data, error } = await supabase
-          .from(table)
-          .update({ [column]: value  })
-          .eq("id", id);
-      
-        if (error) {
-          console.log(error);
-          console.log("Error");
-        } else {
-          console.log(data);
-          console.log("Success");
-        }
-      };
-
     
 
     const [currIndex, setCurrIndex] = useState(0);

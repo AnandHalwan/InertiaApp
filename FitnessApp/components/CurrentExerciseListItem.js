@@ -134,7 +134,7 @@ function CurrentExerciseListItem({name, sets, lowRepRange, highRepRange, backgro
                 handleEnterButton(weightValue, repsValue, lastSet, relativeHighWeight, highWeight, highReps);
 
             } else if (!isNaN(weightValue) && !isNaN(repsValue) && lastSet) {
-                    console.log("Call supabase to enter" + relativeHighWeight + "," + highWeight + "," + highReps);
+                    console.log("Call firebase to enter" + relativeHighWeight + "," + highWeight + "," + highReps);
                     handleEnterButton(weightValue, repsValue, lastSet, relativeHighWeight, highWeight, highReps);
                     setTimerDisplay('none');
                     setSummaryDisplay('flex');

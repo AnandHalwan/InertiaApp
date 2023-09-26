@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, Modal, StyleSheet, View, Image, Text } from 'react-native'
 import { Button, Input } from 'react-native-elements'
-import { supabase } from '../supabase/SupaBaseClient'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
@@ -13,128 +12,6 @@ export default function Auth({navigation}) {
   const [loading, setLoading] = useState(false)
   const [showEmailModal, setShowEmailModal] = useState(false);
   const[showLoginButtons, setShowLoginButtons] = useState('flex');
-  async function signInWithEmail() {
-    setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    })
-    if (!error) {
-      console.log("Signed in");
-      setShowLoginButtons('none');
-      setShowEmailModal(false)
-      userId = ((await supabase.auth.getUser()).data.user.id);
-
-      getColumnValueByKey("profiles", "id", userId, "Setup")
-      .then((value) => {
-        const setup = value.Setup;
-
-        if (setup) {
-          console.log("User is already setup");
-          navigation.navigate("TabRoot");
-        } else {
-          console.log("User is not setup");
-          const newData = {
-            WID: 0,
-            UID: userId,
-            // Add additional columns and values as needed
-          };
-
-          for (let i = 0; i < 7; i++) {
-            const newData = {
-              WID: i,
-              UID: userId,
-              // Add additional columns and values as needed
-            };
-            initializeUserWorkout('Workout', newData)
-            .then((insertedRow) => {
-              console.log('Inserted row:', insertedRow);
-            })
-            .catch((error) => {
-              console.error('Error:', error);
-            });
-          }
-          navigation.navigate("Setup");
-        }
-
-        
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-      
-      //navigation.navigate("Setup");
-
-      //insertSetup();
-    }
-
-    if (error) Alert.alert(error.message)
-    setLoading(false)
-  }
-
-
-  async function getColumnValueByKey(tableName, keyColumnName, keyValue, columnToRetrieve) {
-    try {
-      const { data, error } = await supabase
-        .from(tableName)
-        .select(columnToRetrieve)
-        .eq(keyColumnName, keyValue)
-        .single();
-  
-      if (error) {
-        throw error;
-      }
-  
-      // Return the column value
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.error('Error retrieving column value:', error.message);
-      // Handle the error accordingly
-    }
-  }
-
-  async function initializeUserWorkout(tableName, data) {
-    try {
-      const { data: insertedData, error } = await supabase
-        .from(tableName)
-        .insert([data]);
-  
-      if (error) {
-        throw error;
-      }
-  
-    } catch (error) {
-      console.error('Error inserting into table:', error.message);
-      // Handle the error accordingly
-    }
-  }
-
-  async function signUpWithEmail() {
-    setLoading(true)
-    const { error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    })
-
-    if (error) Alert.alert(error.message)
-    setLoading(false)
-  }
-
-  async function insertSetup() {
-    const { data, error } = await supabase
-      .from('Setup')
-      .insert({
-      UID: userId
-    });
-    if (!error) {
-      console.log("Success");
-    }
-    if (error) {
-      console.log(error.message);
-    }
-  }
-
 
   function displayModalHandler() {
     setShowEmailModal(true);
@@ -167,10 +44,10 @@ export default function Auth({navigation}) {
           />
         </View>
         <View style={[styles.verticallySpaced, styles.mt20]}>
-          <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+          <Button title="Sign in" disabled={loading} onPress={() => console.log("Add signin function")} />
         </View>
         <View style={styles.verticallySpaced}>
-          <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+          <Button title="Sign up" disabled={loading} onPress={() => console.log("Add signup function")} />
         </View>
       </View>
       </Modal>
