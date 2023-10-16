@@ -1,43 +1,16 @@
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import Logo from "../assets/SeatedFly.svg";
-import { db } from "../firebaseConfig";
-import { addDoc, collection } from "firebase/firestore";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import BookOpen from "./../assets/navIcons/bookOpen"
+import BookOpenSvg from "../components/BookOpenSvg";
 
 function NutritionScreen({navigation}) {
 
-  const width = useSharedValue(100);
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      width: width.value
-    }
-  })
-
-  const handlePress = () => {
-    width.value = withSpring(width.value + 50);
-  };
-
-  const data = {
-    name: "Anand Halwan",
-    email: "ahalwan124@gmail.com",
-    age: 23,
-  };
-
-  const colRef = collection(db, 'User')
-
-
-  function pressed() {
-    addDoc(colRef, data)
-  }
-
-
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Animated.View style={[styles.listItemContainer,{justifyContent: 'center', alignItems: 'center', height: 420}]}>
-          <TouchableOpacity style={[{ left: -6, flexDirection: 'column' ,justifyContent: 'space-between', top: 40, alignItems: 'center'}]} onPress={pressed}>
-            <Logo width={120} height={120}></Logo>
+      <View style={[styles.listItemContainer,{justifyContent: 'center', alignItems: 'center', height: 420}]}>
+          <TouchableOpacity style={[{ left: -6, flexDirection: 'column' ,justifyContent: 'space-between', top: 40, alignItems: 'center'}]}>
+            <BookOpenSvg ></BookOpenSvg>
           </TouchableOpacity>
-      </Animated.View>
+      </View>
     </View>
   );
 }

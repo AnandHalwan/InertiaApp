@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { View, StyleSheet, Text,  Dimensions, Image, TouchableOpacity, Touchable} from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import DraggableFlatList, {OpacityDecorator} from 'react-native-draggable-flatlist'
@@ -12,20 +12,20 @@ const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;
 const widthRatio = windowWidth/390;
 
-function EditWorkout({workout, date, startWorkout, navigation}) {
+function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
 
     const dateRel = date;
     const [workoutExercises, setWorkoutExercises] = useState(workout.exercises);
-
-    const workoutLocal = workout
-
+    const [workoutName, setWorkoutName] = useState(workout.name)
     const [displayHeader, setDisplayHeader] = useState('flex');
-
+    const [lowDuration, setLowDuration] = useState(workout.durationLow)
+    const [highDuration, setHighDuration] = useState(workout.durationHigh)
+    const [totalSets, setTotalSets] = useState(0)
 
     const [edit, setEdit] = useState(false);
 
     const [deleteId, setDeleteId] = useState("none");
-
+    const [initialLoad, setInitialLoad] = useState(false);
     const daysOfWeek = [
         "SUNDAY",
         "MONDAY",
@@ -56,13 +56,14 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
         setWorkoutExercises((workoutExercises) => [
             ...workoutExercises, newExercise
         ])
+        workout.exercises = workoutExercises
       }
 
       function deleteItemFromWorkout(id) {
         setWorkoutExercises((workoutExercises) => {
             return workoutExercises.filter((item) => item.id !== id);
         })
-        console.log(workoutExercises);
+        workout.exercises = workoutExercises
     }
 
 
@@ -75,13 +76,25 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
 
 
     function closeEditScreen() {
-        console.log("Stop editing");
-        leftValueAnimated.value = withTiming(leftValueAnimated.value - 420);
-        setTimeout(() => {
-            leftValueAnimated.value = leftValueAnimated.value + 849;
-            listTopAnimated.value = withSpring(listTopAnimated.value - 70);
-        }, 300);
-        setEdit(false);
+        if (workoutExercises.length > 0) {
+            console.log("Stop editing");
+            leftValueAnimated.value = withTiming(leftValueAnimated.value - 420);
+            setTimeout(() => {
+                leftValueAnimated.value = leftValueAnimated.value + 849;
+                listTopAnimated.value = withSpring(listTopAnimated.value - 70);
+            }, 300);
+            editedWorkout(
+                {
+                    "durationHigh": highDuration,
+                    "durationLow": lowDuration,
+                    "exercises": workoutExercises,
+                    "id": workout.id,
+                    "name": workoutName,
+                    "totalSets": totalSets,
+                }
+            )
+            setEdit(false);
+        }
     }
 
     const listTopAnimated = useSharedValue(-5);
@@ -98,14 +111,40 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
         }
     });
 
-    function goToEditWorkout() {
-        navigation.navigate("AddEditExerciseScreen")
+    function updateExercise(id, newData) {
+        const index = workout.exercises.findIndex(item => item.id === id)
+        workout.exercises[index] = newData
+        let newWorkoutExercises = [...workoutExercises];
+        newWorkoutExercises[index] = newData
+        setWorkoutExercises(newWorkoutExercises)
     }
+
+    useEffect(() => {
+        let sum = 0
+        for (let i = 0; i < workoutExercises.length; i++) {
+            sum += workoutExercises[i].setList.length
+        }
+        setTotalSets(sum)
+    }, [workoutExercises])
+
 
     const renderItem = useCallback(
         ({item, drag}) => {
-
+        
+        
         const itemRef = useRef();
+
+        function goToEditSets() {
+            navigation.navigate("AddEditExerciseScreen", {exercise: item, onDataReceived: onDataReceived})
+            setTimeout(() => {
+                swipeRef.current.close()
+            }, 200);
+        }
+
+        const onDataReceived = (data) => {
+            // Update the receivedData state with the data from Screen2
+            updateExercise(item.id, data)
+          };
 
         function deleteItemHandler(id) {
             opacityAnimated.value = withTiming(opacityAnimated.value - 1);
@@ -137,6 +176,7 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
             }
         });
         
+        
         function DeleteButton() {
             
             return (
@@ -144,7 +184,7 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
                         <View style={[{height: 101, width: 22, backgroundColor: '#1C1C1E', marginLeft: -18}]}>
 
                         </View>
-                        <TouchableOpacity onPress={goToEditWorkout}>
+                        <TouchableOpacity onPress={goToEditSets}>
                             <View style={[{height: 101, width: 85, backgroundColor: '#7a7980', justifyContent: 'center', alignItems: 'center'}]}>
                                 <Image source={require('../assets/edit.png')} style={{width: 26, height: 26}}/>
                                 <Text style={{color: 'white', marginTop: 2}}>Edit</Text>
@@ -160,14 +200,14 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
                     </View>
                 )
             }
-
+            const swipeRef = useRef();
 
           return (
             <Animated.View style={[animateHeight, opacityAnimatedValue, animatedMarginValue]}>
             <OpacityDecorator>
-                <Swipeable enabled={edit}  renderRightActions={DeleteButton} heightRatio={heightRatio} widthRatio={widthRatio} overshootRight={false} rightThreshold={20}>
+                <Swipeable ref={swipeRef} enabled={edit}  renderRightActions={DeleteButton} heightRatio={heightRatio} widthRatio={widthRatio} overshootRight={false} rightThreshold={20}>
                     <Pressable onLongPress={edit ? drag : openEditView} delayLongPress={100}  pressRetentionOffset={{ bottom: 10, left: 10, right: 10, top: 10}}>
-                        <EditExerciseListItem ref={itemRef} navigation={navigation} itemId={item.id} name={item.name} sets={item.sets} lowRepRange={item.lowRepRange} highRepRange={item.highRepRange} backgroundSrc={item.backgroundSrc} imgSrc={item.imgSrc} exerciseNumber={item.index} startExercise={false}  backgroundCircleColor={item.color} heightRatio={heightRatio} widthRatio={widthRatio} deleteId={deleteId}></EditExerciseListItem>
+                        <EditExerciseListItem ref={itemRef} navigation={navigation} itemId={item.id} name={item.name} sets={item.setList.length} lowRepRange={item.lowRepRange} highRepRange={item.highRepRange} backgroundSrc={item.backgroundSrc} imgSrc={item.imgSrc} exerciseNumber={item.index} startExercise={false}  backgroundCircleColor={item.color} heightRatio={heightRatio} widthRatio={widthRatio} deleteId={deleteId}></EditExerciseListItem>
                     </Pressable>
                 </Swipeable>
             </OpacityDecorator>
@@ -177,11 +217,24 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
         [edit]
       );
 
+    
+    useEffect(() => {
+        if(!initialLoad) {
+            if (workoutExercises.length == 0) {
+                openEditView()
+                setShowStart('none')
+            }
+        }
+        setInitialLoad(true)
+    })
+    
+    const [showStart, setShowStart] = useState('flex')
+
     return(
             <View style={styles.workoutScreenContainer}>
-                <TouchableOpacity style={{top: 700, position: 'absolute', zIndex: 1}} onPress={edit ? closeEditScreen : startWorkout}>
+                <TouchableOpacity style={{top: 700, position: 'absolute', zIndex: 1, display: showStart}} onPress={edit ? closeEditScreen : startWorkout}>
                     <View style={{height: 45, width: 137, borderRadius: 60, backgroundColor: '#74e189', alignItems: 'center', justifyContent: 'center'}}>
-                        <Text style={{color: 'white', fontSize: 23}}>{edit ? "Done" : "Start"}</Text>
+                        <Text style={{color: 'white', fontSize: 23}}>{edit ? "Save" : "Start"}</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={styles.headerContainer}>
@@ -191,10 +244,10 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
                         </View>
                         <View style={{display: displayHeader}}>
                             <View style={{marginBottom: -3, marginLeft: 10 * widthRatio}}>
-                                <Text style={[styles.workoutNameText]}>{workoutLocal.name}</Text>
+                                <Text style={[styles.workoutNameText]}>{workoutName}</Text>
                             </View>
                             <View>
-                                <Text style={styles.durationText}>{workoutLocal.durationLow}-{workoutLocal.durationHigh} min</Text>
+                                <Text style={styles.durationText}>{lowDuration}-{highDuration} min</Text>
                             </View>
                         </View>
                     </View>
@@ -204,11 +257,11 @@ function EditWorkout({workout, date, startWorkout, navigation}) {
                             <Text> </Text>
                         </View>
                         <View style={{marginBottom: 5}}>
-                            <Text style={styles.exerciseCountText} >{workout.exerciseCount} Exercises</Text>
+                            <Text style={styles.exerciseCountText}>{workoutExercises.length} Exercises</Text>
                         </View>
                         
                         <View>
-                            <Text style={styles.setCountText}>{workout.totalSets} Sets</Text>
+                            <Text style={styles.setCountText}>{totalSets} Sets</Text>
                         </View>
                     </View>
                 </View>

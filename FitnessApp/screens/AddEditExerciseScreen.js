@@ -1,74 +1,73 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRef } from "react";
-import { useEffect } from "react";
-import { useCallback } from "react";
-import { TextInput, Touchable } from "react-native";
+import { FlatList, Modal } from "react-native";
+import { ScrollView, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native";
-import { View, Text, StyleSheet, FlatList, Image} from "react-native";
-import DraggableFlatList from "react-native-draggable-flatlist";
+import { View, Text, StyleSheet, Image} from "react-native";
 import { SearchBar } from "react-native-elements";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-function AddEditExerciseScreen() {
-    const [listdata, setListData] = useState([
-        {
-            "Set": "1",
-            "Reps": "6",
-            "Weight": "185",
-            "Rpe": "6"
-        },
-        {
-            "Set": "2",
-            "Reps": "8",
-            "Weight": "205",
-            "Rpe": "7"
-        },
-        {
-            "Set": "3",
-            "Reps": "8",
-            "Weight": "225",
-            "Rpe": "7"
-        },
-        {
-            "Set": "4",
-            "Reps": "8",
-            "Weight": "225",
-            "Rpe": "8"
-        }
-    ]);
+import Animated, { useAnimatedStyle, useSharedValue, withDecay, withTiming } from "react-native-reanimated";
+import { allExercises } from "../exercises";
+function AddEditExerciseScreen({route, navigation}) {
+
+    const exercise = route.params ? route.params.exercise : null;
+    const onDataReceived = route.params ? route.params.onDataReceived : null;
+
+    const [exerciseName, setExerciseName] = useState(exercise.name)
+    const [lowRepRange, setLowRepRange] = useState(exercise.lowRepRange)
+    const [highRepRange, setHighRepRange] = useState(exercise.highRepRange)
+    const [exerciseId, setExerciseId] = useState(exercise.id)
+    const [color, setColor] = useState(exercise.color)
+    const [listdata, setListData] = useState(exercise.setList);
+    const [image, setImage] = useState(exercise.imgSrc)
+
 
     function deleteSetItemData(key) {
         setListData((listdata) => {
-            return listdata.filter((item) => item.Set != key)
+            return listdata.filter((item) => item.Id != key)
         })
         setSetCount(setCount - 1)
     }
 
     function updateSetItemData(key, reps, weight, rpe) {
-        const index = listdata.findIndex((item) => item.Set == key);
-        console.log(index )
+        const index = listdata.findIndex((item) => item.Id == key);
+        console.log(index)
         listdata[index].Reps = reps
         listdata[index].Weight = weight
         listdata[index].Rpe = rpe
-        console.log(listdata)
     }
-
 
     function addSetItemData() {
         setListData((listdata) => {
-            return listdata.concat({"Set": "5", "Reps": "2", "Weight": "225", "Rpe": 5})
+            return listdata.concat({"Id": Date.now(), "Reps": "2", "Weight": "225", "Rpe": 5})
         })
         setSetCount(setCount +1)
     }
 
-    const renderItem = useCallback(({item, drag}) => {
+    function goBackHandler() {
+        const newExercise = {
+            "color": color,
+            "del": false,
+            "highRepRange": highRepRange,
+            "id": exerciseId,
+            "imgSrc": image,
+            "lowRepRange": lowRepRange,
+            "name": exerciseName,
+            "setList": listdata,
+        }
 
+        navigation.goBack();
+        onDataReceived(newExercise)
+
+    }
+
+    const SetListItem = (props) => {
+        console.log(props.item.Id)
         const itemHeight = useSharedValue(60);
         const itemMargin = useSharedValue(8);
 
-
-        const [reps, setReps] = useState(item.Reps);
-        const [weight, setWeight] = useState(item.Weight)
-        const [rpe, setRpe] = useState(item.Rpe)
+        const [reps, setReps] = useState(props.item.Reps);
+        const [weight, setWeight] = useState(props.item.Weight)
+        const [rpe, setRpe] = useState(props.item.Rpe)
 
         const repRef = useRef(null);
         const weightRef = useRef(null);
@@ -78,23 +77,20 @@ function AddEditExerciseScreen() {
         const handleRepsChange = (inputText) => {
             inputText = inputText.replace(/[^0-9]/g, '');
             setReps((inputText));
-            updateSetItemData(item.Set, reps, weight, rpe);
         }
 
         const handleWeightChange = (inputText) => {
             inputText = inputText.replace(/[^0-9]/g, '');
             setWeight((inputText));
-            updateSetItemData(item.Set, reps, weight, rpe);
         }
 
         const handleRpeChange = (inputText) => {
             inputText = inputText.replace(/[^0-9]/g, '');
             setRpe((inputText));
-            updateSetItemData(item.Set, reps, weight, rpe);
         }
-
-
-
+        useEffect(() => {
+            updateSetItemData(props.item.Id, reps, weight, rpe);
+        }, [reps, weight, rpe])
         const animateItemStyle = useAnimatedStyle(() => {
             return {
                 height: itemHeight.value,
@@ -108,16 +104,17 @@ function AddEditExerciseScreen() {
             itemMargin.value = withTiming(0);
             setDeleteVisible('none')
             setTimeout(() => {
-                deleteSetItemData(item.Set)
+                deleteSetItemData(props.item.Id)
             }, 300)
         }
+        
 
         return (
-            <TouchableOpacity onLongPress={drag}>
+            <View>
                 <Animated.View style={[{flexDirection: 'row'}, animateItemStyle]}>
                     
                     <View style={{width: 68, left: 10, top: 20}} >
-                        <Text style={styles.dataText}>{item.Set}</Text>
+                        <Text style={styles.dataText}>{props.children[1] + 1}</Text>
                     </View>
                     <TouchableOpacity onPress={() => repRef.current.focus()} style={{ width: 60, left: -8, top: 6, marginRight: 16, backgroundColor: '#1C1C1E', borderRadius: 14, alignItems: 'center', justifyContent: 'center'}}>
                         <TextInput value={reps} onChangeText={handleRepsChange} focusable={false} keyboardAppearance="dark" keyboardType="number-pad" ref={repRef} style={[styles.dataText, {textAlign: 'right'}]}></TextInput>
@@ -137,56 +134,117 @@ function AddEditExerciseScreen() {
                         </View>
                     </TouchableOpacity>
                 </Animated.View>
-            </TouchableOpacity>
+            </View>
         )
-    });
+    };
 
-    const [setCount, setSetCount] = useState(4);
+
     const [minRepRange, setMinRepRange] = useState(6);
     const [maxRepRange, setMaxRepRange] = useState(8);
 
+    const [modalZIndex, setModalZIndex] = useState(0)
+
+    const [setCount, setSetCount] = useState(exercise.setList.length)
+
+
+    const modalOpacityAnimated = useSharedValue(0)
+    const modalAnimated = useAnimatedStyle(() => {
+        return {
+            opacity: modalOpacityAnimated.value
+        }
+    })
+
+    function startSearchBar() {
+        setModalZIndex(1)
+        modalOpacityAnimated.value = withTiming(1)
+        setSearchText("")
+    }
+
+    function closeSearchBar() {
+        modalOpacityAnimated.value = withTiming(0)
+        setTimeout(() => {
+            setModalZIndex(0)
+            setSearchText("")
+            setFilteredExercises([])
+        }, 500);
+    }
+    const [filteredExercises, setFilteredExercises] = useState([]);
+    function searchChanged(newText) {
+        setSearchText(newText)
+        setFilteredExercises(filterExercises(newText))
+    }
+
+    function filterExercises(query) {
+        return allExercises.filter(exercise => exercise.Name.toLowerCase().includes(query.toLowerCase()));
+    }
+
+    function searchItemPressedHandler(item) {
+        console.log(item)
+        setExerciseName(item.Name)
+        setExerciseId(item.EID)
+    }
+    
+    const [searchText, setSearchText] = useState("")
     return (
         <View style={{flex: 1, backgroundColor: 'black', alignItems: 'center'}}>
             <View style={{top: 90, marginLeft: 27}}>
-                <SearchBar platform="ios"  containerStyle={{backgroundColor: 'black ', height: 50, borderRadius: 80, marginBottom: 20, width: 390, left: -12}} inputContainerStyle={{backgroundColor: '#1C1C1E'}} placeholder="Search Exercise"></SearchBar>
+                <Animated.View style={[{height: 585, top: 70, width: 390, backgroundColor: 'black', position: 'absolute', zIndex: modalZIndex}, modalAnimated]}>
+                    <ScrollView style={{left: 0}}>
+                        {filteredExercises.map((item, idx) => (
+                        <View key={idx} style={{borderTopColor: '#242424', borderTopWidth: .5, paddingVertical: 5}}>
+                            <TouchableOpacity onPress={() => searchItemPressedHandler(item)}>
+                                <Text style={{color: 'white', fontSize: 19}}>{item.Name}</Text>
+                                <Text style={{color: 'grey', fontSize: 13}}>{item.MuscleGroup}</Text>
+                            </TouchableOpacity>
+                        </View>   
+                        ))}
+                    </ScrollView>
+                </Animated.View>
+                <SearchBar onEndEditing={() => {console.log("Done editing")}} onChangeText={searchChanged} style={{color: 'white'}} textAlign="left" keyboardAppearance="dark" platform="ios" onFocus={startSearchBar} onCancel={closeSearchBar}  containerStyle={{backgroundColor: 'black ', height: 50, borderRadius: 80, marginBottom: 20, width: 390, left: -12}} inputContainerStyle={{backgroundColor: '#1C1C1E'}} placeholder="Search Exercise">
+                    {searchText}
+                </SearchBar>
                 <Text style={{color: '#7F7E84', fontSize: 18, letterSpacing:-1, marginBottom: 12}}>MONDAY, DEC 12</Text>
-                <View style={{flexDirection: 'row'}}>
-                    <Text style={{color: 'white', fontSize: 32, marginBottom: 12}}>Barbell Bench Press</Text>
-                    <View style={{height: 78, width: 78, position: 'absolute', top: -26, left: 295, borderRadius: 90, backgroundColor: '#FFB846',}}>
-                        <Image source={require("../assets/exercises/bench.png")} style={{position: 'absolute', height: 54, width: 54, top: 10, left: 12}}></Image>
+                <ScrollView>
+                    <View style={{flexDirection: 'row'}}>
+                        <Text style={{color: 'white', fontSize: 32, marginBottom: 12}}>{exerciseName}</Text>
+                        <View style={{height: 67, width: 67, position: 'absolute', top: 0, left: 295, borderRadius: 90, backgroundColor: color,}}>
+                            <Image source={image} style={{position: 'absolute', height: 45, width: 45, top: 10, left: 11}}></Image>
+                        </View>
                     </View>
-                </View>
-                <Text style={{color: "#7F7E84", fontSize: 17, letterSpacing: .5, marginBottom: 28}}>{setCount} Sets {minRepRange}-{maxRepRange} Reps 7 RPE</Text>
-                <View style={{flexDirection: 'row'}}>
-                    <View style={{width: 68}}>
-                        <Text style={styles.categoryText}>Set</Text>
+                    <Text style={{color: "#7F7E84", fontSize: 17, letterSpacing: .5, marginBottom: 28}}>{setCount} Sets {lowRepRange}-{highRepRange} Reps 7 RPE</Text>
+                    <View style={{flexDirection: 'row'}}>
+                        <View style={{width: 68}}>
+                            <Text style={styles.categoryText}>Set</Text>
+                        </View>
+                        <View style={{width: 84}}>
+                            <Text style={styles.categoryText}>Reps</Text>
+                        </View>
+                        <View style={{width: 102}}>
+                            <Text style={styles.categoryText}>Weight</Text>
+                        </View>
+                        <View style={{width: 72}}>
+                            <Text style={styles.categoryText}>RPE</Text>
+                        </View>
                     </View>
-                    <View style={{width: 84}}>
-                        <Text style={styles.categoryText}>Reps</Text>
+                    <View style={{flex: .77}}>
+                        {listdata.map((data, index) => (
+                            <SetListItem key={data.Id} item={data}>idx={index} </SetListItem>
+                        ))}
                     </View>
-                    <View style={{width: 102}}>
-                        <Text style={styles.categoryText}>Weight</Text>
+                    <View style={{flexDirection: 'row', justifyContent: 'center', top: 10}}>
+                        <TouchableOpacity style={{width: 130, height: 38, borderRadius: 30, backgroundColor: '#87DBFF', left: -40, justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={{color: 'white', fontSize: 20}}>Superset</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={addSetItemData} style={{width: 130, height: 38, borderRadius: 30, backgroundColor: '#ABABAB', left: 15, justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={{color: 'white', fontSize: 20}}>Add Set</Text>
+                        </TouchableOpacity>
                     </View>
-                    <View style={{width: 72}}>
-                        <Text style={styles.categoryText}>RPE</Text>
-                    </View>
-                </View>
-                <View style={{flex: .77}}>
-                    <DraggableFlatList data={listdata} renderItem={renderItem} keyExtractor={(item) => item.Set} onDragEnd={({data}) => setListData(data)}></DraggableFlatList>
-                </View>
-                <View style={{flexDirection: 'row', justifyContent: 'center', top: 10}}>
-                    <TouchableOpacity style={{width: 130, height: 38, borderRadius: 30, backgroundColor: '#87DBFF', left: -40, justifyContent: 'center', alignItems: 'center'}}>
-                        <Text style={{color: 'white', fontSize: 20}}>Superset</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={addSetItemData} style={{width: 130, height: 38, borderRadius: 30, backgroundColor: '#ABABAB', left: 15, justifyContent: 'center', alignItems: 'center'}}>
-                        <Text style={{color: 'white', fontSize: 20}}>Add Set</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{alignItems: 'center'}}>
-                    <View style={{width: 160, height: 44, borderRadius: 30, left: -17, backgroundColor: '#75E18A', justifyContent: 'center', alignItems: 'center', top: 83}}>
-                        <Text style={{color: 'white', fontSize: 26}}>Done</Text>
-                    </View>
-                </View>
+                </ScrollView>
+                <TouchableOpacity style={{alignItems: 'center', position: 'absolute', left: 117, top: 520}} onPress={goBackHandler}>
+                        <View style={{width: 160, height: 44, borderRadius: 30, left: -17, backgroundColor: '#75E18A', justifyContent: 'center', alignItems: 'center', top: 83}}>
+                            <Text style={{color: 'white', fontSize: 26}}>Done</Text>
+                        </View>
+                </TouchableOpacity>
             </View>
         </View>
     );
