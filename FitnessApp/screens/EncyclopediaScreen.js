@@ -1,6 +1,7 @@
 import { View, StyleSheet, Text, Pressable, Image, TextInput, Dimensions } from "react-native";
 import EncyclopediaCircle from "../components/EncyclopediaCircle";
 import * as React from 'react';
+import { exercises } from "../exercises";
 const { width, height } = Dimensions.get('window');
 
 const EncyclopediaScreen = ({navigation}) => {
@@ -10,21 +11,33 @@ const EncyclopediaScreen = ({navigation}) => {
   };
 
   const categoryPressedHandler = (categoryName) => {
-    navigation.navigate('Information', { bodyPart: categoryName });
+    if (categoryName == 'Chest') {
+      navigation.navigate("EncyclopediaCatalog", {data: exercises.chest, name: "Chest"});
+    } else if (categoryName == 'Back') {
+      navigation.navigate("EncyclopediaCatalog", {data: exercises.back, name: "Back"});
+    } else if (categoryName == 'Shoulders') {
+      navigation.navigate("EncyclopediaCatalog", {data: exercises.shoulder, name: "Shoulders"});
+    } else if (categoryName == 'Arms') {
+      navigation.navigate("EncyclopediaCatalog", {data: exercises.arms, name: "Arms"});
+    } else if (categoryName == 'Legs') {
+      navigation.navigate("EncyclopediaCatalog", {data: exercises.legs, name: "Legs"});
+    } else if (categoryName == 'Core') {
+      navigation.navigate("EncyclopediaCatalog", {data: exercises.core, name: "Core"});
+    }
   };
   
 
   return (
       <View style={styles.container}>
         
-        <View style={{top: 400}}>
-
-          <Text style={[styles.buttonText, {top: (height*-282.3)/812, right: (width*-2)/375 ,fontSize: 32.2*Math.min(width/375, height/812)}]}>Encyclopedia</Text>
+        <View style={{top: 450}}>
+          <View style={{alignItems: 'center'}}>
+          <Text style={[styles.buttonText, {top: -300, right: 0 ,fontSize: 36}]}>Encyclopedia</Text>
           <View style={styles.imageContainer}>
-          <Image source={require('../assets/Book1.png')} style={[styles.image, {top: (height*-260)/812, right: (width*-2)/375, width: 35*Math.min(width/375, height/812),height: 35*Math.min(width/375, height/812)}]}/>
+          </View>
           </View>
           <View style={styles.contain}>
-            <TextInput placeholder="Search" style={[styles.searchButton, {top: (height*-80)/812, left: (width*142)/375, fontSize: 16*Math.min(width/375, height/812), width: 95*Math.min(width/375, height/812),height: 33*Math.min(width/375, height/812)}]} onPress={handleSearch}>
+            <TextInput placeholder="Search" style={[styles.searchButton, {top: -82, left: 150, fontSize: 16, width: 99,height: 37}]} onPress={handleSearch}>
             <Text style={[styles.searchButtonText]}>Search</Text>
             </TextInput>
             <EncyclopediaCircle positionX={85} positionY={-216} color={'#f78481'} onPress={() => categoryPressedHandler('Chest')} />
@@ -32,7 +45,7 @@ const EncyclopediaScreen = ({navigation}) => {
             <EncyclopediaCircle positionX={23} positionY={-110} color={'#f4f78e'} onPress={() => categoryPressedHandler('Shoulders')} />
             <EncyclopediaCircle positionX={260} positionY={-110} color={'#f28568'} onPress={() => categoryPressedHandler('Arms')} />
             <EncyclopediaCircle positionX={85} positionY={-5} color={'#7ea3f9'} onPress={() => categoryPressedHandler('Legs')} />
-            <EncyclopediaCircle positionX={198} positionY={-5} color={'#f88bd7'} onPress={() => categoryPressedHandler('Calves')} />
+            <EncyclopediaCircle positionX={198} positionY={-5} color={'#f88bd7'} onPress={() => categoryPressedHandler('Core')} />
           </View>
         </View>
       </View>

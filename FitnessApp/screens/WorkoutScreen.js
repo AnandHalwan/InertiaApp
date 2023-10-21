@@ -4,8 +4,14 @@ import WorkoutContainerComponent from "../components/WorkourContainerComponent";
 import {useState } from "react";
 import { userId } from "./Auth";
 import EditWorkout from "../components/EditWorkout";
+import { useEffect } from "react";
 
-function WorkoutScreen({navigation}) {
+function WorkoutScreen({navigation, route}) {
+
+    const workout = route.params ? route.params.workout : null;
+    const id = route.params ? route.params.id : null;
+    const editedWorkout = route.params ? route.params.editedWorkout : null;
+
 
     const [workoutStarted, setWorkoutStarted] = useState(false);
     
@@ -54,6 +60,16 @@ function WorkoutScreen({navigation}) {
         },
 
     ]
+    const [workoutReal, setWorkoutReal] = useState(workout);
+
+    function saveEditedWorkout(newData) {
+        setWorkoutReal(newData)
+        editedWorkout(newData, id)
+    }
+
+    useEffect(() => {
+        //console.log(workoutReal)
+    }, [workoutReal])
 
     const [selectWorkoutVisible, setSelectWorkoutVisible] = useState(false);
     if (workoutStarted) {
@@ -107,7 +123,7 @@ function WorkoutScreen({navigation}) {
               <TouchableOpacity style={{position: 'absolute', left: 350, top: 90, height:40, width:40, zIndex: 1}} hitSlop={{left: 40, top: 40, bottom: 40, right: 40}} onPress={() => setSelectWorkoutVisible(!selectWorkoutVisible)}>
                 <Image source={require("../assets/option.png")} style={{width: 27, height: 27}}></Image>
               </TouchableOpacity>
-              <EditWorkout index={dates[currentIndex].idx} date={dates[currentIndex].date} workout={ppl[dates[currentIndex].date.getDay()]} navigation={navigation} startWorkout={startWorkoutHandler}></EditWorkout>
+              <EditWorkout editedWorkout={saveEditedWorkout} index={dates[currentIndex].idx} date={dates[currentIndex].date} workout={workoutReal} navigation={navigation} startWorkout={startWorkoutHandler}></EditWorkout>
             </View>
     
         );
