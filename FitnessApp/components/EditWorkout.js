@@ -4,7 +4,6 @@ import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import DraggableFlatList, {OpacityDecorator} from 'react-native-draggable-flatlist'
 import EditExerciseListItem from "./EditExerciseListItem";
 import { Swipeable } from "react-native-gesture-handler";
-import Exercise from "../models/Exercise";
 import Animated, { useSharedValue , useAnimatedStyle, withTiming, withSpring} from 'react-native-reanimated';
 
 const windowWidth = Dimensions.get('window').width;
@@ -33,7 +32,8 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
         "WEDNESDAY",
         "THURSDAY",
         "FRIDAY",
-        "SATURDAY"    ]
+        "SATURDAY"
+    ]
 
     const months = [
         "JAN",
@@ -52,11 +52,27 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
 
 
     function addExerciseHandler() {
-        const newExercise = new Exercise("test", "Test add", 3, 4, 6, require('../assets/exercises/bench.png'), '#FFB846')
+        const newExercise = {
+            "color": "#FFB846",
+            "del": false,
+            "highRepRange": 0,
+            "id": "placeholder",
+            "imgSrc": 3,
+            "lowRepRange": 0,
+            "name": "Add Exercise",
+            "setList": []
+        }
+        navigation.navigate("AddEditExerciseScreen", {exercise: newExercise, onDataReceived: addExercise})
+      }
+
+      const addExercise = (data) => {
+        if (data.name==="Add Exercise" || data.setList.length === 0) {
+            return
+        }
+        console.log(data)
         setWorkoutExercises((workoutExercises) => [
-            ...workoutExercises, newExercise
+            ...workoutExercises, data
         ])
-        workout.exercises = workoutExercises
       }
 
       function deleteItemFromWorkout(id) {
@@ -90,14 +106,13 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
                     "exercises": workoutExercises,
                     "id": workout.id,
                     "name": workoutName,
-                    "totalSets": totalSets,
                 }
             )
             setEdit(false);
         }
     }
 
-    const listTopAnimated = useSharedValue(-5);
+    const listTopAnimated = useSharedValue(37);
     const animateListTop = useAnimatedStyle(() => {
         return {
             top: listTopAnimated.value
@@ -113,7 +128,6 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
 
     function updateExercise(id, newData) {
         const index = workout.exercises.findIndex(item => item.id === id)
-        workout.exercises[index] = newData
         let newWorkoutExercises = [...workoutExercises];
         newWorkoutExercises[index] = newData
         setWorkoutExercises(newWorkoutExercises)
@@ -267,12 +281,17 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
                 </View>
                                 
                     <View style={[{flex: 15 * heightRatio, top: 40},styles.workoutContainer]}>
+                        <TouchableOpacity onPress={addExerciseHandler} style={{flex: .33}}>
                             <Animated.View  style={[animateLeftValue,styles.buttonContainer]}>
                                 <Image source={require('../assets/plus.png')} style={{height: 40, width: 40,}}/>
                             </Animated.View>
-                        <Animated.View style={[animateListTop,{flex: 1}]}>
+                        </TouchableOpacity>
+                        <Animated.View style={[animateListTop, {flex: 9}]}>
                             <DraggableFlatList onDragBegin={({index}) => console.log("Started Dragging")} fadingEdgeLength={100} showsVerticalScrollIndicator={false} data={workoutExercises} renderItem={renderItem} keyExtractor={(item) => item.id} onDragEnd={({data}) => setWorkoutExercises(data)} onPlaceholderIndexChange={({index}) => console.log("Changed index")} onRelease={({index}) => console.log("Released")}></DraggableFlatList>
                         </Animated.View>
+                        <View style={{height: 75, backgroundColor: 'black', width: 100, display: 'flex', top: 40}}>
+
+                        </View>
                     </View>
             </View>
     );

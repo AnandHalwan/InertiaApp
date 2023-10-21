@@ -6,7 +6,12 @@ import { userId } from "./Auth";
 import EditWorkout from "../components/EditWorkout";
 import { useEffect } from "react";
 
-function WorkoutScreen({navigation}) {
+function WorkoutScreen({navigation, route}) {
+
+    const workout = route.params ? route.params.workout : null;
+    const id = route.params ? route.params.id : null;
+    const editedWorkout = route.params ? route.params.editedWorkout : null;
+
 
     const [workoutStarted, setWorkoutStarted] = useState(false);
     
@@ -55,292 +60,15 @@ function WorkoutScreen({navigation}) {
         },
 
     ]
+    const [workoutReal, setWorkoutReal] = useState(workout);
 
-    const [workout, setWorkout] = useState({
-        "durationHigh": "90",
-        "durationLow": "60",
-        "exercises": [
-            {
-                "color": "#FFB846",
-                "del": false,
-                "highRepRange": 8,
-                "id": "e1",
-                "imgSrc": 3,
-                "lowRepRange": 6,
-                "name": "Barbell Bench Press",
-                "sets": 4,
-                "setList": [
-                    {
-                        "Id": 1696960983743,
-                        "Reps": "6",
-                        "Weight": "185",
-                        "Rpe": "6"
-                    },
-                    {
-                        "Id": 1696960983741,
-                        "Reps": "8",
-                        "Weight": "205",
-                        "Rpe": "7"
-                    },
-                    {
-                        "Id": 1696960983740,
-                        "Reps": "8",
-                        "Weight": "225",
-                        "Rpe": "7"
-                    },
-                    {
-                        "Id": 1696960983742,
-                        "Reps": "8",
-                        "Weight": "225",
-                        "Rpe": "8"
-                    }
-                ]
-            },
-            {
-                "color": "#9FFF91",
-                "del": false, "highRepRange": 12,
-                "id": "e2", "imgSrc": 4,
-                "lowRepRange": 8,
-                "name": "Incline Dumbbell Press",
-                "sets": 3
-            },
-            {
-                "color": "#77C0FF",
-                "del": false,
-                "highRepRange": 12,
-                "id": "e3", "imgSrc": 5,
-                "lowRepRange": 10,
-                "name": "Cable Flys",
-                "sets": 4
-            },
-            {
-                "color": "#FF89FA",
-                "del": false,
-                "highRepRange": 12,
-                "id": "e4",
-                "imgSrc": 6,
-                "lowRepRange": 10,
-                "name": "Tricep Cable Pushdown",
-                "sets": 4
-            },
-            {
-                "color": "#FF6565",
-                "del": false,
-                "highRepRange": 12,
-                "id": "e5",
-                "imgSrc": null,
-                "lowRepRange": 10,
-                "name": "Front Raise",
-                "sets": 2
-            },
-            {
-                "color": "#FFB846",
-                "del": false,
-                "highRepRange": 15,
-                "id": "e6",
-                "imgSrc": null,
-                "lowRepRange": 10,
-                "name": "Lateral Raise",
-                "sets": 3
-            }
-        ],
-        "id": "w1",
-        "name": "Push",
-        "totalSets": "20"
-    });
-
-    const [workoutReal, setWorkoutReal] = useState({
-        "durationHigh": "90",
-        "durationLow": "60",
-        "exercises": [
-            {
-                "color": "#FFB846",
-                "del": false,
-                "highRepRange": 8,
-                "id": "e1",
-                "imgSrc": 3,
-                "lowRepRange": 6,
-                "name": "Barbell Bench Press",
-                "setList": [
-                    {
-                        "Id": 1696960983743,
-                        "Reps": "6",
-                        "Weight": "185",
-                        "Rpe": "6"
-                    },
-                    {
-                        "Id": 1696960983741,
-                        "Reps": "8",
-                        "Weight": "205",
-                        "Rpe": "7"
-                    },
-                    {
-                        "Id": 1696960983740,
-                        "Reps": "8",
-                        "Weight": "225",
-                        "Rpe": "7"
-                    },
-                    {
-                        "Id": 1696960983742,
-                        "Reps": "8",
-                        "Weight": "225",
-                        "Rpe": "8"
-                    }
-                ]
-            },
-            {
-                "color": "#9FFF91",
-                "del": false, "highRepRange": 12,
-                "id": "e2", "imgSrc": 4,
-                "lowRepRange": 8,
-                "name": "Incline Dumbbell Press",
-                "setList": [
-                    {
-                        "Id": 1696960883740,
-                        "Reps": "8",
-                        "Weight": "80",
-                        "Rpe": "8"
-                    },
-                    {
-                        "Id": 1696960883741,
-                        "Reps": "8",
-                        "Weight": "80",
-                        "Rpe": "8"
-                    },
-                    {
-                        "Id": 1696960883742,
-                        "Reps": "8",
-                        "Weight": "80",
-                        "Rpe": "8"
-                    },
-                ]
-            },
-            {
-                "color": "#77C0FF",
-                "del": false,
-                "highRepRange": 12,
-                "id": "e3", "imgSrc": 5,
-                "lowRepRange": 10,
-                "name": "Cable Flys",
-                "setList": [
-                    {
-                        "Id": 1686960883742,
-                        "Reps": "12",
-                        "Weight": "20",
-                        "Rpe": "10"
-                    },
-                    {
-                        "Id": 1686960883743,
-                        "Reps": "12",
-                        "Weight": "20",
-                        "Rpe": "10"
-                    },
-                    {
-                        "Id": 1686960883744,
-                        "Reps": "12",
-                        "Weight": "20",
-                        "Rpe": "10"
-                    },
-                ]
-            },
-            {
-                "color": "#FF89FA",
-                "del": false,
-                "highRepRange": 12,
-                "id": "e4",
-                "imgSrc": 6,
-                "lowRepRange": 10,
-                "name": "Tricep Cable Pushdown",
-                "setList": [
-                    {
-                        "Id": 1686930883744,
-                        "Reps": "12",
-                        "Weight": "50",
-                        "Rpe": "10"
-                    },
-                    {
-                        "Id": 1686930883744,
-                        "Reps": "12",
-                        "Weight": "50",
-                        "Rpe": "10"
-                    },
-                    {
-                        "Id": 1686930883744,
-                        "Reps": "12",
-                        "Weight": "50",
-                        "Rpe": "10"
-                    },
-                ]
-            },
-            {
-                "color": "#FF6565",
-                "del": false,
-                "highRepRange": 12,
-                "id": "e5",
-                "imgSrc": null,
-                "lowRepRange": 10,
-                "name": "Front Raise",
-                "setList": [
-                    {
-                        "Id": 1686930883744,
-                        "Reps": "12",
-                        "Weight": "15",
-                        "Rpe": "10"
-                    },
-                    {
-                        "Id": 1686930883744,
-                        "Reps": "12",
-                        "Weight": "15",
-                        "Rpe": "10"
-                    },
-                    {
-                        "Id": 1686930883744,
-                        "Reps": "12",
-                        "Weight": "15",
-                        "Rpe": "10"
-                    },
-                ]
-            },
-            {
-                "color": "#FFB846",
-                "del": false,
-                "highRepRange": 15,
-                "id": "e6",
-                "imgSrc": null,
-                "lowRepRange": 10,
-                "name": "Lateral Raise",
-                "setList": [
-                    {
-                        "Id": 1686930883744,
-                        "Reps": "12",
-                        "Weight": "10",
-                        "Rpe": "10"
-                    },
-                    {
-                        "Id": 1686930883744,
-                        "Reps": "12",
-                        "Weight": "10",
-                        "Rpe": "10"
-                    },
-                    {
-                        "Id": 1686930883744,
-                        "Reps": "12",
-                        "Weight": "10",
-                        "Rpe": "10"
-                    },
-                ]
-            }
-        ],
-        "id": "w1",
-        "name": "Push",
-    });
-
-    function editedWorkout(newData) {
+    function saveEditedWorkout(newData) {
         setWorkoutReal(newData)
+        editedWorkout(newData, id)
     }
 
     useEffect(() => {
-        console.log(workoutReal)
+        //console.log(workoutReal)
     }, [workoutReal])
 
     const [selectWorkoutVisible, setSelectWorkoutVisible] = useState(false);
@@ -395,7 +123,7 @@ function WorkoutScreen({navigation}) {
               <TouchableOpacity style={{position: 'absolute', left: 350, top: 90, height:40, width:40, zIndex: 1}} hitSlop={{left: 40, top: 40, bottom: 40, right: 40}} onPress={() => setSelectWorkoutVisible(!selectWorkoutVisible)}>
                 <Image source={require("../assets/option.png")} style={{width: 27, height: 27}}></Image>
               </TouchableOpacity>
-              <EditWorkout editedWorkout={editedWorkout} index={dates[currentIndex].idx} date={dates[currentIndex].date} workout={workoutReal} navigation={navigation} startWorkout={startWorkoutHandler}></EditWorkout>
+              <EditWorkout editedWorkout={saveEditedWorkout} index={dates[currentIndex].idx} date={dates[currentIndex].date} workout={workoutReal} navigation={navigation} startWorkout={startWorkoutHandler}></EditWorkout>
             </View>
     
         );
