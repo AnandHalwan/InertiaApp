@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { View, StyleSheet, Text,  Dimensions, Image, TouchableOpacity, Touchable} from "react-native";
+import { View, StyleSheet, Text,  Dimensions, Image, TouchableOpacity, Touchable, TextInput} from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import DraggableFlatList, {OpacityDecorator} from 'react-native-draggable-flatlist'
 import EditExerciseListItem from "./EditExerciseListItem";
@@ -86,7 +86,10 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
     function openEditView() {
         console.log("Open edit view now");
         leftValueAnimated.value = withSpring(leftValueAnimated.value - 429);
-        listTopAnimated.value = withTiming(listTopAnimated.value + 70)
+        listTopAnimated.value = withTiming(listTopAnimated.value + 66)
+        setTimeout(() => {
+            setListMargin(145)
+        }, 300);
         setEdit(true);
     }
 
@@ -94,11 +97,17 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
     function closeEditScreen() {
         if (workoutExercises.length > 0) {
             console.log("Stop editing");
-            leftValueAnimated.value = withTiming(leftValueAnimated.value - 420);
+            listRef.current.scrollToIndex({index: 0, animated: true})
+            setTimeout(() => {
+                leftValueAnimated.value = withTiming(leftValueAnimated.value - 420);
+            }, 400);
             setTimeout(() => {
                 leftValueAnimated.value = leftValueAnimated.value + 849;
-                listTopAnimated.value = withSpring(listTopAnimated.value - 70);
-            }, 300);
+                listTopAnimated.value = withSpring(listTopAnimated.value - 66);
+                setListMargin(80)
+
+            }, 700);
+
             editedWorkout(
                 {
                     "durationHigh": highDuration,
@@ -111,8 +120,9 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
             setEdit(false);
         }
     }
-
-    const listTopAnimated = useSharedValue(37);
+    const [listMargin, setListMargin] = useState(80);
+    const listRef = useRef(null)
+    const listTopAnimated = useSharedValue(0);
     const animateListTop = useAnimatedStyle(() => {
         return {
             top: listTopAnimated.value
@@ -239,10 +249,33 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
                 setShowStart('none')
             }
         }
+        if (workoutExercises.length > 0) {
+            setShowStart('flex')
+        } 
         setInitialLoad(true)
     })
     
     const [showStart, setShowStart] = useState('flex')
+
+    function changeWorkoutName(inputText) {
+        setWorkoutName(inputText)
+    }
+
+    const [nameFontSize, setNameFontSize] = useState(60.5)
+
+    useEffect(() => {
+        console.log(workoutName)
+        if (workoutName.length > 5) {
+            setNameFontSize(40)
+        }
+        if (workoutName.length <= 5) {
+            setNameFontSize(60.5)
+        }
+    }, [workoutName])
+
+    const handleScroll = (offset) => {
+        console.log(offset)
+    }
 
     return(
             <View style={styles.workoutScreenContainer}>
@@ -258,7 +291,7 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
                         </View>
                         <View style={{display: displayHeader}}>
                             <View style={{marginBottom: -3, marginLeft: 10 * widthRatio}}>
-                                <Text style={[styles.workoutNameText]}>{workoutName}</Text>
+                                <TextInput editable={edit} keyboardAppearance="dark" onChangeText={changeWorkoutName} style={[styles.workoutNameText, {fontSize: nameFontSize * widthRatio}]}>{workoutName}</TextInput>
                             </View>
                             <View>
                                 <Text style={styles.durationText}>{lowDuration}-{highDuration} min</Text>
@@ -281,17 +314,14 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
                 </View>
                                 
                     <View style={[{flex: 15 * heightRatio, top: 40},styles.workoutContainer]}>
-                        <TouchableOpacity onPress={addExerciseHandler} style={{flex: .33}}>
+                        <TouchableOpacity onPress={addExerciseHandler}>
                             <Animated.View  style={[animateLeftValue,styles.buttonContainer]}>
                                 <Image source={require('../assets/plus.png')} style={{height: 40, width: 40,}}/>
                             </Animated.View>
                         </TouchableOpacity>
-                        <Animated.View style={[animateListTop, {flex: 9}]}>
-                            <DraggableFlatList onDragBegin={({index}) => console.log("Started Dragging")} fadingEdgeLength={100} showsVerticalScrollIndicator={false} data={workoutExercises} renderItem={renderItem} keyExtractor={(item) => item.id} onDragEnd={({data}) => setWorkoutExercises(data)} onPlaceholderIndexChange={({index}) => console.log("Changed index")} onRelease={({index}) => console.log("Released")}></DraggableFlatList>
+                        <Animated.View style={[animateListTop, {marginBottom: listMargin}]}>
+                            <DraggableFlatList ref={listRef} onDragBegin={({index}) => console.log("Started Dragging")} fadingEdgeLength={100} showsVerticalScrollIndicator={false} data={workoutExercises} renderItem={renderItem} keyExtractor={(item) => item.id} onDragEnd={({data}) => setWorkoutExercises(data)} onPlaceholderIndexChange={({index}) => console.log("Changed index")} onRelease={({index}) => console.log("Released")}></DraggableFlatList>
                         </Animated.View>
-                        <View style={{height: 75, backgroundColor: 'black', width: 100, display: 'flex', top: 40}}>
-
-                        </View>
                     </View>
             </View>
     );
@@ -344,7 +374,6 @@ const styles = StyleSheet.create({
     },
     workoutNameText: {
         color: 'white',
-        fontSize: 60.5 * widthRatio,
         fontWeight: 'bold',
         marginTop: 2 * heightRatio,
         letterSpacing: .1
