@@ -30,17 +30,35 @@ function AddEditExerciseScreen({route, navigation}) {
 
     function updateSetItemData(key, reps, weight, rpe) {
         const index = listdata.findIndex((item) => item.Id == key);
-        console.log(index)
-        listdata[index].Reps = reps
-        listdata[index].Weight = weight
-        listdata[index].Rpe = rpe
+        let newSetListData = listdata
+        newSetListData[index].Reps = reps
+        newSetListData[index].Weight = weight
+        newSetListData[index].Rpe = rpe
+        updateRepRange(newSetListData)
+        setListData(newSetListData)
     }
 
     function addSetItemData() {
         setListData((listdata) => {
-            return listdata.concat({"Id": Date.now(), "Reps": "2", "Weight": "225", "Rpe": 5})
+            return listdata.concat({"Id": Date.now(), "Reps": null, "Weight": null, "Rpe": null})
         })
         setSetCount(setCount +1)
+    }
+
+    function updateRepRange(newData) {
+        let min = 1000000
+        let max = -10000000
+        for (let i = 0; i < newData.length; i++) {
+            if (newData[i].Reps < min) {
+                min = newData[i].Reps 
+            }
+            if (newData[i].Reps > max) {
+                max = newData[i].Reps 
+            }
+        }
+        console.log("Min value for reps: " + min)
+        console.log("Max value for reps: " + max)
+
     }
 
     function goBackHandler() {
@@ -61,7 +79,6 @@ function AddEditExerciseScreen({route, navigation}) {
     }
 
     const SetListItem = (props) => {
-        console.log(props.item.Id)
         const itemHeight = useSharedValue(60);
         const itemMargin = useSharedValue(8);
 
@@ -162,10 +179,10 @@ function AddEditExerciseScreen({route, navigation}) {
 
     function closeSearchBar() {
         modalOpacityAnimated.value = withTiming(0)
+        setSearchText("")
+        setFilteredExercises([])
         setTimeout(() => {
             setModalZIndex(0)
-            setSearchText("")
-            setFilteredExercises([])
         }, 500);
     }
     const [filteredExercises, setFilteredExercises] = useState([]);
@@ -179,9 +196,9 @@ function AddEditExerciseScreen({route, navigation}) {
     }
 
     function searchItemPressedHandler(item) {
-        console.log(item)
         setExerciseName(item.Name)
         setExerciseId(item.EID)
+        closeSearchBar();
     }
     
     const [searchText, setSearchText] = useState("")

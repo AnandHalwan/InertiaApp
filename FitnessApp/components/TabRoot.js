@@ -4,11 +4,9 @@ import ProfileScreen from "../screens/ProfileScreen";
 import StatisticsScreen from "../screens/StatisticsScreen";
 import WorkoutRoot from "./WorkoutRoot";
 import EncyclopediaRoot from "./EncyclopediaRoot";
-import BookOpen from "./../assets/navIcons/bookOpen"
-import Book from "./../assets/navIcons/book"
-import HomeOpen from "./../assets/navIcons/homeOpen"
-import Home from "./../assets/navIcons/home"
+import HomeFilled from "./../assets/navIcons/homeFilled.svg"
 import BookOpenSvg from "./BookOpenSvg";
+import { Image } from "react-native";
 const Tab = createBottomTabNavigator();
 
 function TabRoot() {
@@ -25,7 +23,7 @@ function TabRoot() {
              options={{
                 tabBarShowLabel: false,
                 tabBarIcon: ({focused}) => (
-                    <BookOpenSvg></BookOpenSvg>
+                    <Image style={{height: 25, width: 25}} source={require("./../assets/navIcons/homeFilled.png")}></Image>
                 )
              }}
              ></Tab.Screen>
