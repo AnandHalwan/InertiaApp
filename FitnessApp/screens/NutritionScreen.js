@@ -1,6 +1,4 @@
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import BookOpen from "./../assets/navIcons/bookOpen"
-import BookOpenSvg from "../components/BookOpenSvg";
 
 function NutritionScreen({navigation}) {
 
@@ -8,7 +6,6 @@ function NutritionScreen({navigation}) {
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <View style={[styles.listItemContainer,{justifyContent: 'center', alignItems: 'center', height: 420}]}>
           <TouchableOpacity style={[{ left: -6, flexDirection: 'column' ,justifyContent: 'space-between', top: 40, alignItems: 'center'}]}>
-            <BookOpenSvg ></BookOpenSvg>
           </TouchableOpacity>
       </View>
     </View>
