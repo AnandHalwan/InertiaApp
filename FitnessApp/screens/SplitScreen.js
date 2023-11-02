@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useReducer, useState, useRef } from "react";
 import { useCallback } from "react";
 import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -287,6 +288,12 @@ function SplitScreen({navigation}) {
         console.log(workouts)
     }, [workouts])
 
+
+    async function splitModified() {
+        const url = "http://localhost:3000/split/save";
+
+        axios.post()
+    }
 
     const renderItem = useCallback(
         ({item, drag}) => {
