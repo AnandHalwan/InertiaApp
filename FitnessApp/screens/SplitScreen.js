@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useReducer, useState, useRef } from "react";
 import { useCallback } from "react";
 import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -6,262 +7,59 @@ import { Swipeable, TextInput } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 function SplitScreen({navigation}) {
-    let split = {
-        "SplitName": "Push Pull Legs",
-        "SplitId": "s1",
-        "workouts": [
-            {
-                "durationHigh": "90",
-                "durationLow": "60",
-                "exercises": [
-                    {
-                        "color": "#FFB846",
-                        "del": false,
-                        "highRepRange": 8,
-                        "id": "e1",
-                        "imgSrc": 3,
-                        "lowRepRange": 6,
-                        "name": "Barbell Bench Press",
-                        "setList": [
-                            {
-                                "Id": 1696960983743,
-                                "Reps": "6",
-                                "Weight": "185",
-                                "Rpe": "6"
-                            },
-                            {
-                                "Id": 1696960983741,
-                                "Reps": "8",
-                                "Weight": "205",
-                                "Rpe": "7"
-                            },
-                            {
-                                "Id": 1696960983740,
-                                "Reps": "8",
-                                "Weight": "225",
-                                "Rpe": "7"
-                            },
-                            {
-                                "Id": 1696960983742,
-                                "Reps": "8",
-                                "Weight": "225",
-                                "Rpe": "8"
-                            }
-                        ]
-                    },
-                    {
-                        "color": "#9FFF91",
-                        "del": false, "highRepRange": 12,
-                        "id": "e2", "imgSrc": 4,
-                        "lowRepRange": 8,
-                        "name": "Incline Dumbbell Press",
-                        "setList": [
-                            {
-                                "Id": 1696960883740,
-                                "Reps": "8",
-                                "Weight": "80",
-                                "Rpe": "8"
-                            },
-                            {
-                                "Id": 1696960883741,
-                                "Reps": "8",
-                                "Weight": "80",
-                                "Rpe": "8"
-                            },
-                            {
-                                "Id": 1696960883742,
-                                "Reps": "8",
-                                "Weight": "80",
-                                "Rpe": "8"
-                            },
-                        ]
-                    },
-                    {
-                        "color": "#77C0FF",
-                        "del": false,
-                        "highRepRange": 12,
-                        "id": "e3", "imgSrc": 5,
-                        "lowRepRange": 10,
-                        "name": "Cable Flys",
-                        "setList": [
-                            {
-                                "Id": 1686960883742,
-                                "Reps": "12",
-                                "Weight": "20",
-                                "Rpe": "10"
-                            },
-                            {
-                                "Id": 1686960883743,
-                                "Reps": "12",
-                                "Weight": "20",
-                                "Rpe": "10"
-                            },
-                            {
-                                "Id": 1686960883744,
-                                "Reps": "12",
-                                "Weight": "20",
-                                "Rpe": "10"
-                            },
-                        ]
-                    },
-                    {
-                        "color": "#FF89FA",
-                        "del": false,
-                        "highRepRange": 12,
-                        "id": "e4",
-                        "imgSrc": 6,
-                        "lowRepRange": 10,
-                        "name": "Tricep Cable Pushdown",
-                        "setList": [
-                            {
-                                "Id": 1686930883744,
-                                "Reps": "12",
-                                "Weight": "50",
-                                "Rpe": "10"
-                            },
-                            {
-                                "Id": 1686930883744,
-                                "Reps": "12",
-                                "Weight": "50",
-                                "Rpe": "10"
-                            },
-                            {
-                                "Id": 1686930883744,
-                                "Reps": "12",
-                                "Weight": "50",
-                                "Rpe": "10"
-                            },
-                        ]
-                    },
-                    {
-                        "color": "#FF6565",
-                        "del": false,
-                        "highRepRange": 12,
-                        "id": "e5",
-                        "imgSrc": null,
-                        "lowRepRange": 10,
-                        "name": "Front Raise",
-                        "setList": [
-                            {
-                                "Id": 1686930883744,
-                                "Reps": "12",
-                                "Weight": "15",
-                                "Rpe": "10"
-                            },
-                            {
-                                "Id": 1686930883744,
-                                "Reps": "12",
-                                "Weight": "15",
-                                "Rpe": "10"
-                            },
-                            {
-                                "Id": 1686930883744,
-                                "Reps": "12",
-                                "Weight": "15",
-                                "Rpe": "10"
-                            },
-                        ]
-                    },
-                    {
-                        "color": "#FFB846",
-                        "del": false,
-                        "highRepRange": 15,
-                        "id": "e6",
-                        "imgSrc": null,
-                        "lowRepRange": 10,
-                        "name": "Lateral Raise",
-                        "setList": [
-                            {
-                                "Id": 1686930883744,
-                                "Reps": "12",
-                                "Weight": "10",
-                                "Rpe": "10"
-                            },
-                            {
-                                "Id": 1686930883744,
-                                "Reps": "12",
-                                "Weight": "10",
-                                "Rpe": "10"
-                            },
-                            {
-                                "Id": 1686930883744,
-                                "Reps": "12",
-                                "Weight": "10",
-                                "Rpe": "10"
-                            },
-                        ]
-                    },
-                    {
-                        "color": "#FFB846",
-                        "del": false,
-                        "highRepRange": 8,
-                        "id": "e21",
-                        "imgSrc": 3,
-                        "lowRepRange": 6,
-                        "name": "Barbell Bench Press",
-                        "setList": [
-                            {
-                                "Id": 1696960983743,
-                                "Reps": "6",
-                                "Weight": "185",
-                                "Rpe": "6"
-                            },
-                            {
-                                "Id": 1696960983741,
-                                "Reps": "8",
-                                "Weight": "205",
-                                "Rpe": "7"
-                            },
-                            {
-                                "Id": 1696960983740,
-                                "Reps": "8",
-                                "Weight": "225",
-                                "Rpe": "7"
-                            },
-                            {
-                                "Id": 1696960983742,
-                                "Reps": "8",
-                                "Weight": "225",
-                                "Rpe": "8"
-                            }
-                        ]
-                    },
-                    {
-                        "color": "#9FFF91",
-                        "del": false, "highRepRange": 12,
-                        "id": "e20", "imgSrc": 4,
-                        "lowRepRange": 8,
-                        "name": "Incline Dumbbell Press",
-                        "setList": [
-                            {
-                                "Id": 1696960883740,
-                                "Reps": "8",
-                                "Weight": "80",
-                                "Rpe": "8"
-                            },
-                            {
-                                "Id": 1696960883741,
-                                "Reps": "8",
-                                "Weight": "80",
-                                "Rpe": "8"
-                            },
-                            {
-                                "Id": 1696960883742,
-                                "Reps": "8",
-                                "Weight": "80",
-                                "Rpe": "8"
-                            },
-                        ]
-                    },
-                ],
-                "id": "w1",
-                "name": "Push",
-            }
-        ]
+    const [splitId, setSplitId] = useState(null)
+    const [workouts, setWorkouts] = useState([]);
+    const [splitName, setSplitName] = useState("");
+
+    useEffect(() => {
+        console.log("Retrieving splits")
+        getSplit()
+    }, [])
+
+    async function getSplit() {
+        data = {
+            "userId": "c3ajcVzkapfnUHfb4GKeVuELPO32",
+            "splitId": "s1"
+        }
+        
+        axios.get('http://192.168.0.15:3000/split/get', {params: data})
+            .then((response) => {
+                setSplitName(response.data.splits[0].SplitName);
+                setWorkouts(response.data.splits[0].workouts)
+                setSplitId(response.data.splits[0].SplitId);
+            })
+            .catch((error) => {
+                console.error("Error retrieving split: ", error)
+            })
     }
 
-    const [workouts, setWorkouts] = useState(split.workouts);
-    const [splitName, setSplitName] = useState(split.SplitName);
+    function updateWorkouts(newWorkouts) {
+        setWorkouts(newWorkouts)
+        postSplit({
+            "SplitId": splitId,
+            "SplitName": splitName,
+            "workouts": newWorkouts
+        })        
+    }
+
+    async function postSplit(newSplit) {
+        console.log("Posting split")
+
+        data = {
+            "userId": "c3ajcVzkapfnUHfb4GKeVuELPO32",
+            "splitDocument": newSplit
+        }
+        axios.post('http://192.168.0.15:3000/split/save', dataj)
+            .then(function (response) {
+            // Handle the successful response here
+                console.log(response.data);
+            })
+            .catch(function (error) {
+                // Handle any errors that occurred during the request
+                console.error(error);
+            }); 
+            console.log("Posted split")    
+    }
 
     function goToWorkout(workout, id) {
         navigation.navigate("WorkoutHome", {workout: workout, id: id, editedWorkout: editedWorkout})
@@ -274,7 +72,7 @@ function SplitScreen({navigation}) {
         const index = workouts.findIndex(item => item.id === id)
         let newWorkouts = [...workouts];
         newWorkouts[index] = newData
-        setWorkouts(newWorkouts)
+        updateWorkouts(newWorkouts);
     }
 
     function deleteWorkout(id) {
@@ -282,11 +80,6 @@ function SplitScreen({navigation}) {
             return workouts.filter((item) => item.id !== id);
         })
     }
-
-    useEffect(() => {
-        console.log(workouts)
-    }, [workouts])
-
 
     const renderItem = useCallback(
         ({item, drag}) => {
@@ -298,11 +91,11 @@ function SplitScreen({navigation}) {
             function DeleteButton() {
                 return (
                     <View style={{flexDirection: 'row'}}>
-                        <View style={[{height: 101, width: 22, backgroundColor: '#1C1C1E', marginLeft: -18}]}>
+                        <View style={[{height: 103, width: 22, backgroundColor: '#1C1C1E', marginLeft: -18}]}>
         
                         </View>
                         <TouchableOpacity onPress={deleteWorkoutHandler}>
-                            <View style={[{height: 101,width: 85, backgroundColor: '#383838', justifyContent: 'center', alignItems: 'center', borderTopRightRadius: 16, borderBottomRightRadius: 16}]}>
+                            <View style={[{height: 103,width: 85, backgroundColor: '#383838', justifyContent: 'center', alignItems: 'center', borderTopRightRadius: 16, borderBottomRightRadius: 16}]}>
                                 <Image source={require('../assets/trash.png')} style={{height:30, width: 30}}/>
                                 <Text style={{color: 'white', marginTop: -1}}>Delete</Text>
                             </View>
@@ -327,7 +120,9 @@ function SplitScreen({navigation}) {
                 height.value = withTiming(0)
                 opacity.value = withTiming(0)
                 marginBottom.value = withTiming(0)
-                deleteWorkout(item.id)
+                setTimeout(() => {
+                    deleteWorkout(item.id)
+                }, 300);
             }
 
             return(
@@ -371,14 +166,13 @@ function SplitScreen({navigation}) {
         setWorkouts(newWorkouts)
     }
 
-    function handleChangeWorkoutName(newName) {
-        setSplitName(newName)
+    function handleChangeSplitName() {
+        postSplit()
     }
     return (
         <View style={{backgroundColor: 'black', flex: 1, alignItems: 'center'}}>
             <View style={{marginTop: 110}}>
-
-                    <TextInput onChangeText={handleChangeWorkoutName} textAlign="right" value={splitName} style={{color: 'white', fontSize: 34}}></TextInput>
+                <TextInput onChangeText={(newName) => {setSplitName(newName)}} onEndEditing={handleChangeSplitName} textAlign="right" value={splitName} style={{color: 'white', fontSize: 34}}></TextInput>
             </View>
             <View style={{marginTop: 40}}>
                 <TouchableOpacity style={[styles.buttonContainer]} onPress={addWorkoutHandler}>
