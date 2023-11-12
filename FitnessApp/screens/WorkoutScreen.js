@@ -70,7 +70,7 @@ function WorkoutScreen({navigation, route}) {
     if (workoutStarted) {
         return (
             <View style={styles.container}>
-                <WorkoutContainerComponent index={dates[currentIndex].idx} date={dates[currentIndex].date} workout={ppl[dates[currentIndex].date.getDay()]} navigation={navigation}></WorkoutContainerComponent>
+                <WorkoutContainerComponent date={dates[currentIndex].date} workout={workoutReal} navigation={navigation}></WorkoutContainerComponent>
             </View>
         )
     } else {
@@ -118,7 +118,7 @@ function WorkoutScreen({navigation, route}) {
               <TouchableOpacity style={{position: 'absolute', left: 350, top: 90, height:40, width:40, zIndex: 1}} hitSlop={{left: 40, top: 40, bottom: 40, right: 40}} onPress={() => setSelectWorkoutVisible(!selectWorkoutVisible)}>
                 <Image source={require("../assets/option.png")} style={{width: 27, height: 27}}></Image>
               </TouchableOpacity>
-              <EditWorkout editedWorkout={saveEditedWorkout} index={dates[currentIndex].idx} date={dates[currentIndex].date} workout={workoutReal} navigation={navigation} startWorkout={startWorkoutHandler}></EditWorkout>
+              <EditWorkout editedWorkout={saveEditedWorkout} date={dates[currentIndex].date} workout={workoutReal} navigation={navigation} startWorkout={startWorkoutHandler}></EditWorkout>
             </View>
     
         );
