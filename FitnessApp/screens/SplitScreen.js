@@ -49,7 +49,7 @@ function SplitScreen({navigation}) {
             "userId": "c3ajcVzkapfnUHfb4GKeVuELPO32",
             "splitDocument": newSplit
         }
-        axios.post('http://192.168.0.15:3000/split/save', dataj)
+        axios.post('http://192.168.0.15:3000/split/save', data)
             .then(function (response) {
             // Handle the successful response here
                 console.log(response.data);
