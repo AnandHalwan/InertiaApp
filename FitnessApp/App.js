@@ -3,20 +3,31 @@ import { StyleSheet} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabRoot from './components/TabRoot';
-import Setup from './screens/Setup';
-import Auth from './screens/Auth';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
 const Stack = createNativeStackNavigator();
+
+const queryClient = new QueryClient();
+
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <StatusBar style='light'>
-      </StatusBar>
-      <Stack.Navigator screenOptions={{headerShown:false, animation: 'slide_from_left', gestureEnabled: false}} >
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        <StatusBar style='light'>
+        </StatusBar>
+        <Stack.Navigator screenOptions={{headerShown:false, animation: 'slide_from_left', gestureEnabled: false}} >
 
-        <Stack.Screen name = "TabRoot" component={TabRoot}></Stack.Screen> 
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen name = "TabRoot" component={TabRoot}></Stack.Screen> 
+        </Stack.Navigator>
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
 

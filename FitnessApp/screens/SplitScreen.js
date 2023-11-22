@@ -1,38 +1,30 @@
+import { QueryClient } from "@tanstack/query-core";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useEffect, useReducer, useState, useRef } from "react";
 import { useCallback } from "react";
-import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import DraggableFlatList, { OpacityDecorator } from "react-native-draggable-flatlist";
 import { Swipeable, TextInput } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 function SplitScreen({navigation}) {
-    const [splitId, setSplitId] = useState(null)
-    const [workouts, setWorkouts] = useState([]);
-    const [splitName, setSplitName] = useState("");
 
-    useEffect(() => {
-        console.log("Retrieving splits")
-        getSplit()
-    }, [])
+    const queryClient = useQueryClient()
+
+    const { data, isLoading, isError } = useQuery({queryKey: ['split'], queryFn: getSplit});
 
     async function getSplit() {
-        data = {
+        queryData = {
             "userId": "c3ajcVzkapfnUHfb4GKeVuELPO32",
             "splitId": "s1"
         }
-        
-        axios.get('http://192.168.0.15:3000/split/get', {params: data})
-            .then((response) => {
-                setSplitName(response.data.splits[0].SplitName);
-                setWorkouts(response.data.splits[0].workouts)
-                setSplitId(response.data.splits[0].SplitId);
-            })
-            .catch((error) => {
-                console.error("Error retrieving split: ", error)
-            })
+        const response = await axios.get('http://192.168.0.15:3000/split/get', {params: queryData})
+        if (response.status === 200) {
+            return response.data.splits[0]
+        }
     }
-
+    /*
     function updateWorkouts(newWorkouts) {
         setWorkouts(newWorkouts)
         postSplit({
@@ -41,24 +33,40 @@ function SplitScreen({navigation}) {
             "workouts": newWorkouts
         })        
     }
+    */
+
+    const handleSplitUpdate = async(newSplit) => {
+        try {
+            await splitMutation.mutateAsync(newSplit)
+        } catch (error) {
+            console.error("Error posting split: ", error)
+        }
+    }
+
+    const splitMutation = useMutation({
+        mutationFn: postSplit,
+
+        onMutate: async (newSplit) => {
+            console.log("Mutate: ", newSplit)
+            queryClient.setQueryData(['split'], newSplit)
+        },
+
+        onSettled: () => {
+            queryClient.invalidateQueries(['split']);
+        }
+    })
 
     async function postSplit(newSplit) {
         console.log("Posting split")
 
-        data = {
+        const splitData = {
             "userId": "c3ajcVzkapfnUHfb4GKeVuELPO32",
             "splitDocument": newSplit
         }
-        axios.post('http://192.168.0.15:3000/split/save', data)
-            .then(function (response) {
-            // Handle the successful response here
-                console.log(response.data);
-            })
-            .catch(function (error) {
-                // Handle any errors that occurred during the request
-                console.error(error);
-            }); 
-            console.log("Posted split")    
+        const response = await axios.post('http://192.168.0.15:3000/split/save', splitData)
+        if (response.status === 200) {
+            return response.data
+        }
     }
 
     function goToWorkout(workout, id) {
@@ -67,18 +75,19 @@ function SplitScreen({navigation}) {
 
     const editedWorkout = (newData, id) => {
         console.log("Edited Workout")
-        console.log(newData)
 
-        const index = workouts.findIndex(item => item.id === id)
-        let newWorkouts = [...workouts];
-        newWorkouts[index] = newData
-        updateWorkouts(newWorkouts);
+        let newSplit = queryClient.getQueryData(['split'])
+        const index = newSplit.workouts.findIndex(item => item.id === id)
+        
+        newSplit.workouts[index] = newData
+        console.log(newSplit)
+        handleSplitUpdate(newSplit)
     }
 
     function deleteWorkout(id) {
-        setWorkouts((workouts) => {
-            return workouts.filter((item) => item.id !== id);
-        })
+        let newSplit = queryClient.getQueryData(['split'])
+        newSplit.workouts = newSplit.workouts.filter((item) => item.id !== id);
+        handleSplitUpdate(newSplit)
     }
 
     const renderItem = useCallback(
@@ -125,6 +134,7 @@ function SplitScreen({navigation}) {
                 }, 300);
             }
 
+            
             return(
                 <Animated.View style={animatedWorkoutItem}>
                     <OpacityDecorator>
@@ -143,6 +153,7 @@ function SplitScreen({navigation}) {
                     </OpacityDecorator>
                 </Animated.View>
             )
+            
         }
     )
     function addWorkoutHandler() {
@@ -161,14 +172,55 @@ function SplitScreen({navigation}) {
         console.log("Adding Workout")
         console.log(newData)
 
-        let newWorkouts = [...workouts];
-        newWorkouts.push(newData)
-        setWorkouts(newWorkouts)
+        let newSplit = queryClient.getQueryData(['split'])
+        newSplit.workouts.push(newData)
+        handleSplitUpdate(newSplit)
     }
 
-    function handleChangeSplitName() {
-        postSplit()
+    const [splitName, setSplitName] = useState('')
+
+    const handleSplitNameChanged = () => {
+        const newSplit = queryClient.getQueryData(['split'])
+        newSplit.SplitName = splitName
+        handleSplitUpdate(newSplit)
     }
+
+    useEffect(() => {
+        if (data) {
+            setSplitName(data.SplitName)
+        }
+    }, [data])
+    
+    if (isLoading) {
+        return (<View style={{flex: 1, backgroundColor: 'black', justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size="large" color={"white"}></ActivityIndicator>
+        </View>)
+    } else if (isError) {
+        return (<View style={{flex: 1, backgroundColor: 'black', justifyContent: 'center', alignItems: 'center'}}>
+        <Text style={{color: 'white', fontSize: 25}}>Error</Text>
+    </View>)
+    } else {
+        console.log(data)
+        return (
+            <View style={{backgroundColor: 'black', flex: 1, alignItems: 'center'}}>
+                <View style={{marginTop: 110}}>
+                    <TextInput onChangeText={(newText) => setSplitName(newText)} onEndEditing={handleSplitNameChanged} textAlign="right" value={splitName} style={{color: 'white', fontSize: 34}}></TextInput>
+                </View>
+                <View style={{marginTop: 40}}>
+                    <TouchableOpacity style={[styles.buttonContainer]} onPress={addWorkoutHandler}>
+                        <Image source={require('../assets/plus.png')} style={{height: 40, width: 40,}}/>
+                    </TouchableOpacity>
+                    <View style={{marginTop: 73}}>
+                        <DraggableFlatList data={data.workouts} renderItem={renderItem} keyExtractor={(item) => item.id} onDragBegin={({index}) => console.log("Started Dragging")} onDragEnd={({data}) => setWorkouts(data)}>
+    
+                        </DraggableFlatList>
+                    </View>
+                </View>
+            </View>
+        )
+    }
+
+    /*    
     return (
         <View style={{backgroundColor: 'black', flex: 1, alignItems: 'center'}}>
             <View style={{marginTop: 110}}>
@@ -186,6 +238,7 @@ function SplitScreen({navigation}) {
             </View>
         </View>
     )
+    */
 }
 
 const styles = StyleSheet.create({
