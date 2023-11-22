@@ -147,7 +147,6 @@ import { forwardRef } from "react";
 import { useImperativeHandle } from "react";
 import { useState } from "react";
 import { View , Text, StyleSheet} from "react-native";
-import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 const ExerciseTimer = (props, ref) => {
     const [playing, setPlaying] = useState(false)

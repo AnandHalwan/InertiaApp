@@ -28,7 +28,6 @@ const EditExerciseListItem = (props, ref) => {
             <View style={[{borderRadius: 180, height: 76, width: 76, top: 12, left: 11,  backgroundColor: props.backgroundCircleColor, position: 'absolute'}]}>
                 
             </View>
-            <Image source={props.imgSrc} style={[{position: "absolute" , top: 25, left: 24, height: 50, width: 50}]}></Image>
             <View style={[{justifyContent: 'center', marginBottom: 0, marginRight: 8, marginLeft: 0, top: 0}]}>
                 <Text style={[styles.textPrimary, {fontSize: 20, textAlign: 'right', marginBottom: 0}]}>{props.name}</Text>
                 <Text style={[styles.textSecondary, {fontSize: 17, textAlign: 'right'}]}>{props.sets} sets {props.lowRepRange}-{props.highRepRange} reps</Text>
@@ -43,6 +42,10 @@ export default forwardRef(EditExerciseListItem);
   
 
 /*
+
+            <Image source={props.imgSrc} style={[{position: "absolute" , top: 25, left: 24, height: 50, width: 50}]}></Image>
+
+
         top: 8,
         left: 8,
         width: 70,
