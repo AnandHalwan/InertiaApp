@@ -15,7 +15,7 @@ const Stack = createNativeStackNavigator();
 
 const queryClient = new QueryClient();
 
-
+export const baseApiUrl = "https://inertiafit-f67b79e42b1b.herokuapp.com/"
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
