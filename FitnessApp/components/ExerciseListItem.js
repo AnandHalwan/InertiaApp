@@ -88,7 +88,6 @@ function ExerciseListItem({name, sets, lowRepRange, highRepRange, backgroundCirc
                 <View style={{top: 8 * heightRatio, left: 4 * widthRatio, width: height - (25*heightRatio), height: height - (25*heightRatio), borderRadius: 90, backgroundColor: backgroundCircleColor}}>
                     
                 </View>
-                <Image source={imgSrc} style={{position: "absolute" , top: 25 * heightRatio, left: 24 * widthRatio, height: 50 * heightRatio, width: 50 * widthRatio}}></Image>
                 <View style={[{justifyContent: 'center', marginBottom: 0, marginRight: 8 * widthRatio, marginLeft: 0}]}>
                     <Text style={[styles.textPrimary, {fontSize: 20 * widthRatio, textAlign: 'right'}]}>{name}</Text>
                     <Text style={[styles.textSecondary, {fontSize: 17 * widthRatio, textAlign: 'right'}]}>{sets} sets {lowRepRange}-{highRepRange} reps</Text>
