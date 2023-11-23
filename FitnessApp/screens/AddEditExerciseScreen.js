@@ -225,7 +225,6 @@ function AddEditExerciseScreen({route, navigation}) {
                     <View style={{flexDirection: 'row'}}>
                         <Text style={{color: 'white', fontSize: 32, marginBottom: 12}}>{exerciseName}</Text>
                         <View style={{height: 67, width: 67, position: 'absolute', top: 0, left: 295, borderRadius: 90, backgroundColor: color,}}>
-                            <Image source={image} style={{position: 'absolute', height: 45, width: 45, top: 10, left: 11}}></Image>
                         </View>
                     </View>
                     <Text style={{color: "#7F7E84", fontSize: 17, letterSpacing: .5, marginBottom: 28}}>{setCount} Sets {lowRepRange}-{highRepRange} Reps 7 RPE</Text>

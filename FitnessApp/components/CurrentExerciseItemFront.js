@@ -198,7 +198,6 @@ const CurrentExericseItemFront = (props, ref) => {
             <TouchableOpacity onPressOut={handlePressed}> 
             <View style={[{height: 101,flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: -10}]}>
                 <Animated.View style={{borderRadius: 180, backgroundColor: props.backgroundCircleColor, height: 76, width: 76, marginLeft: 11, top: 6, marginRight: 3}}>
-                    <Image source={props.exercise.imgSrc} style={{position: "absolute" , top: 12, left: 13, height: 50, width: 50}}></Image>
                 </Animated.View>
                 <Animated.View style={{ marginRight: 8, top: 7}}>
                     <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
