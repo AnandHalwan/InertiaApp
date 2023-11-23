@@ -69,17 +69,23 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
         if (data.name==="Add Exercise" || data.setList.length === 0) {
             return
         }
-        console.log(data)
-        setWorkoutExercises((workoutExercises) => [
-            ...workoutExercises, data
-        ])
+        console.log("Adding exercise", data)
+
+        let newWorkoutExercises = workoutExercises;
+        newWorkoutExercises.push(data)
+        console.log("New workout exercises: ", newWorkoutExercises)
+        setWorkoutExercises([...newWorkoutExercises])
       }
 
       function deleteItemFromWorkout(id) {
-        setWorkoutExercises((workoutExercises) => {
-            return workoutExercises.filter((item) => item.id !== id);
-        })
-        workout.exercises = workoutExercises
+
+        let newWorkoutExercises = workoutExercises;
+        const index = newWorkoutExercises.findIndex((item) => item.id === id)
+        if (index > -1) {
+            newWorkoutExercises.splice(index, 1)
+        }
+        console.log("New workout exercises: ", newWorkoutExercises)
+        setWorkoutExercises([...newWorkoutExercises])
     }
 
 
@@ -137,13 +143,15 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
     });
 
     function updateExercise(id, newData) {
-        const index = workout.exercises.findIndex(item => item.id === id)
-        let newWorkoutExercises = [...workoutExercises];
+        const index = workoutExercises.findIndex(item => item.id === id)
+        let newWorkoutExercises = workoutExercises;
         newWorkoutExercises[index] = newData
-        setWorkoutExercises(newWorkoutExercises)
+        console.log("New workout exercises: ", newWorkoutExercises)
+        setWorkoutExercises([...newWorkoutExercises])
     }
 
     useEffect(() => {
+        console.log("Workout exercises: ", workoutExercises)
         let sum = 0
         for (let i = 0; i < workoutExercises.length; i++) {
             sum += workoutExercises[i].setList.length
