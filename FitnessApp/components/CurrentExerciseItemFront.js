@@ -186,7 +186,12 @@ const CurrentExericseItemFront = (props, ref) => {
                         <TextInput placeholder={props.item.Rpe} placeholderTextColor={"#a0a0a0"} value={rpe} onChangeText={handleRpeChange} focusable={false} keyboardAppearance="dark" keyboardType="number-pad" ref={rpeRef} style={styles.dataText}></TextInput>
                     </TouchableOpacity>
                     <TouchableOpacity  onPress={handleCheck} style={{width: 50, top: 6, alignItems: 'center', justifyContent: 'center' , backgroundColor: checked ? '#7fe18f' : '#383838', top: 8.5, borderRadius: 14}}>
-
+                        <View style={{height:25, width: 5, backgroundColor: checked ? 'white' : 'grey', borderRadius: 10, position: 'absolute', transform: [{rotate: '40deg'}], left: 28}}>
+                            
+                        </View>
+                        <View style={{height:5, width: 13, backgroundColor: checked ? 'white' : 'grey', borderRadius: 10, top: 27, left: 14, position: 'absolute', transform: [{rotate: '40deg'}]}}>
+                            
+                        </View>
                     </TouchableOpacity>
                 </Animated.View>
             </View>

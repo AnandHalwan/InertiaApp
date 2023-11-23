@@ -194,6 +194,7 @@ function SplitScreen({navigation}) {
     }
 
     useEffect(() => {
+        console.log("Split Screen Use Effect")
         if (data) {
             setSplitName(data.SplitName)
             setWorkouts(data.workouts)
