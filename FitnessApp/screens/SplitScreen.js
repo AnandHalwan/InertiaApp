@@ -7,6 +7,7 @@ import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacit
 import DraggableFlatList, { OpacityDecorator } from "react-native-draggable-flatlist";
 import { Swipeable, TextInput } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { baseApiUrl } from "../App";
 
 function SplitScreen({navigation}) {
 
@@ -19,7 +20,7 @@ function SplitScreen({navigation}) {
             "userId": "c3ajcVzkapfnUHfb4GKeVuELPO32",
             "splitId": "s1"
         }
-        const response = await axios.get('http://192.168.0.15:3000/split/get', {params: queryData})
+        const response = await axios.get(baseApiUrl+'split/get', {params: queryData})
         if (response.status === 200) {
             return response.data.splits[0]
         }
@@ -63,7 +64,7 @@ function SplitScreen({navigation}) {
             "userId": "c3ajcVzkapfnUHfb4GKeVuELPO32",
             "splitDocument": newSplit
         }
-        const response = await axios.post('http://192.168.0.15:3000/split/save', splitData)
+        const response = await axios.post(baseApiUrl+'split/save', splitData)
         if (response.status === 200) {
             return response.data
         }
