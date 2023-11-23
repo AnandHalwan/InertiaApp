@@ -47,11 +47,6 @@ function SplitScreen({navigation}) {
     const splitMutation = useMutation({
         mutationFn: postSplit,
 
-        onMutate: async (newSplit) => {
-            console.log("Mutate: ", newSplit)
-            queryClient.setQueryData(['split'], newSplit)
-        },
-
         onSettled: () => {
             queryClient.invalidateQueries(['split']);
         }
@@ -82,13 +77,24 @@ function SplitScreen({navigation}) {
         
         newSplit.workouts[index] = newData
         console.log(newSplit)
+        setWorkouts(newSplit.workouts)
         handleSplitUpdate(newSplit)
     }
 
     function deleteWorkout(id) {
         let newSplit = queryClient.getQueryData(['split'])
         newSplit.workouts = newSplit.workouts.filter((item) => item.id !== id);
+        setWorkouts(newSplit.workouts)
         handleSplitUpdate(newSplit)
+    }
+
+    const reorderWorkouts = (newOrder) => {
+        console.log("Reordered workouts");
+
+        let newSplit = queryClient.getQueryData(['split'])
+        newSplit.workouts = newOrder
+        setWorkouts(newSplit.workouts)
+        handleSplitUpdate(newSplit);
     }
 
     const renderItem = useCallback(
@@ -175,11 +181,12 @@ function SplitScreen({navigation}) {
 
         let newSplit = queryClient.getQueryData(['split'])
         newSplit.workouts.push(newData)
+        setWorkouts(newSplit.workouts)
         handleSplitUpdate(newSplit)
     }
 
     const [splitName, setSplitName] = useState('')
-
+    const [workouts, setWorkouts] = useState([])
     const handleSplitNameChanged = () => {
         const newSplit = queryClient.getQueryData(['split'])
         newSplit.SplitName = splitName
@@ -189,6 +196,7 @@ function SplitScreen({navigation}) {
     useEffect(() => {
         if (data) {
             setSplitName(data.SplitName)
+            setWorkouts(data.workouts)
         }
     }, [data])
     
@@ -212,7 +220,7 @@ function SplitScreen({navigation}) {
                         <Image source={require('../assets/plus.png')} style={{height: 40, width: 40,}}/>
                     </TouchableOpacity>
                     <View style={{marginTop: 73}}>
-                        <DraggableFlatList data={data.workouts} renderItem={renderItem} keyExtractor={(item) => item.id} onDragBegin={({index}) => console.log("Started Dragging")} onDragEnd={({data}) => setWorkouts(data)}>
+                        <DraggableFlatList data={workouts} renderItem={renderItem} keyExtractor={(item) => item.id} onDragBegin={({index}) => console.log("Started Dragging")} onDragEnd={({data}) => reorderWorkouts(data)}>
     
                         </DraggableFlatList>
                     </View>
