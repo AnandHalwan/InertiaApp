@@ -1,4 +1,3 @@
-import { QueryClient } from "@tanstack/query-core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useEffect, useReducer, useState, useRef } from "react";
@@ -7,8 +6,7 @@ import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacit
 import DraggableFlatList, { OpacityDecorator } from "react-native-draggable-flatlist";
 import { Swipeable, TextInput } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { baseApiUrl } from "../App";
-
+import { baseApiUrl, heightRatio, widthRatio } from "../helper";
 function SplitScreen({navigation}) {
 
     const queryClient = useQueryClient()
@@ -121,7 +119,7 @@ function SplitScreen({navigation}) {
             }
 
             const height = useSharedValue(101)
-            const marginBottom = useSharedValue(9)
+            const marginBottom = useSharedValue(10)
             const opacity = useSharedValue(1)
 
             const animatedWorkoutItem = useAnimatedStyle(() => {
@@ -213,14 +211,14 @@ function SplitScreen({navigation}) {
         console.log(data)
         return (
             <View style={{backgroundColor: 'black', flex: 1, alignItems: 'center'}}>
-                <View style={{marginTop: 110}}>
+                <View style={{marginTop: 110 * heightRatio}}>
                     <TextInput onChangeText={(newText) => setSplitName(newText)} onEndEditing={handleSplitNameChanged} textAlign="right" value={splitName} style={{color: 'white', fontSize: 34}}></TextInput>
                 </View>
-                <View style={{marginTop: 40}}>
+                <View style={{marginTop: 40*heightRatio}}>
                     <TouchableOpacity style={[styles.buttonContainer]} onPress={addWorkoutHandler}>
-                        <Image source={require('../assets/plus.png')} style={{height: 40, width: 40,}}/>
+                        <Image source={require('../assets/plus.png')} style={{height: 32, width: 32,}}/>
                     </TouchableOpacity>
-                    <View style={{marginTop: 73}}>
+                    <View style={{marginTop: 71*heightRatio}}>
                         <DraggableFlatList data={workouts} renderItem={renderItem} keyExtractor={(item) => item.id} onDragBegin={({index}) => console.log("Started Dragging")} onDragEnd={({data}) => reorderWorkouts(data)}>
     
                         </DraggableFlatList>
@@ -257,7 +255,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#1C1C1E',
         borderRadius: 16,
         padding: 7,
-        width: 370,
+        width: 370 * widthRatio,
         left: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -270,7 +268,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#1C1C1E',
         borderRadius: 16,
         padding: 7,
-        width: 370,
+        width: 370 * widthRatio,
         justifyContent: 'center',
         alignItems: 'center',
         height: 66,

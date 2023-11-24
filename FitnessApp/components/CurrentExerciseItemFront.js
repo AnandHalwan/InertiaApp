@@ -3,7 +3,7 @@ import { useEffect, useImperativeHandle, useState, useRef } from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming, } from "react-native-reanimated";
 import { forwardRef } from "react";
 import { TouchableOpacity, TextInput } from "react-native";
-import { formattedDate } from "../helper";
+import { formattedDate, widthRatio } from "../helper";
 const CurrentExericseItemFront = (props, ref) => {
 
     const exerciseId = props.exercise.id
@@ -13,7 +13,7 @@ const CurrentExericseItemFront = (props, ref) => {
             backgroundColor: '#1C1C1E',
             borderRadius: 16,
             padding: 7,
-            width: 370,
+            width: 370 * widthRatio,
             left: 1,
             marginBottom: 9
         },
@@ -229,19 +229,19 @@ const CurrentExericseItemFront = (props, ref) => {
             <View>
                 <Animated.View style={[{flexDirection: 'row'}, animateItemStyle]}>
                     
-                    <View style={{width: 68, left: 10, top: 20, marginRight: -15}} >
+                    <View style={{width: 68*widthRatio, left: 10*widthRatio, top: 20, marginRight: -15}} >
                         <Text style={styles.dataText}>{props.index + 1}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => repRef.current.focus()} style={{ width: 50, top: 8.5, marginRight: 16, backgroundColor: '#383838', borderRadius: 14, alignItems: 'center', justifyContent: 'center'}}>
-                        <TextInput placeholder={props.item.Reps} placeholderTextColor={"#a0a0a0"} value={reps} onChangeText={handleRepsChange} focusable={false} keyboardAppearance="dark" keyboardType="number-pad" ref={repRef} style={[styles.dataText, {textAlign: 'right'}]}></TextInput>
+                    <TouchableOpacity onPress={() => repRef.current.focus()} style={{ width: 50*widthRatio, top: 8.5, marginRight: 16*widthRatio, backgroundColor: '#383838', borderRadius: 14, alignItems: 'center', justifyContent: 'center'}}>
+                        <TextInput placeholder={props.item.Reps} placeholderTextColor={"#a0a0a0"} value={reps} onChangeText={handleRepsChange} focusable={false} keyboardAppearance="dark" keyboardType="number-pad" ref={repRef} style={[styles.dataText, {textAlign: 'center'}]}></TextInput>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => weightRef.current.focus()} style={{width: 80, top: 8.5, marginRight: 16, backgroundColor: '#383838', borderRadius: 14, alignItems: 'center', justifyContent: 'center'}}>
+                    <TouchableOpacity onPress={() => weightRef.current.focus()} style={{width: 80 * widthRatio, top: 8.5, marginRight: 16*widthRatio, backgroundColor: '#383838', borderRadius: 14, alignItems: 'center', justifyContent: 'center'}}>
                         <TextInput placeholder={props.item.Weight} placeholderTextColor={"#a0a0a0"} value={weight} onChangeText={handleWeightChange} focusable={false} keyboardAppearance="dark" keyboardType="number-pad" ref={weightRef} style={styles.dataText}></TextInput>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => rpeRef.current.focus()} style={{width: 50, top: 8.5, marginRight: 15, backgroundColor: '#383838', borderRadius: 14, alignItems: 'center', justifyContent: 'center'}}>
-                        <TextInput placeholder={props.item.Rpe} placeholderTextColor={"#a0a0a0"} value={rpe} onChangeText={handleRpeChange} focusable={false} keyboardAppearance="dark" keyboardType="number-pad" ref={rpeRef} style={styles.dataText}></TextInput>
+                    <TouchableOpacity onPress={() => rpeRef.current.focus()} style={{width: 50 * widthRatio, top: 8.5, marginRight: 15*(widthRatio), backgroundColor: '#383838', borderRadius: 14, alignItems: 'center', justifyContent: 'center'}}>
+                        <TextInput placeholder={props.item.Rpe} placeholderTextColor={"#a0a0a0"} value={rpe} onChangeText={handleRpeChange} focusable={false} keyboardAppearance="dark" keyboardType="number-pad" ref={rpeRef} style={[styles.dataText, {textAlign: 'center'}]}></TextInput>
                     </TouchableOpacity>
-                    <TouchableOpacity  onPress={handleCheck} style={{width: 50, top: 6, alignItems: 'center', justifyContent: 'center' , backgroundColor: thisSetData.checked ? '#7fe18f' : '#383838', top: 8.5, borderRadius: 14}}>
+                    <TouchableOpacity  onPress={handleCheck} style={{width: 50*(widthRatio), top: 6, alignItems: 'center', justifyContent: 'center' , backgroundColor: thisSetData.checked ? '#7fe18f' : '#383838', top: 8.5, borderRadius: 14}}>
                         <View style={{height:25, width: 5, backgroundColor: thisSetData.checked ? 'white' : 'grey', borderRadius: 10, position: 'absolute', transform: [{rotate: '40deg'}], left: 28}}>
                             
                         </View>
@@ -258,9 +258,9 @@ const CurrentExericseItemFront = (props, ref) => {
         <Animated.View style={[animateItemHeight,styles.listItemContainer]}>
             <TouchableOpacity onPressOut={handlePressed}> 
             <View style={[{height: 101,flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: -10}]}>
-                <Animated.View style={{borderRadius: 180, backgroundColor: props.backgroundCircleColor, height: 76, width: 76, marginLeft: 11, top: 6, marginRight: 3}}>
+                <Animated.View style={{borderRadius: 180, backgroundColor: props.backgroundCircleColor, height: 76, width: 76, marginLeft: 11*widthRatio, top: 6, marginRight: 3}}>
                 </Animated.View>
-                <Animated.View style={{ marginRight: 8, top: 7}}>
+                <Animated.View style={{ marginRight: 8*widthRatio, top: 7}}>
                     <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
                         <View ref={primaryTextRef} onLayout={() => {
                             if (primaryTextRef.current && !calculated) {

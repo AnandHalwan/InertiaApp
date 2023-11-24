@@ -5,11 +5,8 @@ import DraggableFlatList, {OpacityDecorator} from 'react-native-draggable-flatli
 import EditExerciseListItem from "./EditExerciseListItem";
 import { Swipeable } from "react-native-gesture-handler";
 import Animated, { useSharedValue , useAnimatedStyle, withTiming, withSpring} from 'react-native-reanimated';
+import { heightRatio, widthRatio } from "../helper";
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-const heightRatio = windowHeight/844;
-const widthRatio = windowWidth/390;
 
 function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
 
@@ -287,8 +284,8 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
 
     return(
             <View style={styles.workoutScreenContainer}>
-                <TouchableOpacity style={{top: 700, position: 'absolute', zIndex: 1, display: showStart}} onPress={edit ? closeEditScreen : startWorkout}>
-                    <View style={{height: 45, width: 137, borderRadius: 60, backgroundColor: '#74e189', alignItems: 'center', justifyContent: 'center'}}>
+                <TouchableOpacity style={{top: 700 * heightRatio, position: 'absolute', zIndex: 1, display: showStart}} onPress={edit ? closeEditScreen : startWorkout}>
+                    <View style={{height: 45 * heightRatio, width: 137 * widthRatio, borderRadius: 60, backgroundColor: '#74e189', alignItems: 'center', justifyContent: 'center'}}>
                         <Text style={{color: 'white', fontSize: 23}}>{edit ? "Save" : "Start"}</Text>
                     </View>
                 </TouchableOpacity>
@@ -324,7 +321,7 @@ function EditWorkout({workout, date, startWorkout, navigation, editedWorkout}) {
                     <View style={[{flex: 15 * heightRatio, top: 40},styles.workoutContainer]}>
                         <TouchableOpacity onPress={addExerciseHandler}>
                             <Animated.View  style={[animateLeftValue,styles.buttonContainer]}>
-                                <Image source={require('../assets/plus.png')} style={{height: 40, width: 40,}}/>
+                                <Image source={require('../assets/plus.png')} style={{height: 32, width: 32,}}/>
                             </Animated.View>
                         </TouchableOpacity>
                         <Animated.View style={[animateListTop, {marginBottom: listMargin}]}>

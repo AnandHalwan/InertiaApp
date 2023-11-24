@@ -1,3 +1,13 @@
+import { Dimensions } from "react-native";
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+export const heightRatio = windowHeight/844;
+export const widthRatio = windowWidth/390;
+
+export const baseApiUrl = "https://inertiafit-f67b79e42b1b.herokuapp.com/"
+
+
 export function formattedDate() {
     let currentDate = new Date();
 
