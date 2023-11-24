@@ -2,8 +2,12 @@ import { Text , StyleSheet, View, findNodeHandle, UIManager} from "react-native"
 import { useEffect, useImperativeHandle, useState, useRef } from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming, } from "react-native-reanimated";
 import { forwardRef } from "react";
-import { Image, TouchableOpacity, TextInput } from "react-native";
+import { TouchableOpacity, TextInput } from "react-native";
+import { formattedDate } from "../helper";
 const CurrentExericseItemFront = (props, ref) => {
+
+    const exerciseId = props.exercise.id
+
     const styles = StyleSheet.create({
         listItemContainer: {
             backgroundColor: '#1C1C1E',
@@ -44,6 +48,10 @@ const CurrentExericseItemFront = (props, ref) => {
     const infoOpacity = useSharedValue(0)
     const index = props.index
     const [calculated, setCalculated] = useState(false)
+
+    const setLogs = useRef([])
+
+
 
     const animatePrimaryText = useAnimatedStyle(() => {
         return {
@@ -123,16 +131,57 @@ const CurrentExericseItemFront = (props, ref) => {
             primaryTextLeft.value = withTiming(0, {duration: 450})
             secondaryTextLeft.value = withTiming(0, {duration: 450})
             setExpanded(false)
+            
+            let setDataToBeSaved = []
+            
+            for (let i = 0; i < setData.length; i++) {
+                if (setData[i].checked) {
+                    setDataToBeSaved.push(setData[i])
+                }
+            }
+            console.log("Set data to be saved: ", setDataToBeSaved);
         }
     }
 
+    useEffect(() => {
+        console.log("Set data: ", setData)
+    }, [setData])
+
+    
+    const [setData, setSetData] = useState(() => {
+        let initialSetData = []
+        for (let i = 1; i <= props.exercise.setList.length; i++) {
+            const data = {
+                "id": exerciseId,
+                "date": formattedDate(),
+                "setNumber": i,
+                "reps": "",
+                "weight": "",
+                "rpe": "",
+                "checked": false
+            }
+            initialSetData.push(data)
+        }
+        return initialSetData
+    });
+    
+    function handleUpdateSetData(index, newData) {
+        let newSetData = setData;
+        newSetData[index] = newData
+        console.log("New Set Data: ", newSetData)
+        setSetData([...newSetData])
+    }
+    
     const SetListItem = (props) => {
+        
         const itemHeight = useSharedValue(50);
         const itemMargin = useSharedValue(8);
-
-        const [reps, setReps] = useState("");
-        const [weight, setWeight] = useState("")
-        const [rpe, setRpe] = useState("")
+        
+        const thisSetData = setData[props.index]
+        
+        const [reps, setReps] = useState(thisSetData.reps);
+        const [weight, setWeight] = useState(thisSetData.weight)
+        const [rpe, setRpe] = useState(thisSetData.rpe)
 
         const repRef = useRef(null);
         const weightRef = useRef(null);
@@ -160,14 +209,21 @@ const CurrentExericseItemFront = (props, ref) => {
                 marginBottom: itemMargin.value
             }
         })
-
-        const [deleteVisible, setDeleteVisible] = useState('flex')
         
-        const [checked, setChecked] = useState(false)
 
         function handleCheck() {
-            setChecked(!checked)
+            const setData = {
+                "id": exerciseId,
+                "date": formattedDate(),
+                "setNumber": props.index + 1,
+                "reps": reps,
+                "weight": weight,
+                "rpe": rpe,
+                "checked": !thisSetData.checked
+            }
+            handleUpdateSetData(props.index, setData)
         }
+
 
         return (
             <View>
@@ -185,11 +241,11 @@ const CurrentExericseItemFront = (props, ref) => {
                     <TouchableOpacity onPress={() => rpeRef.current.focus()} style={{width: 50, top: 8.5, marginRight: 15, backgroundColor: '#383838', borderRadius: 14, alignItems: 'center', justifyContent: 'center'}}>
                         <TextInput placeholder={props.item.Rpe} placeholderTextColor={"#a0a0a0"} value={rpe} onChangeText={handleRpeChange} focusable={false} keyboardAppearance="dark" keyboardType="number-pad" ref={rpeRef} style={styles.dataText}></TextInput>
                     </TouchableOpacity>
-                    <TouchableOpacity  onPress={handleCheck} style={{width: 50, top: 6, alignItems: 'center', justifyContent: 'center' , backgroundColor: checked ? '#7fe18f' : '#383838', top: 8.5, borderRadius: 14}}>
-                        <View style={{height:25, width: 5, backgroundColor: checked ? 'white' : 'grey', borderRadius: 10, position: 'absolute', transform: [{rotate: '40deg'}], left: 28}}>
+                    <TouchableOpacity  onPress={handleCheck} style={{width: 50, top: 6, alignItems: 'center', justifyContent: 'center' , backgroundColor: thisSetData.checked ? '#7fe18f' : '#383838', top: 8.5, borderRadius: 14}}>
+                        <View style={{height:25, width: 5, backgroundColor: thisSetData.checked ? 'white' : 'grey', borderRadius: 10, position: 'absolute', transform: [{rotate: '40deg'}], left: 28}}>
                             
                         </View>
-                        <View style={{height:5, width: 13, backgroundColor: checked ? 'white' : 'grey', borderRadius: 10, top: 27, left: 14, position: 'absolute', transform: [{rotate: '40deg'}]}}>
+                        <View style={{height:5, width: 13, backgroundColor: thisSetData.checked ? 'white' : 'grey', borderRadius: 10, top: 27, left: 14, position: 'absolute', transform: [{rotate: '40deg'}]}}>
                             
                         </View>
                     </TouchableOpacity>

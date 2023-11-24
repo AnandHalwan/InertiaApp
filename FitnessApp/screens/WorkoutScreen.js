@@ -66,11 +66,16 @@ function WorkoutScreen({navigation, route}) {
         editedWorkout(newData, id)
     }
 
+    function handleEndWorkout() {
+        console.log("Going back")
+        navigation.goBack()
+    }
+
     const [selectWorkoutVisible, setSelectWorkoutVisible] = useState(false);
     if (workoutStarted) {
         return (
             <View style={styles.container}>
-                <WorkoutContainerComponent date={dates[currentIndex].date} workout={workoutReal} navigation={navigation}></WorkoutContainerComponent>
+                <WorkoutContainerComponent date={dates[currentIndex].date} workout={workoutReal} navigation={navigation} endWorkout={handleEndWorkout}></WorkoutContainerComponent>
             </View>
         )
     } else {

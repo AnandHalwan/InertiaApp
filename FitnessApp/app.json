@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anand124.FitnessApp",
-      "buildNumber": "5"
+      "buildNumber": "6"
     },
     "android": {
       "adaptiveIcon": {

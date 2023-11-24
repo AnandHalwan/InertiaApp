@@ -1,11 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image } from "react-native";
+import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image, TouchableOpacity } from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
-import CurrentExerciseListItem from "./CurrentExerciseListItem";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
-import { userId } from "../screens/Auth";
 import CurrentExerciseItemFront from "./CurrentExerciseItemFront";
-import { createRef } from "react";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;
@@ -71,6 +68,11 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
         );
     }
 
+    function endWorkoutHandler() {
+        console.log("Ending workout!")
+        setModalEndVisible(true);
+    }
+
     const opacityAnimated = useSharedValue(0);
     const animateOpacity = useAnimatedStyle(() => {
         return {
@@ -88,6 +90,11 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
 
     return(
             <Animated.View style={styles.workoutScreenContainer}>
+                <TouchableOpacity style={{top: 700, position: 'absolute', zIndex: 1,}} onPress={endWorkoutHandler}>
+                    <View style={{height: 45, width: 137, borderRadius: 60, backgroundColor: '#74e189', alignItems: 'center', justifyContent: 'center'}}>
+                        <Text style={{color: 'white', fontSize: 23}}>{"End"}</Text>
+                    </View>
+                </TouchableOpacity>
                 <Modal
                     animationType="none"
                     transparent={false}
@@ -107,7 +114,8 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
                     </Pressable>
                 </Modal>
 
-                <Modal transparent={true} animationType="fade" visible={modalEndVisible}>
+                <Modal transparent={false} animationType="fade" visible={modalEndVisible}>
+                    <View style={{backgroundColor: 'black', flex: 1}}>
                    <View style={styles.endWorkoutModalContainer}>
                         <View style={styles.workoutSummaryContainer}>
                             <View>
@@ -179,10 +187,16 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
                             </View>
                         </View>
                         <View style={styles.checkContainer}>
-                            <Pressable onPress={endWorkout}>
-                                <Image source={require('../assets/checkmark_copy.png')} style={{height: 120, width: 120, left: -4, top: -7}}></Image>
-                            </Pressable>
+                            <TouchableOpacity onPress={endWorkout} style={{height: 92, width: 92, left: 9, top: 9, backgroundColor: '#75e18a', borderRadius: 90}}>
+                                <View style={{height:45, width: 10, backgroundColor: 'white', borderRadius: 10, position: 'absolute', transform: [{rotate: '40deg'}], top: 22, left: 49}}>
+                                
+                                </View>
+                                <View style={{height:10, width: 24, backgroundColor:'white', borderRadius: 10, top: 47, left: 24, position: 'absolute', transform: [{rotate: '40deg'}]}}>
+                                    
+                                </View>
+                            </TouchableOpacity>
                         </View>
+                    </View>
                     </View>
                 </Modal>
                 <View style={styles.headerContainer}>
