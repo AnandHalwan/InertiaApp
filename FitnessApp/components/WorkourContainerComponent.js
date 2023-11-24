@@ -3,6 +3,8 @@ import { View, StyleSheet, Text, FlatList, Modal, Dimensions, Image, TouchableOp
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import CurrentExerciseItemFront from "./CurrentExerciseItemFront";
+import { PanGestureHandler } from "react-native-gesture-handler";
+import GestureRecognizer from "react-native-swipe-gestures";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const heightRatio = windowHeight/844;
@@ -14,7 +16,6 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
 
 
     const [modalStartVisible, setModalStartVisible] = useState(true);  
-    const [modalEndVisible, setModalEndVisible] = useState(false);
     const daysOfWeek = [
         "SUNDAY",
         "MONDAY",
@@ -50,7 +51,7 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
 
     function modalPressHandler() {
         setModalStartVisible(false);
-
+        
     }
 
     const [currentExercise, setCurrentExercise] = useState(workoutLocal.exercises[0].id)
@@ -69,8 +70,13 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
     }
 
     function endWorkoutHandler() {
-        console.log("Ending workout!")
-        setModalEndVisible(true);
+        workoutTopPosition.value = withTiming(-800)
+        animateEndButtonOpacity.value = withTiming(0)
+        animateWorkoutSummaryTop.value = withTiming(90)
+    }
+
+    function closeSummaryHandler() {
+        endWorkout()
     }
 
     const opacityAnimated = useSharedValue(0);
@@ -88,13 +94,46 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
         opacityAnimated.value = withTiming(1,{duration: 1000})
     })
 
+    const workoutTopPosition = useSharedValue(0)
+
+    const animatedWorkout = useAnimatedStyle(() => {
+        return {
+            top: workoutTopPosition.value
+        }
+    })
+
+    const animateEndButtonOpacity = useSharedValue(1);
+
+    const animateEndButton = useAnimatedStyle(() => {
+        return {
+            opacity: animateEndButtonOpacity.value
+        }
+    })
+
+    const animateWorkoutSummaryTop = useSharedValue(800)
+
+    const animateEndWorkout = useAnimatedStyle(() => {
+        return {
+            top: animateWorkoutSummaryTop.value,
+        }
+    })
+
+
+    function handleGoBackToWorkout() {
+        workoutTopPosition.value = withTiming(0)
+        animateEndButtonOpacity.value = withTiming(1)
+        animateWorkoutSummaryTop.value = withTiming(800)
+    }
+
     return(
-            <Animated.View style={styles.workoutScreenContainer}>
-                <TouchableOpacity style={{top: 700, position: 'absolute', zIndex: 1,}} onPress={endWorkoutHandler}>
-                    <View style={{height: 45, width: 137, borderRadius: 60, backgroundColor: '#74e189', alignItems: 'center', justifyContent: 'center'}}>
-                        <Text style={{color: 'white', fontSize: 23}}>{"End"}</Text>
-                    </View>
-                </TouchableOpacity>
+            <View style={styles.workoutScreenContainer}>
+                <Animated.View  style={[{top: 700, position: 'absolute', zIndex: 1,}, animateEndButton]}>
+                    <TouchableOpacity onPress={endWorkoutHandler}>
+                        <View style={{height: 45, width: 137, borderRadius: 60, backgroundColor: '#74e189', alignItems: 'center', justifyContent: 'center'}}>
+                            <Text style={{color: 'white', fontSize: 23}}>{"End"}</Text>
+                        </View>
+                    </TouchableOpacity>
+                </Animated.View>
                 <Modal
                     animationType="none"
                     transparent={false}
@@ -114,9 +153,25 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
                     </Pressable>
                 </Modal>
 
-                <Modal transparent={false} animationType="fade" visible={modalEndVisible}>
-                    <View style={{backgroundColor: 'black', flex: 1}}>
-                   <View style={styles.endWorkoutModalContainer}>
+                <Animated.View style={animatedWorkout}>
+                    <View style={styles.headerContainer}>
+                        <View style={styles.leftHeaderContainer}>
+                            <View style={{marginBottom: -10, height: 25, left: 12 * widthRatio}}>
+                                <Text style={styles.dateText}>{daysOfWeek[dateRel.getDay()]}, {months[date.getMonth()]} {date.getDate()}</Text>
+                            </View>
+                        </View>
+                    </View>
+                                    
+                    <View style={[styles.workoutContainer, {flex: 50.4 * heightRatio}, {top: 18}]}>
+                        <FlatList ref={flatListRef} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
+                    </View>
+                </Animated.View>
+                    <Animated.View style={[styles.endWorkoutModalContainer, animateEndWorkout]}       onTouchStart={e=> touchY = e.nativeEvent.pageY}
+                        onTouchEnd={e => {
+                            if (touchY - e.nativeEvent.pageY < -80)
+                            handleGoBackToWorkout()
+                        }}>
+
                         <View style={styles.workoutSummaryContainer}>
                             <View>
                                 <Text style={styles.workoutSummaryHeader}>
@@ -187,7 +242,7 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
                             </View>
                         </View>
                         <View style={styles.checkContainer}>
-                            <TouchableOpacity onPress={endWorkout} style={{height: 92, width: 92, left: 9, top: 9, backgroundColor: '#75e18a', borderRadius: 90}}>
+                            <TouchableOpacity onPress={closeSummaryHandler} style={{height: 92, width: 92, left: 9, top: 9, backgroundColor: '#75e18a', borderRadius: 90}}>
                                 <View style={{height:45, width: 10, backgroundColor: 'white', borderRadius: 10, position: 'absolute', transform: [{rotate: '40deg'}], top: 22, left: 49}}>
                                 
                                 </View>
@@ -196,21 +251,8 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
                                 </View>
                             </TouchableOpacity>
                         </View>
-                    </View>
-                    </View>
-                </Modal>
-                <View style={styles.headerContainer}>
-                    <View style={styles.leftHeaderContainer}>
-                        <View style={{marginBottom: -10, height: 25, left: 12 * widthRatio}}>
-                            <Text style={styles.dateText}>{daysOfWeek[dateRel.getDay()]}, {months[date.getMonth()]} {date.getDate()}</Text>
-                        </View>
-                    </View>
-                </View>
-                                
-                <View style={[styles.workoutContainer, {flex: 50.4 * heightRatio}, {top: 18}]}>
-                    <FlatList ref={flatListRef} data={workoutLocal.exercises} keyExtractor={(item) => item.id} renderItem={renderExerciseListItem} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}></FlatList>
-                </View>
-            </Animated.View>
+                    </Animated.View>
+            </View>
     );
 }
 export default WorkoutContainerComponent;
@@ -297,12 +339,12 @@ const styles = StyleSheet.create({
         top: 115 * heightRatio,
         backgroundColor: 'black',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        position: 'absolute',
     },
     workoutSummaryContainer: {
         backgroundColor: '#1C1C1E',
         height: 600 * heightRatio,
-        top: -20 * heightRatio,
         width: 385 * widthRatio,
         borderRadius: 15,
         paddingVertical: 20 * heightRatio,
