@@ -127,7 +127,7 @@ function WorkoutContainerComponent({workout, date, navigation, endWorkout, close
 
     return(
             <View style={styles.workoutScreenContainer}>
-                <Animated.View  style={[{top: 700, position: 'absolute', zIndex: 1,}, animateEndButton]}>
+                <Animated.View  style={[{top: 700*heightRatio, position: 'absolute', zIndex: 1,}, animateEndButton]}>
                     <TouchableOpacity onPress={endWorkoutHandler}>
                         <View style={{height: 45, width: 137, borderRadius: 60, backgroundColor: '#74e189', alignItems: 'center', justifyContent: 'center'}}>
                             <Text style={{color: 'white', fontSize: 23}}>{"End"}</Text>
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         height: 110 * heightRatio,
         width: 110 * widthRatio,
-        borderRadius: 55,
+        borderRadius: 90,
         position: 'absolute',
         top: 539 * heightRatio
     }
