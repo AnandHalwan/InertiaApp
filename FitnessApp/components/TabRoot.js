@@ -5,16 +5,18 @@ import StatisticsScreen from "../screens/StatisticsScreen";
 import WorkoutRoot from "./WorkoutRoot";
 import EncyclopediaRoot from "./EncyclopediaRoot";
 import { Image, View } from "react-native";
+import { heightRatio } from "../helper";
 
 const Tab = createBottomTabNavigator();
 
 function TabRoot() {
-
+    const tabHeight = 82*heightRatio
+    const iconratio = tabHeight/82
     return(
         <Tab.Navigator 
-        screenOptions={{headerShown: false, tabBarActiveBackgroundColor: 'black', 
-        tabBarInactiveBackgroundColor: 'black', headerStatusBarHeight: 0, 
-        tabBarItemStyle: {marginTop: 9, }, tabBarStyle: {backgroundColor: 'black', borderTopColor: '#242424', height: 70}} } >
+        screenOptions={{headerShown: false, 
+        headerStatusBarHeight: 0, 
+        tabBarItemStyle: {marginTop: 0, }, tabBarStyle: {backgroundColor: 'black', borderTopColor: '#242424', height: tabHeight,}} } >
         
             <Tab.Screen
              name="Workout" 
@@ -23,7 +25,7 @@ function TabRoot() {
                 tabBarShowLabel: false,
                 tabBarIcon: ({focused}) => (
                     <View>
-                      <Image style={{height: 24, width: 24}} source={focused ? require("../assets/navIcons/HomeFilled.png") : require("../assets/navIcons/Home.png")}>
+                      <Image style={{height: 24*iconratio, width: 24*iconratio}} source={focused ? require("../assets/navIcons/HomeFilled.png") : require("../assets/navIcons/Home.png")}>
 
                       </Image>
                     </View>
@@ -37,7 +39,7 @@ function TabRoot() {
                   tabBarShowLabel: false,
                   tabBarIcon: ({focused}) => (
                     <View>
-                      <Image style={{height: 24, width: 24}} source={focused ? require("../assets/navIcons/SocialFilled.png") : require("../assets/navIcons/Social.png")}>
+                      <Image style={{height: 24*iconratio, width: 24*iconratio}} source={focused ? require("../assets/navIcons/SocialFilled.png") : require("../assets/navIcons/Social.png")}>
 
                       </Image>
                     </View>
@@ -50,7 +52,7 @@ function TabRoot() {
                 tabBarShowLabel: false,
                 tabBarIcon: ({focused}) => (
                   <View>
-                    <Image style={{height: 24, width: 24}} source={focused ? require("../assets/navIcons/BookFilled.png") : require("../assets/navIcons/Book.png")}>
+                    <Image style={{height: 24*iconratio, width: 24*iconratio}} source={focused ? require("../assets/navIcons/BookFilled.png") : require("../assets/navIcons/Book.png")}>
 
                     </Image>
                   </View>
@@ -63,7 +65,7 @@ function TabRoot() {
                   tabBarShowLabel: false,
                   tabBarIcon: ({focused}) => (
                     <View>
-                      <Image style={{height: 24, width: 24}} source={focused ? require("../assets/navIcons/LeafFilled.png") : require("../assets/navIcons/Leaf.png")}>
+                      <Image style={{height: 24*iconratio, width: 24*iconratio}} source={focused ? require("../assets/navIcons/LeafFilled.png") : require("../assets/navIcons/Leaf.png")}>
 
                       </Image>
                     </View>
@@ -76,7 +78,7 @@ function TabRoot() {
                     tabBarShowLabel: false,
                     tabBarIcon: ({focused}) => (
                       <View>
-                        <Image style={{height: 24, width: 24}} source={focused ? require("../assets/navIcons/ProfileFilled.png") : require("../assets/navIcons/Profile.png")}>
+                        <Image style={{height: 24*iconratio, width: 24*iconratio}} source={focused ? require("../assets/navIcons/ProfileFilled.png") : require("../assets/navIcons/Profile.png")}>
   
                         </Image>
                       </View>
