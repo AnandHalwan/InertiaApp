@@ -10,6 +10,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import Auth from './screens/Auth';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,8 +22,8 @@ export default function App() {
       <NavigationContainer>
         <StatusBar style='light'>
         </StatusBar>
-        <Stack.Navigator screenOptions={{headerShown:false, animation: 'slide_from_left', gestureEnabled: false}} >
-
+        <Stack.Navigator screenOptions={{headerShown:false, animation: 'slide_from_left', gestureEnabled: false}}>
+          <Stack.Screen name="Auth" component={Auth}></Stack.Screen>
           <Stack.Screen name = "TabRoot" component={TabRoot}></Stack.Screen> 
         </Stack.Navigator>
       </NavigationContainer>

@@ -7,6 +7,8 @@ export const widthRatio = windowWidth/390;
 
 export const baseApiUrl = "https://inertiafit-f67b79e42b1b.herokuapp.com/"
 
+// "https://inertiafit-f67b79e42b1b.herokuapp.com/"
+// http://192.168.0.15:3000/
 
 export function formattedDate() {
     let currentDate = new Date();

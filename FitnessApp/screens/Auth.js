@@ -1,7 +1,10 @@
+import axios from 'axios';
 import React, { useState } from 'react'
 import { Alert, Modal, StyleSheet, View, Image, Text } from 'react-native'
 import { Button, Input } from 'react-native-elements'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { baseApiUrl } from '../helper';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 
 export let userId = "";
@@ -15,6 +18,56 @@ export default function Auth({navigation}) {
 
   function displayModalHandler() {
     setShowEmailModal(true);
+  }
+
+
+  function signInHandler() {
+    signIn(email, password)
+  }
+
+  function signUpHandler() {
+    signUp(email, password)
+  }
+
+
+  async function signUp(email, password) {
+    const userData = {
+      email: email,
+      password: password,
+    };
+    
+    // Make the POST request
+    axios.post(baseApiUrl+"auth/signup", userData)
+      .then(response => {
+        // Handle the response from the server
+        setShowEmailModal(false)
+        userId = response.data.userId
+        navigation.navigate('TabRoot')
+      })
+      .catch(error => {
+        // Handle errors
+        console.error(error);
+      });
+  }
+
+  async function signIn(email, password) {
+    const userData = {
+      email: email,
+      password: password,
+    };
+    
+    // Make the POST request
+    axios.post(baseApiUrl+"auth/signin", userData)
+      .then(response => {
+        // Handle the response from the server
+        setShowEmailModal(false)
+        userId = response.data.userId
+        navigation.navigate('TabRoot')
+      })
+      .catch(error => {
+        // Handle errors
+        console.error(error);
+      });
   }
 
 
@@ -44,10 +97,10 @@ export default function Auth({navigation}) {
           />
         </View>
         <View style={[styles.verticallySpaced, styles.mt20]}>
-          <Button title="Sign in" disabled={loading} onPress={() => console.log("Add signin function")} />
+          <Button title="Sign in" disabled={loading} onPress={signInHandler} />
         </View>
         <View style={styles.verticallySpaced}>
-          <Button title="Sign up" disabled={loading} onPress={() => console.log("Add signup function")} />
+          <Button title="Sign up" disabled={loading} onPress={signUpHandler} />
         </View>
       </View>
       </Modal>

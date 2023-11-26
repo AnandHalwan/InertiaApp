@@ -7,15 +7,20 @@ import DraggableFlatList, { OpacityDecorator } from "react-native-draggable-flat
 import { Swipeable, TextInput } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { baseApiUrl, heightRatio, widthRatio } from "../helper";
+import { userId } from "./Auth";
 function SplitScreen({navigation}) {
 
     const queryClient = useQueryClient()
 
-    const { data, isLoading, isError } = useQuery({queryKey: ['split'], queryFn: getSplit});
+    const { data, isLoading, isError } = useQuery({queryKey: ['split'], queryFn: getSplit,});
+
+    useEffect(() => {
+        console.log("User Id obtained from auth is: ", userId)
+    })
 
     async function getSplit() {
         queryData = {
-            "userId": "c3ajcVzkapfnUHfb4GKeVuELPO32",
+            "userId": userId,
             "splitId": "s1"
         }
         const response = await axios.get(baseApiUrl+'split/get', {params: queryData})
@@ -54,7 +59,7 @@ function SplitScreen({navigation}) {
         console.log("Posting split")
 
         const splitData = {
-            "userId": "c3ajcVzkapfnUHfb4GKeVuELPO32",
+            "userId": userId,
             "splitDocument": newSplit
         }
         const response = await axios.post(baseApiUrl+'split/save', splitData)
